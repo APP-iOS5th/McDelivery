@@ -25,6 +25,8 @@
 		469D90412C0DA41F000ABE8C /* Inter-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 469D90382C0DA41F000ABE8C /* Inter-Thin.ttf */; };
 		469D90422C0DA41F000ABE8C /* Inter-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 469D90392C0DA41F000ABE8C /* Inter-Light.ttf */; };
 		469D90432C0DA41F000ABE8C /* Inter-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 469D903A2C0DA41F000ABE8C /* Inter-Black.ttf */; };
+		469D90452C0DAC02000ABE8C /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D90442C0DAC02000ABE8C /* APIManager.swift */; };
+		469D90472C0DAC10000ABE8C /* CurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D90462C0DAC10000ABE8C /* CurrencyModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +50,8 @@
 		469D90382C0DA41F000ABE8C /* Inter-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Thin.ttf"; sourceTree = "<group>"; };
 		469D90392C0DA41F000ABE8C /* Inter-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Light.ttf"; sourceTree = "<group>"; };
 		469D903A2C0DA41F000ABE8C /* Inter-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Black.ttf"; sourceTree = "<group>"; };
+		469D90442C0DAC02000ABE8C /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		469D90462C0DAC10000ABE8C /* CurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +97,7 @@
 		469D90222C0D9F7E000ABE8C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				469D90462C0DAC10000ABE8C /* CurrencyModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -110,6 +115,7 @@
 		469D90242C0D9F91000ABE8C /* API */ = {
 			isa = PBXGroup;
 			children = (
+				469D90442C0DAC02000ABE8C /* APIManager.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -230,10 +236,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				469D90452C0DAC02000ABE8C /* APIManager.swift in Sources */,
 				469D902A2C0D9FED000ABE8C /* SecondViewController.swift in Sources */,
 				469D902C2C0DA035000ABE8C /* Colors.swift in Sources */,
 				469D90302C0DA049000ABE8C /* MainTabController.swift in Sources */,
 				469D90282C0D9FE4000ABE8C /* FirstViewController.swift in Sources */,
+				469D90472C0DAC10000ABE8C /* CurrencyModel.swift in Sources */,
 				469D900F2C0D9E1B000ABE8C /* AppDelegate.swift in Sources */,
 				469D902E2C0DA03D000ABE8C /* Fonts.swift in Sources */,
 				469D90112C0D9E1B000ABE8C /* SceneDelegate.swift in Sources */,
