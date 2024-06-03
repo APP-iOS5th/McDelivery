@@ -24,6 +24,11 @@ class SecondViewController: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .secondaryTextColor
         setupTitleLabel() 
+        
+        
+        
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
