@@ -27,6 +27,7 @@
 		469D90432C0DA41F000ABE8C /* Inter-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 469D903A2C0DA41F000ABE8C /* Inter-Black.ttf */; };
 		469D90452C0DAC02000ABE8C /* CurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D90442C0DAC02000ABE8C /* CurrencyService.swift */; };
 		469D90472C0DAC10000ABE8C /* CurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D90462C0DAC10000ABE8C /* CurrencyModel.swift */; };
+		EB320F762C0ED0BC009FF27D /* McCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB320F752C0ED0BC009FF27D /* McCount.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		469D903A2C0DA41F000ABE8C /* Inter-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Black.ttf"; sourceTree = "<group>"; };
 		469D90442C0DAC02000ABE8C /* CurrencyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyService.swift; sourceTree = "<group>"; };
 		469D90462C0DAC10000ABE8C /* CurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModel.swift; sourceTree = "<group>"; };
+		EB320F752C0ED0BC009FF27D /* McCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = McCount.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				469D90462C0DAC10000ABE8C /* CurrencyModel.swift */,
+				EB320F752C0ED0BC009FF27D /* McCount.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 				469D90282C0D9FE4000ABE8C /* FirstViewController.swift in Sources */,
 				469D90472C0DAC10000ABE8C /* CurrencyModel.swift in Sources */,
 				469D900F2C0D9E1B000ABE8C /* AppDelegate.swift in Sources */,
+				EB320F762C0ED0BC009FF27D /* McCount.swift in Sources */,
 				469D902E2C0DA03D000ABE8C /* Fonts.swift in Sources */,
 				469D90112C0D9E1B000ABE8C /* SceneDelegate.swift in Sources */,
 			);
