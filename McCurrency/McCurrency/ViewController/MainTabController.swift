@@ -66,9 +66,9 @@ class MainTabController: UITabBarController, UITabBarControllerDelegate {
         guard subviews.count > index + 1 else { return }
         
         let x = subviews[index + 1].center.x - movingView.frame.width / 2
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations:  {
             self.movingView.frame.origin.x = x
-        }
+        }, completion: nil)
     }
     
 }
