@@ -8,15 +8,22 @@
 import UIKit
 
 
-class MainTabController: UITabBarController {
+class MainTabController: UITabBarController, UITabBarControllerDelegate {
+    let movingView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewControllers()
         tabBar.backgroundColor = .mainColor
         
-        
+        // 사각형 뷰 설정
+        movingView.backgroundColor = .red
+        movingView.frame = CGRect(x: self.tabBar.center.x / 4 , y: 0, width: 100, height: 5)
+        movingView.layer.cornerRadius = 5
+        tabBar.addSubview(movingView)
     }
+    
+    
     
     
     
@@ -31,7 +38,7 @@ class MainTabController: UITabBarController {
         appearance.backgroundColor = .white
         nav.navigationBar.standardAppearance = appearance
         nav.navigationBar.scrollEdgeAppearance = nav.navigationBar.standardAppearance
-       
+        
         return nav
     }
     
@@ -43,14 +50,24 @@ class MainTabController: UITabBarController {
         
         let nav1 = templateNavigationController(image: UIImage(systemName: "person.fill"), rootViewController: firstVC)
         let nav2 = templateNavigationController(image:  UIImage(systemName: "pencil"), rootViewController: secondVC)
- 
+        
         nav1.tabBarItem.title = "프로필"
         nav2.tabBarItem.title = "연필"
-
+        
         viewControllers = [nav1, nav2]
         
     }
     
-    
+    override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        guard let index = self.tabBar.items?.firstIndex(of: item) else { return }
+        
+        let subviews = tabBar.subviews.filter({ !$0.isHidden })
+        guard subviews.count > index + 1 else { return }
+        
+        let x = subviews[index + 1].center.x - movingView.frame.width / 2
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+            self.movingView.frame.origin.x = x
+        }
+    }
     
 }
