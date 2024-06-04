@@ -16,8 +16,9 @@ class MainTabController: UITabBarController, UITabBarControllerDelegate {
         configureViewControllers()
         tabBar.backgroundColor = .mainColor
         
-        // 사각형 뷰 설정
-        movingView.backgroundColor = .red
+        // 사각형 뷰 설정_배경이랑 색상이 같아서 주석처리 후 구분되게 blue로 표시해 놓음.
+//        movingView.backgroundColor = UIColor(red: 245/255, green: 197/255, blue: 77/255, alpha: 1)
+        movingView.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 255/255, alpha: 1)
         movingView.frame = CGRect(x: self.tabBar.center.x / 4 , y: 0, width: 100, height: 5)
         movingView.layer.cornerRadius = 5
         tabBar.addSubview(movingView)
