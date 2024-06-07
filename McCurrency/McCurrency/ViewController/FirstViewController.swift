@@ -155,32 +155,39 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             
             fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             fromCountryLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            //대한민국
             
-            toCountryLabel.topAnchor.constraint(equalTo: fromCountryLabel.bottomAnchor, constant: 10),
+            toCountryLabel.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 30),
             toCountryLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            //미국
             
-            countryPickerView.topAnchor.constraint(equalTo: toCountryLabel.bottomAnchor, constant: 10),
+            countryPickerView.bottomAnchor.constraint(equalTo: toCountryLabel.topAnchor, constant: 300),
             countryPickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             countryPickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            //나라선택피커
             
-            fromAmountTextField.topAnchor.constraint(equalTo: countryPickerView.bottomAnchor, constant: 20),
+            fromAmountTextField.topAnchor.constraint(equalTo: fromCountryLabel.bottomAnchor, constant: 20),
             fromAmountTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            //원화 입력가능
             
             fromAmountSuffixLabel.centerYAnchor.constraint(equalTo: fromAmountTextField.centerYAnchor),
             fromAmountSuffixLabel.leadingAnchor.constraint(equalTo: fromAmountTextField.trailingAnchor, constant: 5),
             fromAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            //원
             
-            exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 10),
+            exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 30),
             exchangeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            //환전버튼
             
-            toAmountLabel.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 10),
-            toAmountLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                
+            toAmountLabel.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 80),
+            toAmountLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -90),
+            //달러 환전되어나옴
 
             toAmountSuffixLabel.centerYAnchor.constraint(equalTo: toAmountLabel.centerYAnchor),
             toAmountSuffixLabel.leadingAnchor.constraint(equalTo: toAmountLabel.trailingAnchor, constant: 5),
+            //달러
             
-            bigMacCountbox.topAnchor.constraint(equalTo: toAmountSuffixLabel.bottomAnchor, constant: 20),
+            bigMacCountbox.topAnchor.constraint(equalTo: toAmountSuffixLabel.bottomAnchor, constant: 200),
             bigMacCountbox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             bigMacCountbox.widthAnchor.constraint(equalToConstant: 300),
             bigMacCountbox.heightAnchor.constraint(equalToConstant: 180),
