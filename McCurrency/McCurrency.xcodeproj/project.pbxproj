@@ -28,6 +28,7 @@
 		469D90452C0DAC02000ABE8C /* CurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D90442C0DAC02000ABE8C /* CurrencyService.swift */; };
 		469D90472C0DAC10000ABE8C /* CurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D90462C0DAC10000ABE8C /* CurrencyModel.swift */; };
 		EB320F762C0ED0BC009FF27D /* McCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB320F752C0ED0BC009FF27D /* McCount.swift */; };
+		EBC678952C12B84C0015C300 /* McRotator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC678942C12B84C0015C300 /* McRotator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		469D90442C0DAC02000ABE8C /* CurrencyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyService.swift; sourceTree = "<group>"; };
 		469D90462C0DAC10000ABE8C /* CurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModel.swift; sourceTree = "<group>"; };
 		EB320F752C0ED0BC009FF27D /* McCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = McCount.swift; sourceTree = "<group>"; };
+		EBC678942C12B84C0015C300 /* McRotator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = McRotator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				469D902F2C0DA049000ABE8C /* MainTabController.swift */,
 				469D90272C0D9FE4000ABE8C /* FirstViewController.swift */,
 				469D90292C0D9FED000ABE8C /* SecondViewController.swift */,
+				EBC678942C12B84C0015C300 /* McRotator.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -246,6 +249,7 @@
 				469D90282C0D9FE4000ABE8C /* FirstViewController.swift in Sources */,
 				469D90472C0DAC10000ABE8C /* CurrencyModel.swift in Sources */,
 				469D900F2C0D9E1B000ABE8C /* AppDelegate.swift in Sources */,
+				EBC678952C12B84C0015C300 /* McRotator.swift in Sources */,
 				EB320F762C0ED0BC009FF27D /* McCount.swift in Sources */,
 				469D902E2C0DA03D000ABE8C /* Fonts.swift in Sources */,
 				469D90112C0D9E1B000ABE8C /* SceneDelegate.swift in Sources */,
