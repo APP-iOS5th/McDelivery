@@ -50,7 +50,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     let bigMacCountbox = UIButton()
     let tooltipButton = UIButton()
     
-    let maxCharacters = 10 //글자수 최대를 10자로 제한.
+    let maxCharacters = 10 //글자수 최대를 10자로 제한함.
     
     //MARK: - LifeCycles
     override func viewDidLoad() {
