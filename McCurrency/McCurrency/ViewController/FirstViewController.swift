@@ -49,6 +49,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     let exchangeButton = UIButton()
     let bigMacCountbox = UIButton()
     let tooltipButton = UIButton()
+    var tooltipView: UIView?
     
     let maxCharacters = 10 //글자수 최대를 10자로 제한함.
     
@@ -226,50 +227,78 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func showTooltip() {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
-        
-        let title = "빅맥지수란?"
-        let titleFont = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .bold)]
-        let attributedTitle = NSMutableAttributedString(string: title, attributes: titleFont)
-        
-        alert.setValue(attributedTitle, forKey: "attributedTitle")
-        alert.message = "맥도날드의 대표적인 메뉴 빅맥 가격에 기초해, 영국 경제전문지 이코노미스트가 120여 개국의 물가 수준과 통화 가치를 비교하는 주요 지수로,  매 분기(1월,7월)마다 작성, 발표합니다! "
-        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
-    }
-    
-    //    private func fetchCurrencyData() {
-    //        CurrencyService.shared.fetchExchangeRates(searchDate: nil) { [weak self] exchangeRates in
-    //            DispatchQueue.main.async {
-    //                if let rates = exchangeRates {
-    //                    let ttsDictionary = self?.createTtsDictionary(from: rates)
-    //
-    //                    if let ttsDictionary = ttsDictionary {
-    //                        let desiredKey = "바레인 디나르" // 원하는 키 설정
-    //                        if let ttsValue = ttsDictionary[desiredKey] {
-    //                            self?.titleLabel.text = desiredKey
-    //                            self?.titleLabel2.text = ttsValue
-    //                        } else {
-    //                            self?.titleLabel.text = "No data"
-    //                            self?.titleLabel2.text = "No data"
-    //                        }
-    //                        print("TTS Dictionary: \(ttsDictionary)")
-    //                    }
-    //                } else {
-    //                    self?.titleLabel.text = "Failed to fetch data"
-    //                    self?.titleLabel2.text = "Failed to fetch data"
-    //                }
-    //            }
-    //        }
-    //    }
-    //
-    func createTtsDictionary(from rates: [ExchangeRate]) -> [String: String] {
-        let dictionary = rates.reduce(into: [String: String]()) { (dict, rate) in
-            dict[rate.cur_nm] = rate.tts
+        if let tooltipView = tooltipView {
+            tooltipView.removeFromSuperview()
+            self.tooltipView = nil
+            return
         }
-        return dictionary
+        
+        let newTooltipView = UIView()
+        newTooltipView.backgroundColor = UIColor.boxColor.withAlphaComponent(0.5)
+        newTooltipView.layer.cornerRadius = 8
+        newTooltipView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let tooltipLabel = UILabel()
+        tooltipLabel.text = "빅맥지수란, 전 세계 맥도날드 빅맥 가격을 기준으로 각국 통화의 구매력을 비교하는 지표입니다."
+        tooltipLabel.textColor = .white
+        tooltipLabel.font = UIFont.systemFont(ofSize: 12)
+        tooltipLabel.numberOfLines = 0
+        tooltipLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        newTooltipView.addSubview(tooltipLabel)
+        
+        NSLayoutConstraint.activate([
+            tooltipLabel.topAnchor.constraint(equalTo: newTooltipView.topAnchor, constant: 8),
+            tooltipLabel.bottomAnchor.constraint(equalTo: newTooltipView.bottomAnchor, constant: -8),
+            tooltipLabel.leadingAnchor.constraint(equalTo: newTooltipView.leadingAnchor, constant: 8),
+            tooltipLabel.trailingAnchor.constraint(equalTo: newTooltipView.trailingAnchor, constant: -8)
+        ])
+        
+        view.addSubview(newTooltipView)
+        
+        NSLayoutConstraint.activate([
+            newTooltipView.topAnchor.constraint(equalTo: tooltipButton.bottomAnchor, constant: 8),
+            newTooltipView.centerXAnchor.constraint(equalTo: tooltipButton.centerXAnchor),
+            newTooltipView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            newTooltipView.widthAnchor.constraint(lessThanOrEqualToConstant: 250)
+        ])
+        
+        self.tooltipView = newTooltipView
     }
 }
+
+//    private func fetchCurrencyData() {
+//        CurrencyService.shared.fetchExchangeRates(searchDate: nil) { [weak self] exchangeRates in
+//            DispatchQueue.main.async {
+//                if let rates = exchangeRates {
+//                    let ttsDictionary = self?.createTtsDictionary(from: rates)
+//
+//                    if let ttsDictionary = ttsDictionary {
+//                        let desiredKey = "바레인 디나르" // 원하는 키 설정
+//                        if let ttsValue = ttsDictionary[desiredKey] {
+//                            self?.titleLabel.text = desiredKey
+//                            self?.titleLabel2.text = ttsValue
+//                        } else {
+//                            self?.titleLabel.text = "No data"
+//                            self?.titleLabel2.text = "No data"
+//                        }
+//                        print("TTS Dictionary: \(ttsDictionary)")
+//                    }
+//                } else {
+//                    self?.titleLabel.text = "Failed to fetch data"
+//                    self?.titleLabel2.text = "Failed to fetch data"
+//                }
+//            }
+//        }
+//    }
+//
+func createTtsDictionary(from rates: [ExchangeRate]) -> [String: String] {
+    let dictionary = rates.reduce(into: [String: String]()) { (dict, rate) in
+        dict[rate.cur_nm] = rate.tts
+    }
+    return dictionary
+}
+
 
 extension FirstViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
