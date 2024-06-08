@@ -44,7 +44,7 @@ extension UITabBarController {
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         tabBar.insertSubview(blurEffectView, at: 0)
-        
+       
         if #available(iOS 13.0, *) {
             let appearance = UITabBarAppearance()
             appearance.configureWithDefaultBackground()

@@ -56,6 +56,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        
         //        fetchCurrencyData()
     }
     
@@ -113,36 +114,42 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         
         fromAmountTextField.text = "1,300,000"
         fromAmountTextField.textColor = .white
-        fromAmountTextField.font = UIFont.boldSystemFont(ofSize: 36)
+        fromAmountTextField.font = UIFont.interLightFont(ofSize: 36)
         fromAmountTextField.borderStyle = .none
         fromAmountTextField.keyboardType = .numberPad
         fromAmountTextField.textAlignment = .right
         
         fromAmountSuffixLabel.text = " 원"
         fromAmountSuffixLabel.textColor = .white
-        fromAmountSuffixLabel.font = UIFont.boldSystemFont(ofSize: 36)
+        fromAmountSuffixLabel.font = UIFont.interMediumFont(ofSize: 36)
         
         toAmountLabel.text = "1,000"
-        toAmountLabel.textColor = .lightGray
-        toAmountLabel.font = UIFont.boldSystemFont(ofSize: 36)
+        toAmountLabel.textColor = .white
+        toAmountLabel.font = UIFont.interLightFont(ofSize: 36)
         
         toAmountSuffixLabel.text = " 달러"
         toAmountSuffixLabel.textColor = .lightGray
-        toAmountSuffixLabel.font = UIFont.boldSystemFont(ofSize: 36)
+        toAmountSuffixLabel.font = UIFont.interMediumFont(ofSize: 36)
         
-        exchangeButton.setTitle("⇆", for: .normal)
+        exchangeButton.setImage(UIImage(systemName: "arrow.left.arrow.right"), for: .normal)
+        exchangeButton.tintColor = UIColor.secondaryTextColor
         exchangeButton.setTitleColor(.white, for: .normal)
         exchangeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
         exchangeButton.addTarget(self, action: #selector(exchangeButtonTapped), for: .touchUpInside)
         
-        bigMacCountbox.setTitle("빅맥을 한개 살 수 있어요", for: .normal)
+        bigMacCountbox.titleLabel?.numberOfLines = 0
+        bigMacCountbox.titleLabel?.textAlignment = .center
+        
+        bigMacCountbox.setTitle("개의 빅맥을\n살 수 있어요", for: .normal)
         bigMacCountbox.setTitleColor(.white, for: .normal)
-        bigMacCountbox.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        bigMacCountbox.backgroundColor = .lightGray
+        bigMacCountbox.titleLabel?.font = UIFont.interLightFont(ofSize: 20)
+        bigMacCountbox.backgroundColor = UIColor.boxColor
         bigMacCountbox.layer.cornerRadius = 20
         
-        tooltipButton.setTitle("빅맥지수란?", for: .normal)
-        tooltipButton.setTitleColor(.white, for: .normal)
+        tooltipButton.setTitle(" 빅맥지수란?", for: .normal)
+        tooltipButton.setImage(UIImage(systemName: "info.circle"), for: .normal)
+        tooltipButton.tintColor = UIColor.secondaryTextColor
+        tooltipButton.setTitleColor(UIColor.secondaryTextColor, for: .normal)
         tooltipButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         tooltipButton.addTarget(self, action: #selector(showTooltip), for: .touchUpInside)
         
@@ -181,7 +188,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             toAmountLabel.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 80),
             toAmountLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -90),
             //달러 환전되어나옴
-
+            
             toAmountSuffixLabel.centerYAnchor.constraint(equalTo: toAmountLabel.centerYAnchor),
             toAmountSuffixLabel.leadingAnchor.constraint(equalTo: toAmountLabel.trailingAnchor, constant: 5),
             //달러
@@ -197,11 +204,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            // 현재 텍스트 필드의 텍스트 길이를 가져옴
-            guard let text = textField.text else { return true }
-            let newLength = text.count + string.count - range.length
-            return newLength <= maxCharacters // 최대 글자 수를 초과하지 않도록 함
-        }
+        // 현재 텍스트 필드의 텍스트 길이를 가져옴
+        guard let text = textField.text else { return true }
+        let newLength = text.count + string.count - range.length
+        return newLength <= maxCharacters // 최대 글자 수를 초과하지 않도록 함
+    }
     
     @objc func toCountryLabelTapped() {
         countryPickerView.isHidden = !countryPickerView.isHidden
@@ -256,7 +263,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     //        }
     //    }
     //
-   func createTtsDictionary(from rates: [ExchangeRate]) -> [String: String] {
+    func createTtsDictionary(from rates: [ExchangeRate]) -> [String: String] {
         let dictionary = rates.reduce(into: [String: String]()) { (dict, rate) in
             dict[rate.cur_nm] = rate.tts
         }

@@ -15,13 +15,8 @@ class MainTabController: UITabBarController {
         self.view.backgroundColor = UIColor.backgroundColor
         configureViewControllers()
         configureTabBarAppearance()
-        if let tabBarController = self.tabBarController {
-            tabBarController.configureTabBarAppearance()
-        }
     }
-    
-    
-    
+
     func templateNavigationController(image:UIImage?,rootViewController: UIViewController) -> UINavigationController {
         
         let nav = UINavigationController(rootViewController: rootViewController)
@@ -36,7 +31,6 @@ class MainTabController: UITabBarController {
         
         return nav
     }
-    
     
     func configureViewControllers() {
         
