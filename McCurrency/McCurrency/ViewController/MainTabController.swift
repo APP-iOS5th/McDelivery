@@ -12,10 +12,12 @@ class MainTabController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.backgroundColor
         configureViewControllers()
-        tabBar.backgroundColor = .mainColor
-        
-        
+        configureTabBarAppearance()
+        if let tabBarController = self.tabBarController {
+            tabBarController.configureTabBarAppearance()
+        }
     }
     
     
@@ -31,7 +33,7 @@ class MainTabController: UITabBarController {
         appearance.backgroundColor = .white
         nav.navigationBar.standardAppearance = appearance
         nav.navigationBar.scrollEdgeAppearance = nav.navigationBar.standardAppearance
-       
+        
         return nav
     }
     
@@ -41,12 +43,12 @@ class MainTabController: UITabBarController {
         let firstVC = FirstViewController()
         let secondVC = SecondViewController()
         
-        let nav1 = templateNavigationController(image: UIImage(systemName: "person.fill"), rootViewController: firstVC)
-        let nav2 = templateNavigationController(image:  UIImage(systemName: "pencil"), rootViewController: secondVC)
- 
-        nav1.tabBarItem.title = "프로필"
-        nav2.tabBarItem.title = "연필"
-
+        let nav1 = templateNavigationController(image: UIImage(systemName: "banknote"), rootViewController: firstVC)
+        let nav2 = templateNavigationController(image:  UIImage(systemName: "capsule.fill"), rootViewController: secondVC)
+        
+        nav1.tabBarItem.title = "Currency"
+        nav2.tabBarItem.title = "Index"
+        
         viewControllers = [nav1, nav2]
         
     }

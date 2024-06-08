@@ -55,7 +55,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     //MARK: - LifeCycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
         setupUI()
         //        fetchCurrencyData()
     }
