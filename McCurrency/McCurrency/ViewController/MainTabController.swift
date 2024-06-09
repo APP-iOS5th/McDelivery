@@ -44,9 +44,5 @@ class MainTabController: UITabBarController {
         nav2.tabBarItem.title = "Index"
         
         viewControllers = [nav1, nav2]
-        
     }
-    
-    
-    
 }

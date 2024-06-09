@@ -58,7 +58,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        
         //        fetchCurrencyData()
     }
     
@@ -100,7 +99,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         bigMacCountbox.translatesAutoresizingMaskIntoConstraints = false
         tooltipButton.translatesAutoresizingMaskIntoConstraints = false
         
-        
         fromCountryLabel.text = "🇰🇷 대한민국"
         fromCountryLabel.textColor = .white
         fromCountryLabel.font = UIFont.systemFont(ofSize: 14)
@@ -109,11 +107,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         toCountryLabel.textColor = .white
         toCountryLabel.font = UIFont.systemFont(ofSize: 14)
         toCountryLabel.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(toCountryLabelTapped))
-        toCountryLabel.addGestureRecognizer(tapGesture)
         
         toCountryBackgroundView.backgroundColor = UIColor.boxColor
         toCountryBackgroundView.layer.cornerRadius = 5
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(toCountryLabelTapped))
+        toCountryBackgroundView.addGestureRecognizer(tapGesture)
         
         countryPickerView.dataSource = self
         countryPickerView.delegate = self
@@ -200,11 +198,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             //환전버튼
             
             toAmountLabel.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 80),
-            toAmountLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -90),
             //달러 환전되어나옴
             
             toAmountSuffixLabel.centerYAnchor.constraint(equalTo: toAmountLabel.centerYAnchor),
             toAmountSuffixLabel.leadingAnchor.constraint(equalTo: toAmountLabel.trailingAnchor, constant: 5),
+            toAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             //달러
             
             bigMacCountbox.topAnchor.constraint(equalTo: toAmountSuffixLabel.bottomAnchor, constant: 200),
