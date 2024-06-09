@@ -10,25 +10,6 @@ import UIKit
 class FirstViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Properties
-    
-    //    private let titleLabel: UILabel = {
-    //        let label = UILabel()
-    //        label.text = "First VC"
-    //        label.textColor = .white
-    //        label.font = UIFont.boldSystemFont(ofSize: 30)
-    //        label.textAlignment = .center
-    //        return label
-    //    }()
-    //
-    //    private let titleLabel2: UILabel = {
-    //        let label = UILabel()
-    //        label.text = "First VC"
-    //        label.textColor = .white
-    //        label.font = UIFont.boldSystemFont(ofSize: 30)
-    //        label.textAlignment = .center
-    //        return label
-    //    }()
-    
     let fromCountryLabel = UILabel()
     let toCountryLabel = UILabel()
     let toCountryBackgroundView = UIView()
@@ -75,14 +56,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     //MARK: - Functions
     
     func setupUI() {
-        //        view.addSubview(titleLabel)
-        //        view.addSubview(titleLabel2)
         view.addSubview(fromCountryLabel)
         view.addSubview(toCountryLabel)
         view.addSubview(countryPickerView)
         view.addSubview(fromAmountTextField)
         view.addSubview(fromAmountSuffixLabel)
-        //        view.addSubview(toAmountLabel)
         view.addSubview(toAmountSuffixLabel)
         view.addSubview(exchangeButton)
         view.addSubview(bigMacCountbox)
@@ -90,15 +68,12 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(toCountryBackgroundView)
         toCountryBackgroundView.addSubview(toCountryLabel)
         
-        //        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        //        titleLabel2.translatesAutoresizingMaskIntoConstraints = false
         fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         toCountryBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         toCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         countryPickerView.translatesAutoresizingMaskIntoConstraints = false
         fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
         fromAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
-        //        toAmountLabels.translatesAutoresizingMaskIntoConstraints = false
         toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
         exchangeButton.translatesAutoresizingMaskIntoConstraints = false
         bigMacCountbox.translatesAutoresizingMaskIntoConstraints = false
@@ -162,19 +137,15 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         tooltipButton.addTarget(self, action: #selector(showTooltip), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            //            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            //            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            //            titleLabel2.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            //            titleLabel2.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             
-            fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
-            fromCountryLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            fromCountryLabel.centerXAnchor.constraint(equalTo: toCountryBackgroundView.centerXAnchor),
+            fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 90),
             //대한민국
             
             toCountryBackgroundView.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 30),
             toCountryBackgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            toCountryBackgroundView.widthAnchor.constraint(equalToConstant: 110), // 너비 설정
-            toCountryBackgroundView.heightAnchor.constraint(equalToConstant: 32), // 높이 설정
+            toCountryBackgroundView.widthAnchor.constraint(equalToConstant: 110),
+            toCountryBackgroundView.heightAnchor.constraint(equalToConstant: 32),
             
             toCountryLabel.centerYAnchor.constraint(equalTo: toCountryBackgroundView.centerYAnchor),
             toCountryLabel.centerXAnchor.constraint(equalTo: toCountryBackgroundView.centerXAnchor),
@@ -197,7 +168,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 30),
             exchangeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             //환전버튼
- 
+            
             toAmountSuffixLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 300),
             toAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             //달러
@@ -345,7 +316,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    
 }
 
 //    private func fetchCurrencyData() {
