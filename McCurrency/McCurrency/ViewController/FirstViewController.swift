@@ -12,7 +12,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     //MARK: - Properties
     let fromCountryLabel = UILabel()
     let toCountryLabel = UILabel()
-    let toCountryBackgroundView = UIView()
     let countryPickerView = UIPickerView()
     let countries: [(flag: String, name: String)] = [
         ("🇨🇭", "스위스"), ("🇳🇴", "노르웨이"), ("🇺🇾", "우루과이"), ("🇸🇪", "스웨덴"),
@@ -29,6 +28,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     var toAmountLabels: [UILabel] = []
     var toAmountTopConstraints: [NSLayoutConstraint] = []
     let toAmountSuffixLabel = UILabel()
+    let toCountryButton = UIButton()
     let exchangeButton = UIButton()
     let bigMacCountbox = UIButton()
     let tooltipButton = UIButton()
@@ -76,11 +76,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(exchangeButton)
         view.addSubview(bigMacCountbox)
         view.addSubview(tooltipButton)
-        view.addSubview(toCountryBackgroundView)
-        toCountryBackgroundView.addSubview(toCountryLabel)
+        view.addSubview(toCountryButton)
+        toCountryButton.addSubview(toCountryLabel)
         
         fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
-        toCountryBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        toCountryButton.translatesAutoresizingMaskIntoConstraints = false
         toCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         countryPickerView.translatesAutoresizingMaskIntoConstraints = false
         fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -99,10 +99,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         toCountryLabel.font = UIFont.systemFont(ofSize: 14)
         toCountryLabel.isUserInteractionEnabled = true
         
-        toCountryBackgroundView.backgroundColor = UIColor.boxColor
-        toCountryBackgroundView.layer.cornerRadius = 5
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(toCountryLabelTapped))
-        toCountryBackgroundView.addGestureRecognizer(tapGesture)
+        toCountryButton.backgroundColor = UIColor.boxColor
+        toCountryButton.layer.cornerRadius = 5
+        toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
         
         fromAmountTextField.delegate = self
         
@@ -146,17 +145,17 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         
         NSLayoutConstraint.activate([
             
-            fromCountryLabel.centerXAnchor.constraint(equalTo: toCountryBackgroundView.centerXAnchor),
+            fromCountryLabel.centerXAnchor.constraint(equalTo: toCountryButton.centerXAnchor),
             fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 90),
             //대한민국
             
-            toCountryBackgroundView.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 30),
-            toCountryBackgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            toCountryBackgroundView.widthAnchor.constraint(equalToConstant: 110),
-            toCountryBackgroundView.heightAnchor.constraint(equalToConstant: 32),
+            toCountryButton.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 30),
+            toCountryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            toCountryButton.widthAnchor.constraint(equalToConstant: 100),
+            toCountryButton.heightAnchor.constraint(equalToConstant: 32),
             
-            toCountryLabel.centerYAnchor.constraint(equalTo: toCountryBackgroundView.centerYAnchor),
-            toCountryLabel.centerXAnchor.constraint(equalTo: toCountryBackgroundView.centerXAnchor),
+            toCountryLabel.centerYAnchor.constraint(equalTo: toCountryButton.centerYAnchor),
+            toCountryLabel.centerXAnchor.constraint(equalTo: toCountryButton.centerXAnchor),
             //미국
             
             countryPickerView.bottomAnchor.constraint(equalTo: toCountryLabel.topAnchor, constant: 300),
@@ -235,8 +234,10 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         return toAmountLabel
     }
     
-    @objc func toCountryLabelTapped() {
-        countryPickerView.isHidden = !countryPickerView.isHidden
+    @objc func toCountryButtonTapped() {
+        let viewController = CircularViewController()
+        viewController.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
     
     @objc func exchangeButtonTapped() {

@@ -8,7 +8,7 @@
 import UIKit
 import AVKit
 
-class ViewController: UIViewController {
+class CircularViewController: UIViewController {
     
     let countries = [
         "Switzerland", "Norway", "Uruguay", "Sweden", "Euro Area", "United States", "Canada", "Australia", "Brazil",
@@ -30,6 +30,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
+        
+//        navigationController?.setNavigationBarHidden(false, animated: false)
+//        navigationController?.navigationBar.barTintColor = .black
+//        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
+        backButton.tintColor = .white
+        navigationItem.leftBarButtonItem = backButton
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGesture)
@@ -79,6 +87,10 @@ class ViewController: UIViewController {
         ]
         let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
         return attributedText
+    }
+    
+    @objc func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
