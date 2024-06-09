@@ -43,9 +43,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         ("🇷🇴", "루마니아"), ("🇦🇿", "아제르바이잔"), ("🇯🇴", "요르단"), ("🇲🇩", "몰도바"),
         ("🇴🇲", "오만"), ("🇹🇼", "대만")
     ]
+    
     let fromAmountTextField = UITextField()
     let fromAmountSuffixLabel = UILabel()
-    let toAmountLabel = UILabel()
+    var toAmountLabels: [UILabel] = []
+    var toAmountTopConstraints: [NSLayoutConstraint] = []
     let toAmountSuffixLabel = UILabel()
     let exchangeButton = UIButton()
     let bigMacCountbox = UIButton()
@@ -58,6 +60,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setuptoAmountLabels(with: "100000")
+        animatetoAmounts()
+        
         //        fetchCurrencyData()
     }
     
@@ -77,7 +82,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(countryPickerView)
         view.addSubview(fromAmountTextField)
         view.addSubview(fromAmountSuffixLabel)
-        view.addSubview(toAmountLabel)
+        //        view.addSubview(toAmountLabel)
         view.addSubview(toAmountSuffixLabel)
         view.addSubview(exchangeButton)
         view.addSubview(bigMacCountbox)
@@ -93,7 +98,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         countryPickerView.translatesAutoresizingMaskIntoConstraints = false
         fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
         fromAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
-        toAmountLabel.translatesAutoresizingMaskIntoConstraints = false
+        //        toAmountLabels.translatesAutoresizingMaskIntoConstraints = false
         toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
         exchangeButton.translatesAutoresizingMaskIntoConstraints = false
         bigMacCountbox.translatesAutoresizingMaskIntoConstraints = false
@@ -130,10 +135,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         fromAmountSuffixLabel.textColor = .white
         fromAmountSuffixLabel.font = UIFont.interMediumFont(ofSize: 36)
         
-        toAmountLabel.text = "1,000"
-        toAmountLabel.textColor = .white
-        toAmountLabel.font = UIFont.interLightFont(ofSize: 36)
-        
         toAmountSuffixLabel.text = " 달러"
         toAmountSuffixLabel.textColor = .white
         toAmountSuffixLabel.font = UIFont.interMediumFont(ofSize: 36)
@@ -166,7 +167,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             //            titleLabel2.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             //            titleLabel2.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             
-            fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
             fromCountryLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             //대한민국
             
@@ -196,16 +197,12 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 30),
             exchangeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             //환전버튼
-            
-            toAmountLabel.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 80),
-            //달러 환전되어나옴
-            
-            toAmountSuffixLabel.centerYAnchor.constraint(equalTo: toAmountLabel.centerYAnchor),
-            toAmountSuffixLabel.leadingAnchor.constraint(equalTo: toAmountLabel.trailingAnchor, constant: 5),
+ 
+            toAmountSuffixLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 300),
             toAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             //달러
             
-            bigMacCountbox.topAnchor.constraint(equalTo: toAmountSuffixLabel.bottomAnchor, constant: 200),
+            bigMacCountbox.topAnchor.constraint(equalTo: toAmountSuffixLabel.bottomAnchor, constant: 60),
             bigMacCountbox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             bigMacCountbox.widthAnchor.constraint(equalToConstant: 300),
             bigMacCountbox.heightAnchor.constraint(equalToConstant: 180),
@@ -213,13 +210,67 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             tooltipButton.topAnchor.constraint(equalTo: bigMacCountbox.bottomAnchor, constant: 5),
             tooltipButton.trailingAnchor.constraint(equalTo: bigMacCountbox.trailingAnchor, constant: -10)
         ])
+        
+        for (index, label) in toAmountLabels.enumerated() {
+            label.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(label)
+            
+            let topConstraint = label.topAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 80)
+            let leadingConstraint: NSLayoutConstraint
+            
+            if index == 0 {
+                leadingConstraint = label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
+            } else {
+                leadingConstraint = label.leadingAnchor.constraint(equalTo: toAmountLabels[index - 1].trailingAnchor, constant: 5)
+            }
+            
+            NSLayoutConstraint.activate([topConstraint, leadingConstraint])
+        }
+        //toAmountLabel 환전값 배열 출력
     }
+    
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         // 현재 텍스트 필드의 텍스트 길이를 가져옴
         guard let text = textField.text else { return true }
         let newLength = text.count + string.count - range.length
         return newLength <= maxCharacters // 최대 글자 수를 초과하지 않도록 함
+    }
+    
+    private func setuptoAmountLabels(with text: String) {
+        var previousLabel: UILabel? = nil
+        let digits = Array(text)
+        
+        for digit in digits {
+            let toAmountLabel = createtoAmountLabel(with: String(digit))
+            view.addSubview(toAmountLabel)
+            
+            let toAmountTopConstraint = toAmountLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 270)
+            toAmountTopConstraints.append(toAmountTopConstraint)
+            toAmountLabels.append(toAmountLabel)
+            
+            var toAmountConstraints = [toAmountTopConstraint]
+            
+            if let previous = previousLabel {
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 5))
+            } else {
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 140))
+            }
+            
+            NSLayoutConstraint.activate(toAmountConstraints)
+            previousLabel = toAmountLabel
+        }
+    }
+    
+    
+    private func createtoAmountLabel(with text: String) -> UILabel {
+        let toAmountLabel = UILabel()
+        toAmountLabel.translatesAutoresizingMaskIntoConstraints = false
+        toAmountLabel.text = text
+        toAmountLabel.font = UIFont.interLightFont(ofSize: 36)
+        toAmountLabel.textColor = .white
+        toAmountLabel.alpha = 0.0
+        return toAmountLabel
     }
     
     @objc func toCountryLabelTapped() {
@@ -232,8 +283,14 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         let exchangeRate = 1300.0
         let toAmount = fromAmount / exchangeRate
         
-        toAmountLabel.text = String(format: "%.2f", toAmount)
-        toAmountLabel.textColor = .white
+        let formattedToAmount = String(format: "%.2f", toAmount)
+        let characters = Array(formattedToAmount)
+        
+        for (index, label) in toAmountLabels.enumerated() {
+            if index < characters.count {
+                label.text = String(characters[index])
+            }
+        }
         toAmountSuffixLabel.textColor = .white
     }
     
@@ -275,6 +332,20 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         
         self.tooltipView = newTooltipView
     }
+    
+    private func animatetoAmounts() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            for (index, label) in self.toAmountLabels.reversed().enumerated() {
+                let topConstraint = self.toAmountTopConstraints.reversed()[index]
+                UIView.animate(withDuration: 0.3, delay: Double(index) * 0.15, options: .curveEaseInOut, animations: {
+                    topConstraint.constant += 30
+                    label.alpha = 1.0
+                    self.view.layoutIfNeeded()
+                }, completion: nil)
+            }
+        }
+    }
+    
 }
 
 //    private func fetchCurrencyData() {
@@ -331,3 +402,6 @@ extension FirstViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         countryPickerView.isHidden = true
     }
 }
+
+
+
