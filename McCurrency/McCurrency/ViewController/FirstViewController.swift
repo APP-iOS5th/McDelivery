@@ -209,8 +209,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func setuptoAmountLabels(with text: String) {
+        let formattedText = text.formattedWithCommas()
+        let digits = Array(formattedText)
         var previousLabel: UILabel? = nil
-        let digits = Array(text)
         
         for digit in digits {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
@@ -350,6 +351,14 @@ func createTtsDictionary(from rates: [ExchangeRate]) -> [String: String] {
     return dictionary
 }
 
+extension String {
+    func formattedWithCommas() -> String {
+        guard let number = Int(self) else { return self }
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        return numberFormatter.string(from: NSNumber(value: number)) ?? self
+    }
+}
 
 extension FirstViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
