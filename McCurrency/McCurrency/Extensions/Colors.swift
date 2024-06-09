@@ -26,6 +26,7 @@ extension UIColor {
     static let mainColor = UIColor(hex: "FFC327") // 메인 컬러
     static let backgroundColor = UIColor(hex: "232123") // 배경 컬러
     static let boxColor = UIColor(hex: "363336") // 박스 컬러
+    static let slotBox = UIColor(hex: "1D1B1D")
     static let secondaryTextColor = UIColor(hex: "999999") // 보조 텍스트 컬러
     static let unselectedIcon = UIColor(hex: "3E3C3E") // 선택되지 않은 아이콘 컬러
 }
