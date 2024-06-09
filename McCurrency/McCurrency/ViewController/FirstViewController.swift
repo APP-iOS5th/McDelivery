@@ -104,10 +104,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(toCountryLabelTapped))
         toCountryBackgroundView.addGestureRecognizer(tapGesture)
         
-        countryPickerView.dataSource = self
-        countryPickerView.delegate = self
-        countryPickerView.isHidden = true
-        
         fromAmountTextField.delegate = self
         
         fromAmountTextField.text = "1,300,000"
@@ -351,28 +347,6 @@ extension String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         return numberFormatter.string(from: NSNumber(value: number)) ?? self
-    }
-}
-
-extension FirstViewController: UIPickerViewDataSource, UIPickerViewDelegate {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return countries.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        let country = countries[row]
-        return "\(country.flag) \(country.name)"
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selectedCountry = countries[row]
-        toCountryLabel.textColor = .white
-        toCountryLabel.text = "\(selectedCountry.flag) \(selectedCountry.name)"
-        countryPickerView.isHidden = true
     }
 }
 
