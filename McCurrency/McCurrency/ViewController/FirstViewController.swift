@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FirstViewController: UIViewController, UITextFieldDelegate {
+class FirstViewController: UIViewController {
     
     //MARK: - Properties
     let fromCountryLabel = UILabel()
@@ -50,14 +50,14 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 
         super.viewDidLoad()
         setupUI()
-        setuptoAmountLabels(with: "100000")
+        setuptoAmountLabels(with: "20000000")
         animatetoAmounts()
         setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
         setupHamburgerLabelsAndCoverBoxes()
         bringHamburgersToFront()
         animateDigits()
         animateHamburgers()
-        //        fetchCurrencyData()
+         //   fetchCurrencyData()
 
     }
     
@@ -71,6 +71,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     func setupUI() {
         view.addSubview(fromCountryLabel)
+        
         view.addSubview(toCountryLabel)
         view.addSubview(countryPickerView)
         view.addSubview(fromAmountTextField)
@@ -161,9 +162,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             toCountryLabel.centerXAnchor.constraint(equalTo: toCountryButton.centerXAnchor),
             //미국
             
-            countryPickerView.bottomAnchor.constraint(equalTo: toCountryLabel.topAnchor, constant: 300),
-            countryPickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            countryPickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+//            countryPickerView.bottomAnchor.constraint(equalTo: toCountryLabel.topAnchor, constant: 300),
+//            countryPickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//            countryPickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             //나라선택피커
             
             fromAmountTextField.topAnchor.constraint(equalTo: fromCountryLabel.bottomAnchor, constant: 20),
@@ -193,12 +194,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         ])
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // 현재 텍스트 필드의 텍스트 길이를 가져옴
-        guard let text = textField.text else { return true }
-        let newLength = text.count + string.count - range.length
-        return newLength <= maxCharacters // 최대 글자 수를 초과하지 않도록 함
-    }
+    
     
     private func setuptoAmountLabels(with text: String) {
         let formattedText = text.formattedWithCommas()
@@ -526,6 +522,55 @@ extension FirstViewController: CircularViewControllerDelegate {
         pickerVC.modalPresentationStyle = .overFullScreen
         pickerVC.modalTransitionStyle = .crossDissolve
         self.present(pickerVC, animated: true, completion: nil)
+    }
+    
+    
+}
+
+extension FirstViewController: UITextFieldDelegate {
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        // 현재 텍스트 필드의 텍스트 길이를 가져옴
+//        guard let text = textField.text else { return true }
+//        let newLength = text.count + string.count - range.length
+//        return newLength <= maxCharacters // 최대 글자 수를 초과하지 않도록 함
+//    }
+    
+    internal func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        
+        if updatedText.count > 13 {
+            return false
+        }
+        
+        
+        let allowedCharacters = CharacterSet(charactersIn: "0123456789").inverted
+        let filtered = string.components(separatedBy: allowedCharacters).joined(separator: "")
+        if string != filtered {
+            return false
+        }
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.groupingSeparator = ","
+        
+        if let number = Double(updatedText.replacingOccurrences(of: ",", with: "")) {
+            let formattedNumber = numberFormatter.string(from: NSNumber(value: number)) ?? ""
+            textField.text = formattedNumber
+        } else {
+            textField.text = ""
+        }
+        
+        return false
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     
