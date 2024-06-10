@@ -8,6 +8,9 @@
 import UIKit
 import AVKit
 
+protocol CircularViewControllerDelegate: AnyObject {
+    func modalDidDismiss()
+}
 class CircularViewController: UIViewController, UITextFieldDelegate {
     
     let countries = [
@@ -16,6 +19,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
         "Malaysia", "Egypt", "South Africa", "Ukraine", "Hong Kong", "Vietnam", "Japan", "Romania", "Azerbaijan",
         "Jordan", "Moldova", "Oman", "Taiwan"
     ]
+    weak var delegate: CircularViewControllerDelegate?
     var filteredCountries: [String] = []
     var labels: [UILabel] = []
     var lastAngle: CGFloat = 0
@@ -27,20 +31,15 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
     var resultLabel: UILabel!
     var centerLabel: UILabel!
     var searchBar: UISearchTextField!
+    var addButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let blurEffect = UIBlurEffect(style: .dark)
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = self.view.bounds
-//        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(blurEffectView)
-//        
-//        let backgroundView = UIView(frame: self.view.bounds)
-//        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-//        backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//        blurEffectView.contentView.addSubview(backgroundView)
         
         let closeButton = UIButton(type: .system)
         closeButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
@@ -48,6 +47,11 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         closeButton.frame = CGRect(x: -30, y: 55, width: 100, height: 50)
         self.view.addSubview(closeButton)
+        
+        //        addButton = UIButton(type: .system)
+        //        addButton.setTitle("추가하기", for: .normal)
+        //        addButton.setTitleColor(.white, for: .normal)
+        //        addButton.backgroundColor = .
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGesture)
@@ -81,10 +85,21 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(centerLabel)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.modalDidDismiss()
+    }
+    
     func attributedString(for text: String, fittingWidth width: CGFloat, in label: UILabel) -> NSAttributedString {
         let font = label.font ?? UIFont.systemFont(ofSize: 17)
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: font
+            .font: font,
+            .kern: 1.8
         ]
         let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
         return attributedText
@@ -185,13 +200,13 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
             let labelX = circleCenter.x + circleRadiusX * cos(angle)
             let labelY = circleCenter.y + circleRadiusY * sin(angle)
             
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 135, height: 20))
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 170, height: 20))
             label.center = CGPoint(x: labelX, y: labelY)
             label.text = country
             label.font = UIFont(name: AppFontName.interLight, size: 17) ?? UIFont.systemFont(ofSize: 17)
             label.textColor = .white
             label.textAlignment = .left
-            label.attributedText = attributedString(for: country, fittingWidth: 125, in: label)
+            label.attributedText = attributedString(for: country, fittingWidth: 150, in: label)
             label.transform = CGAffineTransform(rotationAngle: angle)
             
             self.labels.append(label)
