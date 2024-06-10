@@ -6,11 +6,18 @@
 //
 
 
+protocol CircularViewControllerDelegate: AnyObject {
+    func countrySelected(_ countryName: String)
+}
+
+
 
 import UIKit
 import AVKit
 
 class CircularViewController: UIViewController {
+    
+    weak var delegate: CircularViewControllerDelegate?
     
     let countries = [
         "Switzerland", "Norway", "Uruguay", "Sweden", "Euro Area", "United States", "Canada", "Australia", "Brazil",
@@ -27,6 +34,7 @@ class CircularViewController: UIViewController {
     
     var resultLabel: UILabel!
     var centerLabel: UILabel!
+  
     
     
     override func viewDidLoad() {
@@ -80,6 +88,30 @@ class CircularViewController: UIViewController {
         centerLabel.layer.borderWidth = 1.0
         centerLabel.textColor = .white
         self.view.addSubview(centerLabel)
+        
+        let addButton:UIButton = UIButton()
+        addButton.setTitle("추가하기", for: .normal)
+        addButton.tintColor = .white
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        
+        self.view.addSubview(addButton)
+        
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+        
+            addButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            addButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 16),
+            addButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 300),
+            addButton.heightAnchor.constraint(equalToConstant: 50),
+        
+        
+        ])
+//        
+//        
+       
+        
+        
     }
     
     func attributedString(for text: String, fittingWidth width: CGFloat, in label: UILabel) -> NSAttributedString {
@@ -93,6 +125,12 @@ class CircularViewController: UIViewController {
     
     @objc func closeButtonTapped() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    
+    @objc func addButtonTapped() {
+        self.dismiss(animated: true)
     }
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
@@ -159,6 +197,8 @@ class CircularViewController: UIViewController {
         if let focusedLabel = closestLabel {
             resultLabel.text = focusedLabel.text
             print("선택된 국가: \(String(describing: resultLabel.text))")
+            
+            delegate?.countrySelected(focusedLabel.text ?? "")
         }
     }
     

@@ -48,18 +48,20 @@ class PickerViewController: UIViewController {
     
     private func setupCloseButton() {
         let backButton = UIButton(type: .custom)
-                backButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)
-                backButton.tintColor = .black  // 아이콘 색상 설정
-                backButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
-                backButton.translatesAutoresizingMaskIntoConstraints = false
-                view.addSubview(backButton)
-                
-               
-                NSLayoutConstraint.activate([
-                    backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-                    backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)
-                ])
+        backButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)
+        backButton.tintColor = .black  // 아이콘 색상 설정
+        backButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backButton)
+        
+        
+        NSLayoutConstraint.activate([
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)
+        ])
     }
+    
+    
     
     
 }
