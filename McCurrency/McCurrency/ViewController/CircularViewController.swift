@@ -53,7 +53,7 @@ class CircularViewController: UIViewController {
             let labelX = circleCenter.x + circleRadiusX * cos(angle)
             let labelY = circleCenter.y + circleRadiusY * sin(angle)
             
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 125, height: 20))
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 135, height: 20))
             label.center = CGPoint(x: labelX, y: labelY)
             label.text = country
             label.font = UIFont(name: AppFontName.interLight, size: 17) ?? UIFont.systemFont(ofSize: 17)
