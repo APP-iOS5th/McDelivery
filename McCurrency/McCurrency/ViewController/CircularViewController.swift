@@ -23,7 +23,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
     weak var delegate: CircularViewControllerDelegate?
     
     let countries = [
-<<<<<<< HEAD
+
 
             "노르웨이 / NOK","말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK",  "스위스 / CHF ",
              "영국 / GBP", "인도네시아 / IDR", "일본 / JPY",  "중국 / CNY","캐나다 / CAD", "홍콩 / HKD",  "태국 / THB ","호주/AUD","뉴질랜드/NZD ","싱가포르/SGD"
@@ -31,17 +31,12 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
 //            "영국 / GBP", "인도네시아 / IDR", "일본 / JPY",  "중국 / CNY","캐나다 / CAD", "홍콩 / HKD",  "태국 / THB ","호주/AUD",
 //           "뉴질랜드/NZD ","싱가포르/SGD"
          
-        ]
+        
 
-=======
-        "Switzerland", "Norway", "Uruguay", "Sweden", "Euro Area", "United States", "Canada", "Australia", "Brazil",
-        "United Kingdom", "South Korea", "Saudi Arabia", "Argentina", "China", "India", "Indonesia", "Philippines",
-        "Malaysia", "Egypt", "South Africa", "Ukraine", "Hong Kong", "Vietnam", "Japan", "Romania", "Azerbaijan",
-        "Jordan", "Moldova", "Oman", "Taiwan"
+
     ]
-    weak var delegate: CircularViewControllerDelegate?
-    var filteredCountries: [String] = []
->>>>>>> 7499fe6 ([issue]TabBar not disappearing)
+
+
     var labels: [UILabel] = []
     var lastAngle: CGFloat = 0
     var counter: CGFloat = 0
@@ -283,17 +278,17 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
         let circleRadiusX: CGFloat = 250
         let circleRadiusY: CGFloat = 320
         
-        let doubledCountries = countries + countries
+        let Countries = countries
         
-        for (index, country) in doubledCountries.enumerated() {
-            let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(doubledCountries.count)
+        for (index, country) in Countries.enumerated() {
+            let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(Countries.count)
             let labelX = circleCenter.x + circleRadiusX * cos(angle)
             let labelY = circleCenter.y + circleRadiusY * sin(angle)
             
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 170, height: 20))
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 20))
             label.center = CGPoint(x: labelX, y: labelY)
             label.text = country
-            label.font = UIFont(name: AppFontName.interLight, size: 16) ?? UIFont.systemFont(ofSize: 17)
+            label.font = UIFont(name: AppFontName.interLight, size: 17) ?? UIFont.systemFont(ofSize: 17)
             label.textColor = .white
             label.textAlignment = .left
             label.attributedText = attributedString(for: country, fittingWidth: 150, in: label)
