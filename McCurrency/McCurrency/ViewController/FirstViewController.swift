@@ -11,8 +11,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Properties
     let fromCountryLabel = UILabel()
-    let toCountryLabel = UILabel()
-    let countryPickerView = UIPickerView()
+    let toCountryButton = UIButton()
     let countries: [(flag: String, name: String)] = [
         ("🇨🇭", "스위스"), ("🇳🇴", "노르웨이"), ("🇺🇾", "우루과이"), ("🇸🇪", "스웨덴"),
         ("🇪🇺", "유럽 연합"), ("🇺🇸", "미국"), ("🇨🇦", "캐나다"), ("🇦🇺", "오스트레일리아"),
@@ -28,7 +27,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     var toAmountLabels: [UILabel] = []
     var toAmountTopConstraints: [NSLayoutConstraint] = []
     let toAmountSuffixLabel = UILabel()
-    let toCountryButton = UIButton()
     let exchangeButton = UIButton()
     let bigMacCountbox = UIButton()
     let tooltipButton = UIButton()
@@ -68,8 +66,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     func setupUI() {
         view.addSubview(fromCountryLabel)
-        view.addSubview(toCountryLabel)
-        view.addSubview(countryPickerView)
         view.addSubview(fromAmountTextField)
         view.addSubview(fromAmountSuffixLabel)
         view.addSubview(toAmountSuffixLabel)
@@ -77,12 +73,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(bigMacCountbox)
         view.addSubview(tooltipButton)
         view.addSubview(toCountryButton)
-        toCountryButton.addSubview(toCountryLabel)
         
         fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         toCountryButton.translatesAutoresizingMaskIntoConstraints = false
-        toCountryLabel.translatesAutoresizingMaskIntoConstraints = false
-        countryPickerView.translatesAutoresizingMaskIntoConstraints = false
         fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
         fromAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
         toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -94,11 +87,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         fromCountryLabel.textColor = .white
         fromCountryLabel.font = UIFont.systemFont(ofSize: 14)
         
-        toCountryLabel.text = "🇺🇸 미국"
-        toCountryLabel.textColor = .white
-        toCountryLabel.font = UIFont.systemFont(ofSize: 14)
-        toCountryLabel.isUserInteractionEnabled = true
-        
+        toCountryButton.setTitle("🇺🇸 미국", for: .normal)
+        toCountryButton.setTitleColor(.white, for: .normal)
+        toCountryButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         toCountryButton.backgroundColor = UIColor.boxColor
         toCountryButton.layer.cornerRadius = 5
         toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
@@ -153,15 +144,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             toCountryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             toCountryButton.widthAnchor.constraint(equalToConstant: 100),
             toCountryButton.heightAnchor.constraint(equalToConstant: 32),
-            
-            toCountryLabel.centerYAnchor.constraint(equalTo: toCountryButton.centerYAnchor),
-            toCountryLabel.centerXAnchor.constraint(equalTo: toCountryButton.centerXAnchor),
-            //미국
-            
-            countryPickerView.bottomAnchor.constraint(equalTo: toCountryLabel.topAnchor, constant: 300),
-            countryPickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            countryPickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            //나라선택피커
+            //나라선택피커 버튼
             
             fromAmountTextField.topAnchor.constraint(equalTo: fromCountryLabel.bottomAnchor, constant: 20),
             fromAmountTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),

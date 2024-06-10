@@ -8,7 +8,7 @@
 import UIKit
 import AVKit
 
-class CircularViewController: UIViewController {
+class CircularViewController: UIViewController, UITextFieldDelegate {
     
     let countries = [
         "Switzerland", "Norway", "Uruguay", "Sweden", "Euro Area", "United States", "Canada", "Australia", "Brazil",
@@ -16,6 +16,7 @@ class CircularViewController: UIViewController {
         "Malaysia", "Egypt", "South Africa", "Ukraine", "Hong Kong", "Vietnam", "Japan", "Romania", "Azerbaijan",
         "Jordan", "Moldova", "Oman", "Taiwan"
     ]
+    var filteredCountries: [String] = []
     var labels: [UILabel] = []
     var lastAngle: CGFloat = 0
     var counter: CGFloat = 0
@@ -25,11 +26,23 @@ class CircularViewController: UIViewController {
     
     var resultLabel: UILabel!
     var centerLabel: UILabel!
-    
+    var searchBar: UISearchTextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        
+        let blurEffect = UIBlurEffect(style: .dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = self.view.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        let backgroundView = UIView(frame: self.view.bounds)
+        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        blurEffectView.contentView.addSubview(backgroundView)
+        
+        view.addSubview(blurEffectView)
+        blurEffectView.contentView.addSubview(backgroundView)
         
         let closeButton = UIButton(type: .system)
         closeButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
@@ -42,34 +55,23 @@ class CircularViewController: UIViewController {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGesture)
         
-        let circleCenter = CGPoint(x: -70, y: view.frame.height / 2 + 20)
-        let circleRadiusX: CGFloat = 250
-        let circleRadiusY: CGFloat = 320
+        searchBar = UISearchTextField(frame: CGRect(x: 45, y: 100, width: view.frame.width - 88, height: 40))
+        searchBar.backgroundColor = .boxColor
+        searchBar.delegate = self
+        searchBar.tintColor = .white
+        self.view.addSubview(searchBar)
         
-        let doubledCountries = countries + countries
+        searchBar.placeholder = ""
         
-        for (index, country) in doubledCountries.enumerated() {
-            let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(doubledCountries.count)
-            let labelX = circleCenter.x + circleRadiusX * cos(angle)
-            let labelY = circleCenter.y + circleRadiusY * sin(angle)
-            
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 135, height: 20))
-            label.center = CGPoint(x: labelX, y: labelY)
-            label.text = country
-            label.font = UIFont(name: AppFontName.interLight, size: 17) ?? UIFont.systemFont(ofSize: 17)
-            label.textColor = .white
-            label.textAlignment = .left
-            label.attributedText = attributedString(for: country, fittingWidth: 125, in: label)
-            label.transform = CGAffineTransform(rotationAngle: angle)
-            
-            self.labels.append(label)
-            self.view.addSubview(label)
-        }
+        // 초기화 시 모든 countries를 표시
+        filteredCountries = countries
         
-        resultLabel = UILabel(frame: CGRect(x: 88, y: 66, width: 222, height: 33))
+        displayCountries(filteredCountries)
+        
+        // 출력 확인용. 나중에 지우기
+        resultLabel = UILabel(frame: CGRect(x: 20, y: 150, width: view.frame.width - 40, height: 40))
         resultLabel.numberOfLines = 0
         resultLabel.layer.borderWidth = 1.0
-        resultLabel.layer.borderColor = UIColor.white.cgColor
         resultLabel.textColor = .white
         self.view.addSubview(resultLabel)
         
@@ -154,4 +156,55 @@ class CircularViewController: UIViewController {
             }
         }
     }
+    
+    func filterCountries(for searchText: String) {
+        if searchText.isEmpty {
+            filteredCountries = countries
+        } else {
+            filteredCountries = countries.filter { country in
+                return country.lowercased().contains(searchText.lowercased())
+            }
+        }
+        displayCountries(filteredCountries)
+    }
+    
+    func displayCountries(_ countries: [String]) {
+        // Clear existing labels
+        for label in labels {
+            label.removeFromSuperview()
+        }
+        labels.removeAll()
+        
+        let circleCenter = CGPoint(x: -70, y: view.frame.height / 2 + 20)
+        let circleRadiusX: CGFloat = 250
+        let circleRadiusY: CGFloat = 320
+        
+        let doubledCountries = countries + countries
+        
+        for (index, country) in doubledCountries.enumerated() {
+            let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(doubledCountries.count)
+            let labelX = circleCenter.x + circleRadiusX * cos(angle)
+            let labelY = circleCenter.y + circleRadiusY * sin(angle)
+            
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 135, height: 20))
+            label.center = CGPoint(x: labelX, y: labelY)
+            label.text = country
+            label.font = UIFont(name: AppFontName.interLight, size: 17) ?? UIFont.systemFont(ofSize: 17)
+            label.textColor = .white
+            label.textAlignment = .left
+            label.attributedText = attributedString(for: country, fittingWidth: 125, in: label)
+            label.transform = CGAffineTransform(rotationAngle: angle)
+            
+            self.labels.append(label)
+            self.view.addSubview(label)
+        }
+    }
+    
+    // UITextFieldDelegate method
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? string
+        filterCountries(for: currentText)
+        return true
+    }
 }
+
