@@ -32,7 +32,7 @@ class FirstViewController: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .backgroundColor
         setupTitleLabel()
-        fetchCurrencyData()
+      //  fetchCurrencyData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
