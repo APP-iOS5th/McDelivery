@@ -46,7 +46,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setuptoAmountLabels(with: "100000")
+        setuptoAmountLabels(with: "10000000")
         animatetoAmounts()
         setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
         setupHamburgerLabelsAndCoverBoxes()
@@ -185,7 +185,21 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         let digits = Array(formattedText)
         var previousLabel: UILabel? = nil
         
+        var totalWidth: CGFloat = 0
+        var labelWidths: [CGFloat] = []
+        
         for digit in digits {
+            let toAmountLabel = createtoAmountLabel(with: String(digit))
+            let labelWidth = toAmountLabel.intrinsicContentSize.width
+            labelWidths.append(labelWidth)
+            totalWidth += labelWidth + 5
+        }
+        
+        if !labelWidths.isEmpty {
+            totalWidth -= 5
+        }
+        
+        for(index, digit) in digits.enumerated() {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             view.addSubview(toAmountLabel)
             
@@ -198,8 +212,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             if let previous = previousLabel {
                 toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 5))
             } else {
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 140))
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth))
             }
+            
             
             NSLayoutConstraint.activate(toAmountConstraints)
             previousLabel = toAmountLabel
