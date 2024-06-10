@@ -140,7 +140,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate, CircularViewCo
             fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 90),
             //대한민국
             
-            toCountryButton.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 30),
+            toCountryButton.topAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 17),
             toCountryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             toCountryButton.widthAnchor.constraint(equalToConstant: 100),
             toCountryButton.heightAnchor.constraint(equalToConstant: 32),
@@ -155,7 +155,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate, CircularViewCo
             fromAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             //원
             
-            exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 30),
+            exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 20),
             exchangeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             //환전버튼
             
