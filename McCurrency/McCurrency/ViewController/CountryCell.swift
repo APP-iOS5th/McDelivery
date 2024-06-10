@@ -72,7 +72,7 @@ class CountryCell: UITableViewCell {
             hamburgerImage.widthAnchor.constraint(equalToConstant: 28),
             hamburgerImage.heightAnchor.constraint(equalToConstant: 28),
             
-            countLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 50)  
+            countLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 50)
         ])
     }
     
