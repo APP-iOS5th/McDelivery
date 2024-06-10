@@ -4,7 +4,7 @@
 import UIKit
 import AVKit
 
-class McRotator: UIViewController {
+class McRotator: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
     
     
     let countries = [
@@ -23,6 +23,10 @@ class McRotator: UIViewController {
     var resultLabel: UILabel!
     var centerLabel: UILabel!
     
+    //SearchBar
+    let searchBar = UISearchBar()
+    let countryTableView = UITableView()
+    var searchedCountries :[String]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +63,24 @@ class McRotator: UIViewController {
             self.view.addSubview(resultLabel)
             self.view.addSubview(centerLabel)
         }
+        
+        // UISearchBar
+        view.addSubview(searchBar)
+        searchBar.frame = CGRect(x: (self.view.frame.size.width  - 50) / 2 , y: 100, width: 50, height: 50)
+        searchBar.backgroundImage = UIImage()
+        searchBar.delegate = self
+        
+        // UITableView
+        countryTableView.dataSource = self
+        countryTableView.delegate = self
+        countryTableView.allowsSelection = true
+        countryTableView.frame = CGRect(x: (self.view.frame.size.width - 200) / 2, y: searchBar.frame.origin.y + 50 , width: 200, height:  100)
+        countryTableView.layer.cornerRadius = 10
+        countryTableView.layer.borderWidth = 1.0
+        countryTableView.layer.borderColor = UIColor.black.cgColor
+        countryTableView.isHidden = true
+        view.addSubview(countryTableView)
+        
     }
     
     func attributedString(for text: String, fittingWidth width: CGFloat, in label: UILabel) -> NSAttributedString {
@@ -147,5 +169,73 @@ class McRotator: UIViewController {
                 }
             }
         }
+    }
+    // UISearchBarDelegate 메서드
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            searchedCountries = nil
+            countryTableView.isHidden = true
+        } else {
+            searchedCountries = countries.filter { $0.contains(searchText) }
+            countryTableView.isHidden = false
+        }
+        countryTableView.reloadData()
+        
+    }
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        // 포커스가 가면 직사각형 모양으로 펼쳐지는 애니메이션
+        UIView.animate(withDuration: 0.2, delay: 0 , options: .curveEaseInOut) {
+            // x좌표를 searchBar의 중심이 되게 조정
+            searchBar.frame.origin.x = (self.view.frame.size.width - 150) / 2
+            searchBar.frame.size.width = 150
+        }
+    }
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        // 포커스가 가지 않으면 정사각형 모양으로 되돌리는 애니메이션
+        UIView.animate(withDuration: 0.3, delay: 0.2, options: .curveEaseInOut) {
+            searchBar.frame.origin.x = (self.view.frame.size.width - 50) / 2
+            searchBar.text = nil
+            self.countryTableView.isHidden = true
+            
+            searchBar.frame.size.width = 50
+        }
+    }
+    
+    // UITableViewDataSource 메서드
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchedCountries?.count ?? countries.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") ?? UITableViewCell(style: .default, reuseIdentifier: "Cell")
+        cell.textLabel?.text = searchedCountries?[indexPath.row] ?? countries[indexPath.row]
+        return cell
+    }
+    
+    func distance(from point1: CGPoint, to point2: CGPoint) -> CGFloat {
+        let dx = point1.x - point2.x
+        let dy = point1.y - point2.y
+        return sqrt(dx * dx + dy * dy)
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedData = searchedCountries?[indexPath.row] ?? countries[indexPath.row]
+        var searchedIndex: Int? = 0
+        let tolerance: CGFloat = 5.0 // 오차 범위 설정
+        let targetPoint = CGPoint(x: 250, y: view.frame.height / 2)
+        
+        for (index, label) in self.labels.enumerated() {
+            if selectedData == label.text {
+                searchedIndex = index
+            }
+            if let searchedIndex = searchedIndex {
+                let currentIndex = labels.firstIndex(where: { distance(from: $0.center, to: targetPoint) < tolerance }) ?? 0
+                let steps =   currentIndex - searchedIndex
+                self.rotateLabels(by: steps )
+                self.counter = 0
+            }
+        }
+        searchBar.text = nil
+        tableView.isHidden = true
+        searchBar.resignFirstResponder()
     }
 }
