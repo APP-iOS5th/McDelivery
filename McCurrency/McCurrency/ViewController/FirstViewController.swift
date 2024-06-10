@@ -70,8 +70,9 @@ class FirstViewController: UIViewController {
         
         super.viewDidLoad()
         setupUI()
+
         animatetoAmounts()
-<<<<<<< HEAD
+
         setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
         setupHamburgerLabelsAndCoverBoxes()
         bringHamburgersToFront()
@@ -264,22 +265,15 @@ class FirstViewController: UIViewController {
         
         var totalWidth: CGFloat = 0
         var labelWidths: [CGFloat] = []
-<<<<<<< HEAD
-        
-        
-=======
 
->>>>>>> 9ccf884 (toAmount Constraint edit)
         for label in toAmountLabels {
             label.removeFromSuperview()
         }
         toAmountLabels.removeAll()
         toAmountTopConstraints.removeAll()
-<<<<<<< HEAD
-        
-        
-=======
->>>>>>> 9ccf884 (toAmount Constraint edit)
+
+
+
         
         for digit in digits {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
@@ -288,11 +282,14 @@ class FirstViewController: UIViewController {
             totalWidth += labelWidth + 5
         }
 
+=======
+        
         if !labelWidths.isEmpty {
             totalWidth -= 5
         }
+        
+ 
 
-        for (index, digit) in digits.enumerated() {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             view.addSubview(toAmountLabel)
             
@@ -305,8 +302,11 @@ class FirstViewController: UIViewController {
             if let previous = previousLabel {
                 toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 1))
             } else {
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth + 13))
+
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth))
+
             }
+            
             
             NSLayoutConstraint.activate(toAmountConstraints)
             previousLabel = toAmountLabel
