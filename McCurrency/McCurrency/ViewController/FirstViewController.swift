@@ -278,13 +278,13 @@ class FirstViewController: UIViewController, UITextFieldDelegate, CircularViewCo
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             let labelWidth = toAmountLabel.intrinsicContentSize.width
             labelWidths.append(labelWidth)
-            totalWidth += labelWidth + 5
+            totalWidth += labelWidth + 1.5
         }
 
 =======
         
         if !labelWidths.isEmpty {
-            totalWidth -= 5
+            totalWidth -= 1
         }
         
  
