@@ -40,6 +40,7 @@ class CircularViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         //view.backgroundColor = UIColor.backgroundColor.withAlphaComponent(0.7)
+        view.backgroundColor = .clear
         blurEffect()
         let closeButton = UIButton(type: .system)
         closeButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
@@ -204,7 +205,7 @@ class CircularViewController: UIViewController {
     
     func blurEffect() {
         
-        let blurEffect = UIBlurEffect(style: .dark)
+                 let blurEffect = UIBlurEffect(style: .dark)
                       let blurEffectView = UIVisualEffectView(effect: blurEffect)
       
       
