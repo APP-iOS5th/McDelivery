@@ -236,8 +236,8 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     @objc func toCountryButtonTapped() {
         let viewController = CircularViewController()
-        viewController.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(viewController, animated: true)
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: true, completion: nil)
     }
     
     @objc func exchangeButtonTapped() {

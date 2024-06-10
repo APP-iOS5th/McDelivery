@@ -31,13 +31,13 @@ class CircularViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .black
         
-//        navigationController?.setNavigationBarHidden(false, animated: false)
-//        navigationController?.navigationBar.barTintColor = .black
-//        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        let closeButton = UIButton(type: .system)
+        closeButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        closeButton.tintColor = .white
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         
-        let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
-        backButton.tintColor = .white
-        navigationItem.leftBarButtonItem = backButton
+        closeButton.frame = CGRect(x: -30, y: 55, width: 100, height: 50)
+        self.view.addSubview(closeButton)
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGesture)
@@ -89,8 +89,8 @@ class CircularViewController: UIViewController {
         return attributedText
     }
     
-    @objc func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
+    @objc func closeButtonTapped() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
