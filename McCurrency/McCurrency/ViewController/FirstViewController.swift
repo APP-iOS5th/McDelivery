@@ -11,6 +11,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Properties
     let fromCountryLabel = UILabel()
+     
     let toCountryLabel = UILabel()
     let countryPickerView = UIPickerView()
     let countries: [(flag: String, name: String)] = [
@@ -236,12 +237,12 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         return toAmountLabel
     }
     
-    @objc func toCountryButtonTapped() {
-        let pickerVC = CircularViewController()
-        pickerVC.modalPresentationStyle = .overFullScreen
-        pickerVC.modalTransitionStyle = .crossDissolve
-        self.present(pickerVC, animated: true, completion: nil)
-    }
+//    @objc func toCountryButtonTapped() {
+//        let pickerVC = CircularViewController()
+//        pickerVC.modalPresentationStyle = .overFullScreen
+//        pickerVC.modalTransitionStyle = .crossDissolve
+//        self.present(pickerVC, animated: true, completion: nil)
+//    }
     
     @objc func exchangeButtonTapped() {
         guard let fromAmountText = fromAmountTextField.text, let fromAmount = Double(fromAmountText.replacingOccurrences(of: ",", with: "")) else { return }
@@ -510,4 +511,22 @@ extension FirstViewController {
             }
         }
     }
+}
+
+
+extension FirstViewController: CircularViewControllerDelegate {
+    func countrySelected(_ countryName: String) {
+        toCountryLabel.text = countryName
+      //  view.setNeedsDisplay()
+    }
+    
+    @objc func toCountryButtonTapped() {
+        let pickerVC = CircularViewController()
+        pickerVC.delegate = self
+        pickerVC.modalPresentationStyle = .overFullScreen
+        pickerVC.modalTransitionStyle = .crossDissolve
+        self.present(pickerVC, animated: true, completion: nil)
+    }
+    
+    
 }
