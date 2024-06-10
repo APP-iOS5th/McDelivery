@@ -49,6 +49,7 @@ class CircularViewController: UIViewController {
         closeButton.tintColor = .white
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         
+
         closeButton.frame = CGRect(x: -30, y: 55, width: 100, height: 50)
         self.view.addSubview(closeButton)
         
@@ -128,12 +129,12 @@ class CircularViewController: UIViewController {
     
     @objc func closeButtonTapped() {
         self.dismiss(animated: true, completion: nil)
+
     }
-    
-    
-    
+
     @objc func addButtonTapped() {
         self.dismiss(animated: true)
+
     }
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {

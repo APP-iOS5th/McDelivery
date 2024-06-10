@@ -337,6 +337,12 @@ class FirstViewController: UIViewController {
         return toAmountLabel
     }
 
+    @objc func toCountryButtonTapped() {
+        let viewController = CircularViewController()
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: true, completion: nil)
+    }
+    
     @objc func exchangeButtonTapped() {
         guard let fromAmountText = fromAmountTextField.text, let fromAmount = Double(fromAmountText.replacingOccurrences(of: ",", with: "")) else { return }
         
