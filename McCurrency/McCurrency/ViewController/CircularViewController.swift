@@ -34,21 +34,18 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
         let blurEffect = UIBlurEffect(style: .dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = self.view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        let backgroundView = UIView(frame: self.view.bounds)
-        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-        backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        blurEffectView.contentView.addSubview(backgroundView)
-        
-        view.addSubview(blurEffectView)
-        blurEffectView.contentView.addSubview(backgroundView)
+//        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.view.addSubview(blurEffectView)
+//        
+//        let backgroundView = UIView(frame: self.view.bounds)
+//        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+//        backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//        blurEffectView.contentView.addSubview(backgroundView)
         
         let closeButton = UIButton(type: .system)
         closeButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         closeButton.tintColor = .white
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
-        
         closeButton.frame = CGRect(x: -30, y: 55, width: 100, height: 50)
         self.view.addSubview(closeButton)
         
@@ -56,9 +53,11 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
         view.addGestureRecognizer(panGesture)
         
         searchBar = UISearchTextField(frame: CGRect(x: 45, y: 100, width: view.frame.width - 88, height: 40))
-        searchBar.backgroundColor = .boxColor
+        searchBar.backgroundColor = .SearchBarColor
         searchBar.delegate = self
-        searchBar.tintColor = .white
+        searchBar.tintColor = .secondaryTextColor
+        searchBar.textColor = .white
+        searchBar.leftView?.tintColor = .secondaryTextColor
         self.view.addSubview(searchBar)
         
         searchBar.placeholder = ""
