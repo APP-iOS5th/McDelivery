@@ -147,7 +147,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
     }
     
     func attributedString(for text: String, fittingWidth width: CGFloat, in label: UILabel) -> NSAttributedString {
-        let font = label.font ?? UIFont.systemFont(ofSize: 17)
+        let font = label.font ?? UIFont.systemFont(ofSize: 16)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .kern: 1.8
@@ -293,7 +293,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: 170, height: 20))
             label.center = CGPoint(x: labelX, y: labelY)
             label.text = country
-            label.font = UIFont(name: AppFontName.interLight, size: 17) ?? UIFont.systemFont(ofSize: 17)
+            label.font = UIFont(name: AppFontName.interLight, size: 16) ?? UIFont.systemFont(ofSize: 17)
             label.textColor = .white
             label.textAlignment = .left
             label.attributedText = attributedString(for: country, fittingWidth: 150, in: label)
