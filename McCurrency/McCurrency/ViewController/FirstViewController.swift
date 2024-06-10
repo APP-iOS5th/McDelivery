@@ -192,11 +192,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate, CircularViewCo
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             let labelWidth = toAmountLabel.intrinsicContentSize.width
             labelWidths.append(labelWidth)
-            totalWidth += labelWidth + 5
+            totalWidth += labelWidth + 1.5
         }
         
         if !labelWidths.isEmpty {
-            totalWidth -= 5
+            totalWidth -= 1
         }
         
         for(index, digit) in digits.enumerated() {
@@ -210,7 +210,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate, CircularViewCo
             var toAmountConstraints = [toAmountTopConstraint]
             
             if let previous = previousLabel {
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 5))
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 1))
             } else {
                 toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth))
             }
