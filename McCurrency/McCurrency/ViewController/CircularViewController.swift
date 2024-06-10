@@ -14,11 +14,13 @@ protocol CircularViewControllerDelegate: AnyObject {
 class CircularViewController: UIViewController, UITextFieldDelegate {
     
     let countries = [
-        "Switzerland", "Norway", "Uruguay", "Sweden", "Euro Area", "United States", "Canada", "Australia", "Brazil",
-        "United Kingdom", "South Korea", "Saudi Arabia", "Argentina", "China", "India", "Indonesia", "Philippines",
-        "Malaysia", "Egypt", "South Africa", "Ukraine", "Hong Kong", "Vietnam", "Japan", "Romania", "Azerbaijan",
-        "Jordan", "Moldova", "Oman", "Taiwan"
+        "스위스 / CHF", "노르웨이 / NOK", "우루과이 / UYU", "스웨덴 / SEK", "유로 지역 / EUR", "미국 / USD",
+        "캐나다 / CAD", "오스트레일리아 / AUD", "브라질 / BRL", "영국 / GBP", "대한민국 / KRW", "사우디 아라비아 / SAR",
+        "아르헨티나 / ARS", "중국 / CNY", "인도 / INR", "인도네시아 / IDR", "필리핀 / PHP", "말레이시아 / MYR",
+        "이집트 / EGP", "남아프리카 공화국 / ZAR", "우크라이나 / UAH", "홍콩 / HKD", "베트남 / VND", "일본 / JPY",
+        "루마니아 / RON", "아제르바이잔 / AZN", "요르단 / JOD", "몰도바 / MDL", "오만 / OMR", "대만 / TWD"
     ]
+
     weak var delegate: CircularViewControllerDelegate?
     var filteredCountries: [String] = []
     var labels: [UILabel] = []
@@ -193,17 +195,17 @@ class CircularViewController: UIViewController, UITextFieldDelegate {
         let circleRadiusX: CGFloat = 250
         let circleRadiusY: CGFloat = 320
         
-        let doubledCountries = countries + countries
+        let Countries = countries
         
-        for (index, country) in doubledCountries.enumerated() {
-            let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(doubledCountries.count)
+        for (index, country) in Countries.enumerated() {
+            let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(Countries.count)
             let labelX = circleCenter.x + circleRadiusX * cos(angle)
             let labelY = circleCenter.y + circleRadiusY * sin(angle)
             
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 170, height: 20))
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 20))
             label.center = CGPoint(x: labelX, y: labelY)
             label.text = country
-            label.font = UIFont(name: AppFontName.interLight, size: 16) ?? UIFont.systemFont(ofSize: 17)
+            label.font = UIFont(name: AppFontName.interLight, size: 17) ?? UIFont.systemFont(ofSize: 17)
             label.textColor = .white
             label.textAlignment = .left
             label.attributedText = attributedString(for: country, fittingWidth: 150, in: label)
