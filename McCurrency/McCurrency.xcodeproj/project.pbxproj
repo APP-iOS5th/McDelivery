@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04E0DCA02C15997F0012C77D /* NumericMotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E0DC9F2C15997F0012C77D /* NumericMotionView.swift */; };
+		04E0DCC72C15D8210012C77D /* CircularViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E0DCC62C15D8210012C77D /* CircularViewController.swift */; };
 		469D900F2C0D9E1B000ABE8C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D900E2C0D9E1B000ABE8C /* AppDelegate.swift */; };
 		469D90112C0D9E1B000ABE8C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D90102C0D9E1B000ABE8C /* SceneDelegate.swift */; };
 		469D90182C0D9E1D000ABE8C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 469D90172C0D9E1D000ABE8C /* Assets.xcassets */; };
@@ -27,9 +29,14 @@
 		469D90432C0DA41F000ABE8C /* Inter-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 469D903A2C0DA41F000ABE8C /* Inter-Black.ttf */; };
 		469D90452C0DAC02000ABE8C /* CurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D90442C0DAC02000ABE8C /* CurrencyService.swift */; };
 		469D90472C0DAC10000ABE8C /* CurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D90462C0DAC10000ABE8C /* CurrencyModel.swift */; };
+		EB320F762C0ED0BC009FF27D /* McCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB320F752C0ED0BC009FF27D /* McCount.swift */; };
+		EBC678952C12B84C0015C300 /* McRotator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC678942C12B84C0015C300 /* McRotator.swift */; };
+		EBC678972C12BAE20015C300 /* McCounter_addedSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC678962C12BAE20015C300 /* McCounter_addedSearch.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04E0DC9F2C15997F0012C77D /* NumericMotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NumericMotionView.swift; path = ../../../../.Trash/McDelivery/McCurrency/McCurrency/Extensions/NumericMotionView.swift; sourceTree = "<group>"; };
+		04E0DCC62C15D8210012C77D /* CircularViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularViewController.swift; sourceTree = "<group>"; };
 		469D900B2C0D9E1B000ABE8C /* McCurrency.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = McCurrency.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		469D900E2C0D9E1B000ABE8C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		469D90102C0D9E1B000ABE8C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -52,6 +59,9 @@
 		469D903A2C0DA41F000ABE8C /* Inter-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Black.ttf"; sourceTree = "<group>"; };
 		469D90442C0DAC02000ABE8C /* CurrencyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyService.swift; sourceTree = "<group>"; };
 		469D90462C0DAC10000ABE8C /* CurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModel.swift; sourceTree = "<group>"; };
+		EB320F752C0ED0BC009FF27D /* McCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = McCount.swift; sourceTree = "<group>"; };
+		EBC678942C12B84C0015C300 /* McRotator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = McRotator.swift; sourceTree = "<group>"; };
+		EBC678962C12BAE20015C300 /* McCounter_addedSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = McCounter_addedSearch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				469D90462C0DAC10000ABE8C /* CurrencyModel.swift */,
+				EB320F752C0ED0BC009FF27D /* McCount.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -108,6 +119,10 @@
 				469D902F2C0DA049000ABE8C /* MainTabController.swift */,
 				469D90272C0D9FE4000ABE8C /* FirstViewController.swift */,
 				469D90292C0D9FED000ABE8C /* SecondViewController.swift */,
+
+				EBC678942C12B84C0015C300 /* McRotator.swift */,
+				EBC678962C12BAE20015C300 /* McCounter_addedSearch.swift */,
+
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -123,6 +138,7 @@
 		469D90252C0D9F9A000ABE8C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				04E0DC9F2C15997F0012C77D /* NumericMotionView.swift */,
 				469D902B2C0DA035000ABE8C /* Colors.swift */,
 				469D902D2C0DA03D000ABE8C /* Fonts.swift */,
 			);
@@ -237,12 +253,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				469D90452C0DAC02000ABE8C /* CurrencyService.swift in Sources */,
+				04E0DCC72C15D8210012C77D /* CircularViewController.swift in Sources */,
 				469D902A2C0D9FED000ABE8C /* SecondViewController.swift in Sources */,
 				469D902C2C0DA035000ABE8C /* Colors.swift in Sources */,
 				469D90302C0DA049000ABE8C /* MainTabController.swift in Sources */,
 				469D90282C0D9FE4000ABE8C /* FirstViewController.swift in Sources */,
+				EBC678972C12BAE20015C300 /* McCounter_addedSearch.swift in Sources */,
 				469D90472C0DAC10000ABE8C /* CurrencyModel.swift in Sources */,
+				04E0DCA02C15997F0012C77D /* NumericMotionView.swift in Sources */,
 				469D900F2C0D9E1B000ABE8C /* AppDelegate.swift in Sources */,
+				EBC678952C12B84C0015C300 /* McRotator.swift in Sources */,
+				EB320F762C0ED0BC009FF27D /* McCount.swift in Sources */,
 				469D902E2C0DA03D000ABE8C /* Fonts.swift in Sources */,
 				469D90112C0D9E1B000ABE8C /* SceneDelegate.swift in Sources */,
 			);
