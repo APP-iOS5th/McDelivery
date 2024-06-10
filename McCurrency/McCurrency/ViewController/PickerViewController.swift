@@ -57,7 +57,7 @@ class PickerViewController: UIViewController {
                
                 NSLayoutConstraint.activate([
                     backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-                    backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)  
+                    backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)
                 ])
     }
     
