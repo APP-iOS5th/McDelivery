@@ -214,14 +214,12 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             } else {
                 toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth))
             }
-            
-            
+
             NSLayoutConstraint.activate(toAmountConstraints)
             previousLabel = toAmountLabel
         }
     }
-    
-    
+
     private func createtoAmountLabel(with text: String) -> UILabel {
         let toAmountLabel = UILabel()
         toAmountLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -453,6 +451,7 @@ extension FirstViewController {
             ])
         }
     }
+    
     private func createCoverBox() -> UIView {
         let coverBox = UIView()
         coverBox.translatesAutoresizingMaskIntoConstraints = false
