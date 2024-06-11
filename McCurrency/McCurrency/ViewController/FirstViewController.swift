@@ -52,10 +52,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         setupUI()
 
->>>>>>> df88fa4 ([fix] 일본 엔 환율 수정 및 에러 핸들링)
+
         animatetoAmounts()
 
-        setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
+        setupSlotBoxesAndNumericViews(inside: bigMacCountbox, with: "1")
+
         setupHamburgerLabelsAndCoverBoxes()
         bringHamburgersToFront()
         animateDigits()
@@ -590,63 +591,16 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
 
 //MARK: - Animation
 extension FirstViewController {
-    
-//    private func setupSlotBoxesAndNumericViews(inside backgroundView: UIView, withBigMacCount bigMacCount: Int) {
-//        for _ in 0..<3 {
-//            let slotbox = createSlotBox()
-//            backgroundView.addSubview(slotbox)
-//            slotBoxes.append(slotbox)
-//        }
-//
-//        NSLayoutConstraint.activate([
-//            slotBoxes[0].leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 51),
-//            slotBoxes[0].topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 33),
-//            slotBoxes[0].widthAnchor.constraint(equalToConstant: 73),
-//            slotBoxes[0].heightAnchor.constraint(equalToConstant: 78),
-//            
-//            slotBoxes[1].centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-//            slotBoxes[1].topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 33),
-//            slotBoxes[1].widthAnchor.constraint(equalToConstant: 73),
-//            slotBoxes[1].heightAnchor.constraint(equalToConstant: 78),
-//            
-//            slotBoxes[2].trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -51),
-//            slotBoxes[2].topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 33),
-//            slotBoxes[2].widthAnchor.constraint(equalToConstant: 73),
-//            slotBoxes[2].heightAnchor.constraint(equalToConstant: 78),
-//        ])
-//
-//        // bigMacText 업데이트
-//             bigMacText = String(bigMacCount)
-//             let textParts = bigMacText.map { String($0) } // 숫자를 문자열 배열로 분할
-//        
-//       // let textParts = text.map { String($0) } // 숫자를 문자열 배열로 분할
-//
-//        for (index, textPart) in textParts.enumerated() {
-//            let numericMotionView = NumericMotionView(
-//                frame: .zero,
-//                text: textPart,
-//                trigger: false,
-//                duration: 1.2,
-//                speed: 0.005,
-//                textColor: .white
-//            )
-//            numericMotionView.translatesAutoresizingMaskIntoConstraints = false
-//            slotBoxes[index % slotBoxes.count].addSubview(numericMotionView)
-//            numericMotionViews.append(numericMotionView)
-//
-//            NSLayoutConstraint.activate([
-//                numericMotionView.centerXAnchor.constraint(equalTo: slotBoxes[index % slotBoxes.count].centerXAnchor),
-//                numericMotionView.centerYAnchor.constraint(equalTo: slotBoxes[index % slotBoxes.count].centerYAnchor)
-//            ])
-//        }
-//    }
-    private func setupSlotBoxesAndNumericViews(inside backgroundView: UIView) {
+
+    private func setupSlotBoxesAndNumericViews(inside backgroundView: UIView, with text: String) {
+        // 슬롯 박스 생성 및 배치
+
         for _ in 0..<3 {
             let slotbox = createSlotBox()
             backgroundView.addSubview(slotbox)
             slotBoxes.append(slotbox)
         }
-        
+
         NSLayoutConstraint.activate([
             slotBoxes[0].leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 51),
             slotBoxes[0].topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 33),
@@ -663,22 +617,54 @@ extension FirstViewController {
             slotBoxes[2].widthAnchor.constraint(equalToConstant: 73),
             slotBoxes[2].heightAnchor.constraint(equalToConstant: 78),
         ])
-        
-        let text = "0000"
-        let length = text.count / 3
-        let remainder = text.count % 3
-        let textParts = [
-            String(text.prefix(length)),
-            String(text.dropFirst(length).prefix(length)),
-            String(text.dropFirst(length * 2))
-        ]
-        let adjustedTextParts = [
-            textParts[0],
-            textParts[1],
-            textParts[2] + String(text.suffix(remainder))
-        ]
-        
-        for (index, textPart) in adjustedTextParts.enumerated() {
+
+
+        var slotTexts = ["000", "000", "000"] // 초기 슬롯 텍스트 설정
+        let digits = Array(text)
+        let numDigits = digits.count
+
+        switch numDigits {
+        case 1:
+            slotTexts = ["0", "0", String(digits)]
+        case 2:
+            slotTexts = ["0", String(digits.first!), String(digits.last!)]
+        case 3...4:
+            slotTexts[0] = String(digits.first!)
+            slotTexts[1] = String(digits[1])
+            slotTexts[2] = String(digits.dropFirst(2))
+        case 5:
+            slotTexts[0] = String(digits.first!)
+            slotTexts[1] = String(digits[1...2])
+            slotTexts[2] = String(digits.dropFirst(3))
+        case 6:
+            slotTexts[0] = String(digits[..<2])
+            slotTexts[1] = String(digits[2..<4])
+            slotTexts[2] = String(digits[4...])
+        case 7:
+            slotTexts[0] = String(digits[..<2])
+            slotTexts[1] = String(digits[2..<4])
+            slotTexts[2] = String(digits[4...])
+        case 8:
+            slotTexts[0] = String(digits[..<2])
+            slotTexts[1] = String(digits[2..<5])
+            slotTexts[2] = String(digits[5...])
+        default:
+            let partSize = numDigits / 3
+            let remainder = numDigits % 3
+            if remainder == 0 {
+                slotTexts[0] = String(digits[..<partSize])
+                slotTexts[1] = String(digits[partSize..<(2*partSize)])
+                slotTexts[2] = String(digits[(2*partSize)...])
+            } else {
+                slotTexts[0] = String(digits[..<partSize])
+                slotTexts[1] = String(digits[partSize..<(2*partSize + remainder)])
+                slotTexts[2] = String(digits[(2*partSize + remainder)...])
+            }
+        }
+
+        // 슬롯에 텍스트 배치
+        for (index, textPart) in slotTexts.enumerated() {
+
             let numericMotionView = NumericMotionView(
                 frame: .zero,
                 text: textPart,
@@ -690,50 +676,15 @@ extension FirstViewController {
             numericMotionView.translatesAutoresizingMaskIntoConstraints = false
             slotBoxes[index].addSubview(numericMotionView)
             numericMotionViews.append(numericMotionView)
-            
+
             NSLayoutConstraint.activate([
                 numericMotionView.centerXAnchor.constraint(equalTo: slotBoxes[index].centerXAnchor),
                 numericMotionView.centerYAnchor.constraint(equalTo: slotBoxes[index].centerYAnchor)
             ])
         }
     }
-    
-//    private func setupSlotBoxesAndNumericViews(inside backgroundView: UIView, number: Int) {
-//        // 숫자를 문자열로 변환
-//        let text = String(number)
-//        let numberOfDigits = text.count
-//        let numberOfBoxes = slotBoxes.count // 일반적으로 3으로 설정되어 있음을 가정
-//
-//        // 각 슬롯에 표시할 숫자 분배 계산
-//        var digitsForSlots = Array(repeating: "", count: numberOfBoxes)
-//
-//        // 숫자를 슬롯에 균등하게 분배
-//        for (index, digit) in text.enumerated().reversed() {
-//            let slotIndex = (numberOfDigits - 1 - index) % numberOfBoxes
-//            digitsForSlots[slotIndex] = String(digit) + digitsForSlots[slotIndex]
-//        }
-//
-//        // 각 슬롯에 숫자를 설정하고 애니메이션 뷰 추가
-//        for (index, slotText) in digitsForSlots.enumerated() {
-//            let numericMotionView = NumericMotionView(
-//                frame: .zero,
-//                text: slotText,
-//                trigger: false,
-//                duration: 1.2,
-//                speed: 0.005,
-//                textColor: .white
-//            )
-//            numericMotionView.translatesAutoresizingMaskIntoConstraints = false
-//            slotBoxes[index].addSubview(numericMotionView)
-//            numericMotionViews.append(numericMotionView)
-//
-//            NSLayoutConstraint.activate([
-//                numericMotionView.centerXAnchor.constraint(equalTo: slotBoxes[index].centerXAnchor),
-//                numericMotionView.centerYAnchor.constraint(equalTo: slotBoxes[index].centerYAnchor)
-//            ])
-//        }
-//    }
-    
+
+
     private func createSlotBox() -> UIView {
         let slotbox = UIView()
         slotbox.translatesAutoresizingMaskIntoConstraints = false
@@ -779,6 +730,8 @@ extension FirstViewController {
             ])
         }
     }
+    
+    
     
     private func createCoverBox() -> UIView {
         let coverBox = UIView()
