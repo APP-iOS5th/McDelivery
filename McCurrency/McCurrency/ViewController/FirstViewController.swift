@@ -137,7 +137,10 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         toCountryButton.setTitle("🇺🇸 미국", for: .normal)
         toCountryButton.setTitleColor(.white, for: .normal)
         toCountryButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+<<<<<<< HEAD
 
+=======
+>>>>>>> f5c605a (아라님 수정, secondVC, CountryFlagView)
         toCountryButton.backgroundColor = UIColor.boxColor
         toCountryButton.layer.cornerRadius = 5
         toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
