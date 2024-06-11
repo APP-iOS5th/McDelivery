@@ -7,12 +7,15 @@
 
 import UIKit
 
-class FirstViewController: UIViewController, UITextFieldDelegate {
+class FirstViewController: UIViewController, UITextFieldDelegate, CircularViewControllerDelegate {
+    func didSelectCountry(_ country: String) {
+        
+    }
+    
     
     //MARK: - Properties
     let fromCountryLabel = UILabel()
-    let toCountryLabel = UILabel()
-    let countryPickerView = UIPickerView()
+    let toCountryButton = UIButton()
     let countries: [(flag: String, name: String)] = [
         ("🇨🇭", "스위스"), ("🇳🇴", "노르웨이"), ("🇺🇾", "우루과이"), ("🇸🇪", "스웨덴"),
         ("🇪🇺", "유럽 연합"), ("🇺🇸", "미국"), ("🇨🇦", "캐나다"), ("🇦🇺", "오스트레일리아"),
@@ -28,7 +31,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     var toAmountLabels: [UILabel] = []
     var toAmountTopConstraints: [NSLayoutConstraint] = []
     let toAmountSuffixLabel = UILabel()
-    let toCountryButton = UIButton()
     let exchangeButton = UIButton()
     let bigMacCountbox = UIButton()
     let tooltipButton = UIButton()
@@ -46,10 +48,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - LifeCycles
     override func viewDidLoad() {
-
         super.viewDidLoad()
         setupUI()
-        setuptoAmountLabels(with: "100000")
+        setuptoAmountLabels(with: "10000000")
         animatetoAmounts()
         setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
         setupHamburgerLabelsAndCoverBoxes()
@@ -57,7 +58,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         animateDigits()
         animateHamburgers()
         //        fetchCurrencyData()
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -70,8 +70,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     func setupUI() {
         view.addSubview(fromCountryLabel)
-        view.addSubview(toCountryLabel)
-        view.addSubview(countryPickerView)
         view.addSubview(fromAmountTextField)
         view.addSubview(fromAmountSuffixLabel)
         view.addSubview(toAmountSuffixLabel)
@@ -79,12 +77,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(bigMacCountbox)
         view.addSubview(tooltipButton)
         view.addSubview(toCountryButton)
-        toCountryButton.addSubview(toCountryLabel)
         
         fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         toCountryButton.translatesAutoresizingMaskIntoConstraints = false
-        toCountryLabel.translatesAutoresizingMaskIntoConstraints = false
-        countryPickerView.translatesAutoresizingMaskIntoConstraints = false
         fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
         fromAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
         toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -96,11 +91,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         fromCountryLabel.textColor = .white
         fromCountryLabel.font = UIFont.systemFont(ofSize: 14)
         
-        toCountryLabel.text = "🇺🇸 미국"
-        toCountryLabel.textColor = .white
-        toCountryLabel.font = UIFont.systemFont(ofSize: 14)
-        toCountryLabel.isUserInteractionEnabled = true
-        
+        toCountryButton.setTitle("🇺🇸 미국", for: .normal)
+        toCountryButton.setTitleColor(.white, for: .normal)
+        toCountryButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         toCountryButton.backgroundColor = UIColor.boxColor
         toCountryButton.layer.cornerRadius = 5
         toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
@@ -151,19 +144,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 90),
             //대한민국
             
-            toCountryButton.bottomAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 30),
+            toCountryButton.topAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 17),
             toCountryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             toCountryButton.widthAnchor.constraint(equalToConstant: 100),
             toCountryButton.heightAnchor.constraint(equalToConstant: 32),
-            
-            toCountryLabel.centerYAnchor.constraint(equalTo: toCountryButton.centerYAnchor),
-            toCountryLabel.centerXAnchor.constraint(equalTo: toCountryButton.centerXAnchor),
-            //미국
-            
-            countryPickerView.bottomAnchor.constraint(equalTo: toCountryLabel.topAnchor, constant: 300),
-            countryPickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            countryPickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            //나라선택피커
+            //나라선택피커 버튼
             
             fromAmountTextField.topAnchor.constraint(equalTo: fromCountryLabel.bottomAnchor, constant: 20),
             fromAmountTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -174,7 +159,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             fromAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             //원
             
-            exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 30),
+            exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 20),
             exchangeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             //환전버튼
             
@@ -204,7 +189,21 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         let digits = Array(formattedText)
         var previousLabel: UILabel? = nil
         
+        var totalWidth: CGFloat = 0
+        var labelWidths: [CGFloat] = []
+        
         for digit in digits {
+            let toAmountLabel = createtoAmountLabel(with: String(digit))
+            let labelWidth = toAmountLabel.intrinsicContentSize.width
+            labelWidths.append(labelWidth)
+            totalWidth += labelWidth + 1.5
+        }
+        
+        if !labelWidths.isEmpty {
+            totalWidth -= 1
+        }
+        
+        for(index, digit) in digits.enumerated() {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             view.addSubview(toAmountLabel)
             
@@ -215,10 +214,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             var toAmountConstraints = [toAmountTopConstraint]
             
             if let previous = previousLabel {
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 5))
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 1))
             } else {
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 140))
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth))
             }
+            
             
             NSLayoutConstraint.activate(toAmountConstraints)
             previousLabel = toAmountLabel
@@ -238,8 +238,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     @objc func toCountryButtonTapped() {
         let viewController = CircularViewController()
-        viewController.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(viewController, animated: true)
+        viewController.modalPresentationStyle = .overCurrentContext
+        viewController.delegate = self
+        self.present(viewController, animated: true, completion: nil)
     }
     
     @objc func exchangeButtonTapped() {
@@ -508,5 +509,8 @@ extension FirstViewController {
                 self.numericMotionViews.forEach { $0.animateText() }
             }
         }
+    }
+    func modalDidDismiss() {
+        self.tabBarController?.tabBar.isHidden = false
     }
 }

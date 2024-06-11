@@ -2,7 +2,7 @@
 //  CountryFlagView.swift
 //  McCurrency
 //
-//  Created by 임재현 on 6/4/24.
+//  Created by 조아라 on 6/10/24.
 //
 
 import UIKit
