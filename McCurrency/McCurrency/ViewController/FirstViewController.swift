@@ -107,7 +107,7 @@ class FirstViewController: UIViewController {
         
         let placeholderAttributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.lightGray,
-            .font: UIFont.interBoldFont(ofSize: 40)
+            .font: UIFont.interMediumFont(ofSize: 40)
         ]
         fromAmountTextField.attributedPlaceholder = NSAttributedString(string: "0", attributes: placeholderAttributes)
         fromAmountTextField.textColor = .white
