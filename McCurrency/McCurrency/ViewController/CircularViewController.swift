@@ -71,16 +71,39 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         closeButton.frame = CGRect(x: -30, y: 55, width: 100, height: 50)
         self.view.addSubview(closeButton)
         
+        addButton = UIButton(type: .system)
+        addButton.setTitle("추가하기", for: .normal)
+        addButton.setTitleColor(.black, for: .normal)
+        addButton.backgroundColor = .AddButton
+        addButton.tintColor = .black
+        addButton.addTarget(self, action: #selector(addCounntryButtonTapped), for: .touchUpInside)
+        addButton.layer.cornerRadius = 10
+        self.view.addSubview(addButton)
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            addButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -55),
+            addButton.widthAnchor.constraint(equalToConstant: 350),
+            addButton.heightAnchor.constraint(equalToConstant: 55)
+        ])
+        
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGesture)
         
         searchBar = UISearchBar()
-        searchBar.backgroundImage = UIImage()
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
-        searchBar.tintColor = .secondaryTextColor
-        searchBar.searchTextField.textColor = .white
-        searchBar.searchTextField.leftView?.tintColor = .secondaryTextColor
+        
+        searchBar.backgroundImage = UIImage()
+        
+        let searchTextField = searchBar.searchTextField
+        searchTextField.layer.cornerRadius = 10
+        searchTextField.layer.masksToBounds = true
+        searchTextField.backgroundColor = .darkGray
+        searchTextField.textColor = .white
+        searchTextField.leftView?.tintColor = .secondaryTextColor
+        
         self.view.addSubview(searchBar)
         
         searchBar.placeholder = ""
@@ -88,7 +111,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         searchBarWidthConstraint = searchBar.widthAnchor.constraint(equalToConstant: 50)
         NSLayoutConstraint.activate([
             searchBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            searchBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            searchBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 30),
             searchBar.heightAnchor.constraint(equalToConstant: 40),
             searchBarWidthConstraint
         ])
@@ -99,7 +122,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         displayCountries(filteredCountries)
         
         centerLabel = UILabel(frame: CGRect(x: 0, y: self.view.frame.height / 2, width: self.view.frame.width, height: 40))
-        centerLabel.layer.borderColor = UIColor.white.cgColor
+        centerLabel.layer.borderColor = UIColor.CenterHighlighted.cgColor
         centerLabel.layer.borderWidth = 1.0
         centerLabel.textColor = .white
         self.view.addSubview(centerLabel)
@@ -164,6 +187,11 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
 
     }
     
+    // 재현님 코드 추가
+    @objc func addCounntryButtonTapped() {
+        
+    }
+    
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
         let location = gesture.location(in: view)
         let centerX = UIScreen.main.bounds.minX
@@ -211,7 +239,6 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     }
     
     func labelTextSending() {
-
 
     }
     
@@ -295,7 +322,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         // 포커스가 가면 직사각형 모양으로 펼쳐지는 애니메이션
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
-            self.searchBarWidthConstraint.constant = self.view.frame.size.width - 40
+            self.searchBarWidthConstraint.constant = self.view.frame.size.width - 60
             self.view.layoutIfNeeded()
         }
     }
