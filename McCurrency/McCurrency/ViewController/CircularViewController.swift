@@ -20,7 +20,11 @@ protocol CircularViewControllerDelegate: AnyObject {
 }
 
 class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBarDelegate {
-    
+
+    let countries = [
+        "노르웨이 / NOK", "말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK", "스위스 / CHF", "영국 / GBP", "인도네시아 / IDR", "일본 / JPY", "중국 / CNY", "캐나다 / CAD", "홍콩 / HKD", "태국 / THB", "호주 / AUD", "뉴질랜드 / NZD", "싱가포르 / SGD"
+    ]
+
     weak var delegate: CircularViewControllerDelegate?
     
     let countries = [
@@ -289,10 +293,11 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         let circleRadiusX: CGFloat = 250
         let circleRadiusY: CGFloat = 320
         
-        let Countries = countries
+        let extendedCountries = countries + countries
+
         
-        for (index, country) in Countries.enumerated() {
-            let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(Countries.count)
+        for (index, country) in extendedCountries.enumerated() {
+            let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(extendedCountries.count)
             let labelX = circleCenter.x + circleRadiusX * cos(angle)
             let labelY = circleCenter.y + circleRadiusY * sin(angle)
             
