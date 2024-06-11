@@ -8,20 +8,7 @@
 import UIKit
 
 
-              
-              //  setupSlotBoxesAndNumericViews(inside: bigMacCountbox, withBigMacCount: Int(bigMacText) ?? 0)
-//                setupHamburgerLabelsAndCoverBoxes()
-//                bringHamburgersToFront()
-//                
-//                
-//                self.animateHamburgers()
-              
-            }
-        }
-    var totalWidth: CGFloat = 0
-    var labelWidths: [CGFloat] = []
-    var currencyDetails: [String: CurrencyDetail] = [:]
-class FirstViewController: UIViewController, UITextFieldDelegate, CircularViewControllerDelegate {
+class FirstViewController: UIViewController, UITextFieldDelegate {
 
     
     var ttsDictionary: [String: String] = [:] {
@@ -336,8 +323,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate, CircularViewCo
 
     @objc func toCountryButtonTapped() {
         let viewController = CircularViewController()
-        viewController.modalPresentationStyle = .overCurrentContext
-        viewController.delegate = self
+        viewController.modalPresentationStyle = .overFullScreen
         self.present(viewController, animated: true, completion: nil)
     }
     
@@ -772,9 +758,6 @@ extension FirstViewController {
         }
     }
 
-    func modalDidDismiss() {
-        self.tabBarController?.tabBar.isHidden = false
-    }
 }
 
 //MARK: - UITextFieldDelegate
