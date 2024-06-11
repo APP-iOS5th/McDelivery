@@ -29,6 +29,9 @@ extension UIColor {
     static let slotBox = UIColor(hex: "1D1B1D")
     static let secondaryTextColor = UIColor(hex: "999999") // 보조 텍스트 컬러
     static let unselectedIcon = UIColor(hex: "3E3C3E") // 선택되지 않은 아이콘 컬러
+    static let SearchBarColor = UIColor(hex: "646464") // 서큘러뷰 검색바 컬러
+    static let AddButton = UIColor(hex: "D6D6D6")
+    static let CenterHighlighted = UIColor(hex: "9C9C9C")
 }
 
 // 탭바 투명도와 블러값 적용
