@@ -25,14 +25,9 @@ class FirstViewController: UIViewController {
 
   
     let countries: [(flag: String, name: String)] = [
-        ("🇨🇭", "스위스"), ("🇳🇴", "노르웨이"), ("🇺🇾", "우루과이"), ("🇸🇪", "스웨덴"),
-        ("🇪🇺", "유럽 연합"), ("🇺🇸", "미국"), ("🇨🇦", "캐나다"), ("🇦🇺", "오스트레일리아"),
-        ("🇧🇷", "브라질"), ("🇬🇧", "영국"), ("🇰🇷", "대한민국"), ("🇸🇦", "사우디 아라비아"),
-        ("🇦🇷", "아르헨티나"), ("🇨🇳", "중국"), ("🇮🇳", "인도"), ("🇮🇩", "인도네시아"),
-        ("🇵🇭", "필리핀"), ("🇲🇾", "말레이시아"), ("🇪🇬", "이집트"), ("🇿🇦", "남아프리카 공화국"),
-        ("🇺🇦", "우크라이나"), ("🇭🇰", "홍콩"), ("🇻🇳", "베트남"), ("🇯🇵", "일본"),
-        ("🇷🇴", "루마니아"), ("🇦🇿", "아제르바이잔"), ("🇯🇴", "요르단"), ("🇲🇩", "몰도바"),
-        ("🇴🇲", "오만"), ("🇹🇼", "대만")
+        ("🇳🇴", "노르웨이"), ("🇲🇾", "말레이시아"),("🇺🇸", "미국"), ("🇸🇪", "스웨덴"),("🇨🇭", "스위스"),("🇬🇧", "영국"),("🇮🇩", "인도네시아"),("🇯🇵", "일본"),("🇨🇳", "중국"),("🇨🇦", "캐나다"),
+        ("🇭🇰", "홍콩"),("🇹🇭","태국"),("🇦🇺", "호주"),("🇳🇿","뉴질랜드"),("🇸🇬","싱가포르")
+   
     ]
     let fromAmountTextField = UITextField()
     let fromAmountSuffixLabel = UILabel()
@@ -84,7 +79,7 @@ class FirstViewController: UIViewController {
         view.addSubview(fromCountryLabel)
 
         
-        view.addSubview(toCountryLabel)
+      //  view.addSubview(toCountryLabel)
        
 
         view.addSubview(fromAmountTextField)
@@ -98,7 +93,7 @@ class FirstViewController: UIViewController {
         fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         toCountryButton.translatesAutoresizingMaskIntoConstraints = false
 
-        toCountryLabel.translatesAutoresizingMaskIntoConstraints = false
+       // toCountryLabel.translatesAutoresizingMaskIntoConstraints = false
        
 
         fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -212,7 +207,7 @@ class FirstViewController: UIViewController {
         
         var totalWidth: CGFloat = 0
         var labelWidths: [CGFloat] = []
-<
+
         
         for digit in digits {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
@@ -268,13 +263,6 @@ class FirstViewController: UIViewController {
         return toAmountLabel
     }
 
-    
-    @objc func toCountryButtonTapped() {
-        let viewController = CircularViewController()
-        viewController.modalPresentationStyle = .overFullScreen
-        self.present(viewController, animated: true, completion: nil)
-    }
-    
 
     @objc func exchangeButtonTapped() {
         guard let fromAmountText = fromAmountTextField.text, let fromAmount = Double(fromAmountText.replacingOccurrences(of: ",", with: "")) else { return }
@@ -394,21 +382,21 @@ class FirstViewController: UIViewController {
     
     
     
-     private func updateConversionAmount(text: String) {
-         guard let selectedCurrency = toCountryLabel.text,
-               let rateString = ttsDictionary[selectedCurrency],
-               let rate = Double(rateString.replacingOccurrences(of: ",", with: "")),
-               let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
-             print("환율 데이터가 없거나 입력값 문제 발생")
-            
-             return
-         }
-         
-         let convertedAmount = amount / rate
-         let formattedAmount = String(format: "%.2f", convertedAmount)
-         print("환산된 금액: \(formattedAmount)")
-         displayConvertedAmount(amount: formattedAmount)
-     }
+//     private func updateConversionAmount(text: String) {
+//         guard let selectedCurrency = toCountryLabel.text,
+//               let rateString = ttsDictionary[selectedCurrency],
+//               let rate = Double(rateString.replacingOccurrences(of: ",", with: "")),
+//               let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
+//             print("환율 데이터가 없거나 입력값 문제 발생")
+//            
+//             return
+//         }
+//         
+//         let convertedAmount = amount / rate
+//         let formattedAmount = String(format: "%.2f", convertedAmount)
+//         print("환산된 금액: \(formattedAmount)")
+//         displayConvertedAmount(amount: formattedAmount)
+//     }
      
      private func displayConvertedAmount(amount: String) {
          setuptoAmountLabels(with: amount)
@@ -645,7 +633,7 @@ extension FirstViewController: UITextFieldDelegate {
             
             if let text = textField.text, !text.isEmpty {
                 print("계산 시작\(text)")
-                updateConversionAmount(text: text)
+            //    updateConversionAmount(text: text)
             }
             // updateConversionAmount(text: formattedNumber)
         } else {
@@ -671,9 +659,30 @@ extension FirstViewController: UITextFieldDelegate {
 
 extension FirstViewController: CircularViewControllerDelegate {
     func countrySelected(_ countryName: String) {
-        toCountryLabel.text = countryName
- 
-    }
+           print("전달받은 국가 정보: \(countryName)")  // 디버깅을 위한 로그 추가
+
+           let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
+           if components.count == 2 {
+               let country = components[0]
+               let currencyCode = components[1]
+
+               // 국가 이름과 일치하는 튜플 찾기
+               if let countryTuple = countries.first(where: { $0.name == country }) {
+                   let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
+                   toCountryButton.setTitle(fullCountryName, for: .normal)
+                   toAmountSuffixLabel.text = currencyCode
+                   print("국가: \(fullCountryName), 통화: \(currencyCode)")  // 디버깅을 위한 로그 추가
+               } else {
+                   toCountryButton.setTitle("국가 정보 없음", for: .normal)
+                   toAmountSuffixLabel.text = "통화 정보 없음"
+                   print("국가 정보 미발견: \(country)")  // 디버깅을 위한 로그 추가
+               }
+           } else {
+               toCountryButton.setTitle("형식 오류", for: .normal)
+               toAmountSuffixLabel.text = "통화 정보 없음"
+               print("잘못된 형식: \(countryName)")  // 디버깅을 위한 로그 추가
+           }
+       }
     
     @objc func toCountryButtonTapped() {
         let pickerVC = CircularViewController()
