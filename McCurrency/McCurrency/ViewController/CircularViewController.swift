@@ -15,11 +15,7 @@ protocol CircularViewControllerDelegate: AnyObject {
 class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBarDelegate {
     
     let countries = [
-        "스위스 / CHF", "노르웨이 / NOK", "우루과이 / UYU", "스웨덴 / SEK", "유로 지역 / EUR", "미국 / USD",
-        "캐나다 / CAD", "오스트레일리아 / AUD", "브라질 / BRL", "영국 / GBP", "대한민국 / KRW", "사우디 아라비아 / SAR",
-        "아르헨티나 / ARS", "중국 / CNY", "인도 / INR", "인도네시아 / IDR", "필리핀 / PHP", "말레이시아 / MYR",
-        "이집트 / EGP", "남아프리카 공화국 / ZAR", "우크라이나 / UAH", "홍콩 / HKD", "베트남 / VND", "일본 / JPY",
-        "루마니아 / RON", "아제르바이잔 / AZN", "요르단 / JOD", "몰도바 / MDL", "오만 / OMR", "대만 / TWD"
+        "노르웨이 / NOK", "말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK", "스위스 / CHF", "영국 / GBP", "인도네시아 / IDR", "일본 / JPY", "중국 / CNY", "캐나다 / CAD", "홍콩 / HKD", "태국 / THB", "호주 / AUD", "뉴질랜드 / NZD", "싱가포르 / SGD"
     ]
     
     weak var delegate: CircularViewControllerDelegate?
@@ -215,10 +211,11 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         let circleRadiusX: CGFloat = 250
         let circleRadiusY: CGFloat = 320
         
-        let Countries = countries
+        let extendedCountries = countries + countries
+
         
-        for (index, country) in Countries.enumerated() {
-            let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(Countries.count)
+        for (index, country) in extendedCountries.enumerated() {
+            let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(extendedCountries.count)
             let labelX = circleCenter.x + circleRadiusX * cos(angle)
             let labelY = circleCenter.y + circleRadiusY * sin(angle)
             
