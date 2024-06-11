@@ -38,21 +38,21 @@ class McCounter_addedSearch: UIViewController, UIPickerViewDelegate, UIPickerVie
 //        "Taiwan": 2.59
 //    ]
     let bigMacPricesInUSD: [String: Double] = [
-    "Norway": 6.23,
-    "Malaysia": 2.34,
-     "United States": 5.69,
-    "Sweden": 6.15,
-    "Switzerland": 6.71,
-    "United Kingdom": 4.50,
-    "Indonesia": 2.36,
-    "Japan": 3.50,
-    "China": 3.37,
-    "Canada": 6.77,
-    "Hong Kong": 2.81,
-    "Thailand": 4.40,
-    "Australia": 5.90,
-    "New Zealand": 5.33,
-    "Singapore": 5.18
+    "노르웨이": 6.23,
+    "말레이시아": 2.34,
+     "미국": 5.69,
+    "스웨덴": 6.15,
+    "스위스": 6.71,
+    "영국": 4.50,
+    "인도네시아": 2.36,
+    "일본": 3.50,
+    "중국": 3.37,
+    "캐나다": 6.77,
+    "홍콩": 2.81,
+    "태국": 4.40,
+    "호주": 5.90,
+    "뉴질랜드": 5.33,
+    "싱가포르": 5.18
     
     ]
     
