@@ -15,31 +15,20 @@ protocol CircularViewControllerDelegate: AnyObject {
 import UIKit
 import AVKit
 
-protocol CircularViewControllerDelegate: AnyObject {
-    func modalDidDismiss()
-}
+
 
 class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBarDelegate {
 
+    
+    weak var delegate: CircularViewControllerDelegate?
+    var selectedCountryLabel: UILabel?
+    
     let countries = [
         "노르웨이 / NOK", "말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK", "스위스 / CHF", "영국 / GBP", "인도네시아 / IDR", "일본 / JPY", "중국 / CNY", "캐나다 / CAD", "홍콩 / HKD", "태국 / THB", "호주 / AUD", "뉴질랜드 / NZD", "싱가포르 / SGD"
     ]
-
-    weak var delegate: CircularViewControllerDelegate?
     
-    let countries = [
-
-
-            "노르웨이 / NOK","말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK",  "스위스 / CHF ",
-             "영국 / GBP", "인도네시아 / IDR", "일본 / JPY",  "중국 / CNY","캐나다 / CAD", "홍콩 / HKD",  "태국 / THB ","호주/AUD","뉴질랜드/NZD ","싱가포르/SGD"
-            //"노르웨이 / NOK","말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK",  "스위스 / CHF ",
-//            "영국 / GBP", "인도네시아 / IDR", "일본 / JPY",  "중국 / CNY","캐나다 / CAD", "홍콩 / HKD",  "태국 / THB ","호주/AUD",
-//           "뉴질랜드/NZD ","싱가포르/SGD"
-         
-        
-
-
-    ]
+  
+    var filteredCountries: [String] = []
 
     var labels: [UILabel] = []
     var lastAngle: CGFloat = 0
@@ -47,8 +36,9 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     var currentRotationAngle: CGFloat = 0
     
     var lastText: String?
-    
+    var resultLabel: UILabel = UILabel()
     var centerLabel: UILabel!
+   
 
     var searchBar: UISearchBar!
     var searchBarWidthConstraint: NSLayoutConstraint!
@@ -168,7 +158,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        delegate?.modalDidDismiss()
+
     }
     
     func attributedString(for text: String, fittingWidth width: CGFloat, in label: UILabel) -> NSAttributedString {
@@ -193,7 +183,15 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     
     // 재현님 코드 추가
     @objc func addCounntryButtonTapped() {
-        
+
+       
+        if let countryText = selectedCountryLabel?.text {
+                   delegate?.countrySelected(countryText)
+                   dismiss(animated: true)
+               }
+      
+ 
+
     }
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
@@ -244,31 +242,24 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     
     func labelTextSending() {
 
-    }
-    
+            let focusPoint = CGPoint(x: view.center.x, y: view.frame.height / 2 + 20)
+            var closestLabel: UILabel?
+            var minDistance = CGFloat.greatestFiniteMagnitude
+            
+            for label in labels {
+                let distance = hypot(label.center.x - focusPoint.x, label.center.y - focusPoint.y)
+                if distance < minDistance {
+                    closestLabel = label
+                    minDistance = distance
+                }
+            }
+            
+            if let focusedLabel = closestLabel {
+                resultLabel.text = focusedLabel.text
+                selectedCountryLabel = focusedLabel // 현재 선택된 라벨 저장
+            }
+        }
 
-    func blurEffect() {
-        
-                 let blurEffect = UIBlurEffect(style: .dark)
-                      let blurEffectView = UIVisualEffectView(effect: blurEffect)
-      
-      
-                      blurEffectView.frame = self.view.bounds
-                      blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-      
-      
-                      view.addSubview(blurEffectView)
-      
-      
-                      let backgroundView = UIView(frame: self.view.bounds)
-                      backgroundView.backgroundColor = UIColor.backgroundColor.withAlphaComponent(0.3)
-                      backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                      blurEffectView.contentView.addSubview(backgroundView)
-        
-        
-        
-        
-    }
     
     
 
