@@ -201,9 +201,7 @@ class FirstViewController: UIViewController {
             tooltipButton.trailingAnchor.constraint(equalTo: bigMacCountbox.trailingAnchor, constant: -10)
         ])
     }
-    
-   
-    
+
     private func setuptoAmountLabels(with text: String) {
         let formattedText = text.formattedWithCommas()
         let digits = Array(formattedText)
@@ -211,15 +209,12 @@ class FirstViewController: UIViewController {
         
         var totalWidth: CGFloat = 0
         var labelWidths: [CGFloat] = []
-        
-        
-        for label in toAmountLabels {
-               label.removeFromSuperview()
-           }
-           toAmountLabels.removeAll()
-           toAmountTopConstraints.removeAll()
 
-         
+        for label in toAmountLabels {
+            label.removeFromSuperview()
+        }
+        toAmountLabels.removeAll()
+        toAmountTopConstraints.removeAll()
         
         for digit in digits {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
@@ -227,35 +222,40 @@ class FirstViewController: UIViewController {
             labelWidths.append(labelWidth)
             totalWidth += labelWidth + 5
         }
-        
+
         if !labelWidths.isEmpty {
             totalWidth -= 5
         }
-        
-        for(_, digit) in digits.enumerated() {
+
+        for (index, digit) in digits.enumerated() {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             view.addSubview(toAmountLabel)
             
-            let toAmountTopConstraint = toAmountLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 300)
+            let toAmountTopConstraint = toAmountLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 330)
             toAmountTopConstraints.append(toAmountTopConstraint)
             toAmountLabels.append(toAmountLabel)
             
             var toAmountConstraints = [toAmountTopConstraint]
             
             if let previous = previousLabel {
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 5))
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 1))
             } else {
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 140))
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth))
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth + 13))
             }
-            
             
             NSLayoutConstraint.activate(toAmountConstraints)
             previousLabel = toAmountLabel
         }
-    animateDigits()
+
+        if let lastLabel = toAmountLabels.last {
+            NSLayoutConstraint.activate([
+                lastLabel.trailingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -1)
+            ])
+        }
         
+        animateDigits()
     }
+
     private func createtoAmountLabel(with text: String) -> UILabel {
         let toAmountLabel = UILabel()
         toAmountLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -265,7 +265,7 @@ class FirstViewController: UIViewController {
         toAmountLabel.alpha = 0.0
         return toAmountLabel
     }
-   
+
     @objc func exchangeButtonTapped() {
         guard let fromAmountText = fromAmountTextField.text, let fromAmount = Double(fromAmountText.replacingOccurrences(of: ",", with: "")) else { return }
         
@@ -552,12 +552,16 @@ extension FirstViewController {
             bigMacCountbox.bringSubviewToFront(hamburgerLabel)
         }
     }
-   
+
     private func animateDigits() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            for (index, topConstraint) in self.toAmountTopConstraints.reversed().enumerated() {
-                let label = self.toAmountLabels.reversed()[index]
-                UIView.animate(withDuration: 0.3, delay: Double(index) * 0.15, options: .curveEaseInOut, animations: {
+        DispatchQueue.main.async {
+            let reversedLabels = Array(self.toAmountLabels.reversed())
+            let reversedTopConstraints = Array(self.toAmountTopConstraints.reversed())
+            
+            for (index, (label, topConstraint)) in zip(reversedLabels, reversedTopConstraints).enumerated() {
+                let delay = Double(index) * 0.1
+
+                UIView.animate(withDuration: 0.3, delay: delay, options: .curveEaseInOut, animations: {
                     topConstraint.constant += 30
                     label.alpha = 1.0
                     self.view.layoutIfNeeded()
@@ -565,7 +569,7 @@ extension FirstViewController {
             }
         }
     }
-    
+
     private func animateHamburgers() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             for (index, _) in self.hamburgerTopConstraints.enumerated() {
