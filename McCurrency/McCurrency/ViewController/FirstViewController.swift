@@ -8,7 +8,19 @@
 import UIKit
 
 class FirstViewController: UIViewController {
-    
+    var bigMacText = "" {
+            didSet {
+                print("Big Mac text updated: \(bigMacText)")
+              
+              //  setupSlotBoxesAndNumericViews(inside: bigMacCountbox, withBigMacCount: Int(bigMacText) ?? 0)
+//                setupHamburgerLabelsAndCoverBoxes()
+//                bringHamburgersToFront()
+//                
+//                
+//                self.animateHamburgers()
+              
+            }
+        }
     var totalWidth: CGFloat = 0
     var labelWidths: [CGFloat] = []
     var currencyDetails: [String: CurrencyDetail] = [:]
@@ -59,20 +71,38 @@ class FirstViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         animatetoAmounts()
-        setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
-        setupHamburgerLabelsAndCoverBoxes()
-        bringHamburgersToFront()
-        animateDigits()
-        animateHamburgers()
+           setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
+                setupHamburgerLabelsAndCoverBoxes()
+                bringHamburgersToFront()
+                animateHamburgers()
+                animateDigits()
+              
+                fetchCurrencyData()
+        
+        
+        
+        
+//    
+//        animatetoAmounts()
+//        setupHamburgerLabelsAndCoverBoxes()
+//        bringHamburgersToFront()
+//        animateHamburgers()
+//
+//        self.animateHamburgers()
+      //  setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
+       //   animateDigits()
+       
         fetchCurrencyData()
         //    setupTextField()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // 데이터 로딩 후 딜레이를 주어 출력
-               print("currencyDetails:")
-               for (country, details) in self.currencyDetails {
-                   print("\(country): \(details)")
-               }
-           }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { // 데이터 로딩 후 딜레이를 주어 출력
+//            self.animateHamburgers()
+//            
+//            print("currencyDetails:")
+//               for (country, details) in self.currencyDetails {
+//                   print("\(country): \(details)")
+//               }
+//           }
         
     }
     
@@ -404,19 +434,16 @@ class FirstViewController: UIViewController {
 
         return details
     }
-    
-    
-    
-    
+
+//
 //    private func updateConversionAmount(text: String) {
-//        guard let selectedCountry = toCountryLabel.text,
+//        guard let selectedCountry = toCountryLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines),
 //              let currencyDetail = currencyDetails[selectedCountry],
-//              let rateString = currencyDetail.tts.replacingOccurrences(of: ",", with: ""),
-//              let rate = Double(rateString),
+//              let rate = Double(currencyDetail.tts.replacingOccurrences(of: ",", with: "")),
 //              let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
 //            print("환율 데이터가 없거나 입력값 문제 발생")
 //            print("선택된 국가: \(String(describing: toCountryLabel.text))")
-//            print("사전에서 찾은 환율: \(String(describing: currencyDetails[selectedCountry]))")
+//            print("사전에서 찾은 환율: \(String(describing: currencyDetails[toCountryLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""]))")
 //            return
 //        }
 //
@@ -425,42 +452,36 @@ class FirstViewController: UIViewController {
 //        print("환산된 금액: \(formattedAmount)")
 //        displayConvertedAmount(amount: formattedAmount)
 //    }
-
+    
     private func updateConversionAmount(text: String) {
-        guard let selectedCountry = toCountryLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines),
-              let currencyDetail = currencyDetails[selectedCountry],
-              let rate = Double(currencyDetail.tts.replacingOccurrences(of: ",", with: "")),
-              let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
+        guard let rateUSD = Double(currencyDetails["미국"]?.tts.replacingOccurrences(of: ",", with: "") ?? ""),
+              let amount = Double(text.replacingOccurrences(of: ",", with: "")),
+              let selectedCountry = toCountryLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+              let bigMacPrice = McCounter_addedSearch().bigMacPricesInUSD[selectedCountry] else {
             print("환율 데이터가 없거나 입력값 문제 발생")
-            print("선택된 국가: \(String(describing: toCountryLabel.text))")
-            print("사전에서 찾은 환율: \(String(describing: currencyDetails[toCountryLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""]))")
             return
         }
 
-        let convertedAmount = amount / rate
-        let formattedAmount = String(format: "%.2f", convertedAmount)
-        print("환산된 금액: \(formattedAmount)")
+        // 입력된 한화를 미국 달러로 환산
+        let convertedAmountInUSD = amount / rateUSD
+        // 환산된 달러로 해당 나라의 빅맥을 몇 개 살 수 있는지 계산
+        let bigMacsYouCanBuy = Int(convertedAmountInUSD / bigMacPrice)
+
+        let formattedAmount = String(format: "%.2f", convertedAmountInUSD)
+        print("환산된 금액 (USD): \(formattedAmount)")
+        print("해당 국가에서 구매 가능한 빅맥 수: \(bigMacsYouCanBuy)")
+
         displayConvertedAmount(amount: formattedAmount)
+ //      setupSlotBoxesAndNumericViews(inside: bigMacCountbox, withBigMacCount: bigMacsYouCanBuy)
+       // displayBigMacCount(bigMacsYouCanBuy)
     }
 
     
     private func displayConvertedAmount(amount: String) {
         setuptoAmountLabels(with: amount)
+        
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // MARK: - 환율 계산
-    
-    
+
 }
 
 
@@ -469,6 +490,56 @@ class FirstViewController: UIViewController {
 
 //MARK: - Animation
 extension FirstViewController {
+    
+//    private func setupSlotBoxesAndNumericViews(inside backgroundView: UIView, withBigMacCount bigMacCount: Int) {
+//        for _ in 0..<3 {
+//            let slotbox = createSlotBox()
+//            backgroundView.addSubview(slotbox)
+//            slotBoxes.append(slotbox)
+//        }
+//
+//        NSLayoutConstraint.activate([
+//            slotBoxes[0].leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 51),
+//            slotBoxes[0].topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 33),
+//            slotBoxes[0].widthAnchor.constraint(equalToConstant: 73),
+//            slotBoxes[0].heightAnchor.constraint(equalToConstant: 78),
+//            
+//            slotBoxes[1].centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
+//            slotBoxes[1].topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 33),
+//            slotBoxes[1].widthAnchor.constraint(equalToConstant: 73),
+//            slotBoxes[1].heightAnchor.constraint(equalToConstant: 78),
+//            
+//            slotBoxes[2].trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -51),
+//            slotBoxes[2].topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 33),
+//            slotBoxes[2].widthAnchor.constraint(equalToConstant: 73),
+//            slotBoxes[2].heightAnchor.constraint(equalToConstant: 78),
+//        ])
+//
+//        // bigMacText 업데이트
+//             bigMacText = String(bigMacCount)
+//             let textParts = bigMacText.map { String($0) } // 숫자를 문자열 배열로 분할
+//        
+//       // let textParts = text.map { String($0) } // 숫자를 문자열 배열로 분할
+//
+//        for (index, textPart) in textParts.enumerated() {
+//            let numericMotionView = NumericMotionView(
+//                frame: .zero,
+//                text: textPart,
+//                trigger: false,
+//                duration: 1.2,
+//                speed: 0.005,
+//                textColor: .white
+//            )
+//            numericMotionView.translatesAutoresizingMaskIntoConstraints = false
+//            slotBoxes[index % slotBoxes.count].addSubview(numericMotionView)
+//            numericMotionViews.append(numericMotionView)
+//
+//            NSLayoutConstraint.activate([
+//                numericMotionView.centerXAnchor.constraint(equalTo: slotBoxes[index % slotBoxes.count].centerXAnchor),
+//                numericMotionView.centerYAnchor.constraint(equalTo: slotBoxes[index % slotBoxes.count].centerYAnchor)
+//            ])
+//        }
+//    }
     private func setupSlotBoxesAndNumericViews(inside backgroundView: UIView) {
         for _ in 0..<3 {
             let slotbox = createSlotBox()
@@ -493,7 +564,7 @@ extension FirstViewController {
             slotBoxes[2].heightAnchor.constraint(equalToConstant: 78),
         ])
         
-        let text = "143"
+        let text = "0000"
         let length = text.count / 3
         let remainder = text.count % 3
         let textParts = [
@@ -526,6 +597,42 @@ extension FirstViewController {
             ])
         }
     }
+    
+//    private func setupSlotBoxesAndNumericViews(inside backgroundView: UIView, number: Int) {
+//        // 숫자를 문자열로 변환
+//        let text = String(number)
+//        let numberOfDigits = text.count
+//        let numberOfBoxes = slotBoxes.count // 일반적으로 3으로 설정되어 있음을 가정
+//
+//        // 각 슬롯에 표시할 숫자 분배 계산
+//        var digitsForSlots = Array(repeating: "", count: numberOfBoxes)
+//
+//        // 숫자를 슬롯에 균등하게 분배
+//        for (index, digit) in text.enumerated().reversed() {
+//            let slotIndex = (numberOfDigits - 1 - index) % numberOfBoxes
+//            digitsForSlots[slotIndex] = String(digit) + digitsForSlots[slotIndex]
+//        }
+//
+//        // 각 슬롯에 숫자를 설정하고 애니메이션 뷰 추가
+//        for (index, slotText) in digitsForSlots.enumerated() {
+//            let numericMotionView = NumericMotionView(
+//                frame: .zero,
+//                text: slotText,
+//                trigger: false,
+//                duration: 1.2,
+//                speed: 0.005,
+//                textColor: .white
+//            )
+//            numericMotionView.translatesAutoresizingMaskIntoConstraints = false
+//            slotBoxes[index].addSubview(numericMotionView)
+//            numericMotionViews.append(numericMotionView)
+//
+//            NSLayoutConstraint.activate([
+//                numericMotionView.centerXAnchor.constraint(equalTo: slotBoxes[index].centerXAnchor),
+//                numericMotionView.centerYAnchor.constraint(equalTo: slotBoxes[index].centerYAnchor)
+//            ])
+//        }
+//    }
     
     private func createSlotBox() -> UIView {
         let slotbox = UIView()
