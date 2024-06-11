@@ -20,3 +20,11 @@ struct ExchangeRate: Codable {
     let kftc_deal_bas_r: String
     let cur_nm: String
 }
+
+
+struct CurrencyDetail {
+    let countryName: String
+    let currencyName: String
+    let currencyUnit: String
+    let tts: String // 환율 정보
+}

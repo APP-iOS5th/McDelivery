@@ -20,11 +20,13 @@ class CircularViewController: UIViewController {
     weak var delegate: CircularViewControllerDelegate?
     
     let countries = [
-        "Switzerland", "Norway", "Uruguay", "Sweden", "Euro Area", "United States", "Canada", "Australia", "Brazil",
-        "United Kingdom", "South Korea", "Saudi Arabia", "Argentina", "China", "India", "Indonesia", "Philippines",
-        "Malaysia", "Egypt", "South Africa", "Ukraine", "Hong Kong", "Vietnam", "Japan", "Romania", "Azerbaijan",
-        "Jordan", "Moldova", "Oman", "Taiwan"
-    ]
+            "노르웨이 / NOK","말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK",  "스위스 / CHF ",
+             "영국 / GBP", "인도네시아 / IDR", "일본 / JPY",  "중국 / CNY","캐나다 / CAD", "홍콩 / HKD",  "태국 / THB ","호주/AUD","뉴질랜드/NZD ","싱가포르/SGD"
+            //"노르웨이 / NOK","말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK",  "스위스 / CHF ",
+//            "영국 / GBP", "인도네시아 / IDR", "일본 / JPY",  "중국 / CNY","캐나다 / CAD", "홍콩 / HKD",  "태국 / THB ","호주/AUD",
+//           "뉴질랜드/NZD ","싱가포르/SGD"
+         
+        ]
     var labels: [UILabel] = []
     var lastAngle: CGFloat = 0
     var counter: CGFloat = 0
