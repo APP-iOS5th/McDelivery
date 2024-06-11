@@ -8,10 +8,10 @@
 import UIKit
 
 class FirstViewController: UIViewController {
-
+    
     var totalWidth: CGFloat = 0
     var labelWidths: [CGFloat] = []
-    
+    var currencyDetails: [String: CurrencyDetail] = [:]
     
     var ttsDictionary: [String: String] = [:] {
         didSet {
@@ -20,14 +20,14 @@ class FirstViewController: UIViewController {
     }
     //MARK: - Properties
     let fromCountryLabel = UILabel()
-
+    
     let toCountryButton = UIButton()
-
-  
+    
+    
     let countries: [(flag: String, name: String)] = [
         ("🇳🇴", "노르웨이"), ("🇲🇾", "말레이시아"),("🇺🇸", "미국"), ("🇸🇪", "스웨덴"),("🇨🇭", "스위스"),("🇬🇧", "영국"),("🇮🇩", "인도네시아"),("🇯🇵", "일본"),("🇨🇳", "중국"),("🇨🇦", "캐나다"),
         ("🇭🇰", "홍콩"),("🇹🇭","태국"),("🇦🇺", "호주"),("🇳🇿","뉴질랜드"),("🇸🇬","싱가포르")
-   
+        
     ]
     let fromAmountTextField = UITextField()
     let fromAmountSuffixLabel = UILabel()
@@ -54,8 +54,6 @@ class FirstViewController: UIViewController {
         
         super.viewDidLoad()
         setupUI()
-
-
         animatetoAmounts()
         setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
         setupHamburgerLabelsAndCoverBoxes()
@@ -63,8 +61,6 @@ class FirstViewController: UIViewController {
         animateDigits()
         animateHamburgers()
         fetchCurrencyData()
-    //    setupTextField()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,11 +73,6 @@ class FirstViewController: UIViewController {
     
     func setupUI() {
         view.addSubview(fromCountryLabel)
-
-        
-      //  view.addSubview(toCountryLabel)
-       
-
         view.addSubview(fromAmountTextField)
         view.addSubview(fromAmountSuffixLabel)
         view.addSubview(toAmountSuffixLabel)
@@ -92,10 +83,6 @@ class FirstViewController: UIViewController {
         
         fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         toCountryButton.translatesAutoresizingMaskIntoConstraints = false
-
-       // toCountryLabel.translatesAutoresizingMaskIntoConstraints = false
-       
-
         fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
         fromAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
         toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -107,18 +94,18 @@ class FirstViewController: UIViewController {
         fromCountryLabel.textColor = .white
         fromCountryLabel.font = UIFont.systemFont(ofSize: 14)
         
-
+        
         toCountryButton.setTitle("🇺🇸 미국", for: .normal)
         toCountryButton.setTitleColor(.white, for: .normal)
         toCountryButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-
+        
         toCountryButton.backgroundColor = UIColor.boxColor
         toCountryButton.layer.cornerRadius = 5
         toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
         
         fromAmountTextField.delegate = self
         
-    
+        
         let placeholderAttributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.lightGray,
             .font: UIFont.interBoldFont(ofSize: 40)
@@ -171,7 +158,7 @@ class FirstViewController: UIViewController {
             toCountryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             toCountryButton.widthAnchor.constraint(equalToConstant: 100),
             toCountryButton.heightAnchor.constraint(equalToConstant: 32),
-
+            
             
             fromAmountTextField.topAnchor.constraint(equalTo: fromCountryLabel.bottomAnchor, constant: 20),
             fromAmountTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -199,7 +186,7 @@ class FirstViewController: UIViewController {
             tooltipButton.trailingAnchor.constraint(equalTo: bigMacCountbox.trailingAnchor, constant: -10)
         ])
     }
-
+    
     private func setuptoAmountLabels(with text: String) {
         let formattedText = text.formattedWithCommas()
         let digits = Array(formattedText)
@@ -208,21 +195,24 @@ class FirstViewController: UIViewController {
         var totalWidth: CGFloat = 0
         var labelWidths: [CGFloat] = []
 
+        for label in toAmountLabels {
+            label.removeFromSuperview()
+        }
+        toAmountLabels.removeAll()
+        toAmountTopConstraints.removeAll()
         
         for digit in digits {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             let labelWidth = toAmountLabel.intrinsicContentSize.width
             labelWidths.append(labelWidth)
-
-            totalWidth += labelWidth + 1.5
+            totalWidth += labelWidth + 5
         }
-        
+
         if !labelWidths.isEmpty {
-            totalWidth -= 1
+            totalWidth -= 5
         }
-        
-        for(index, digit) in digits.enumerated() {
 
+        for (index, digit) in digits.enumerated() {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             view.addSubview(toAmountLabel)
             
@@ -235,11 +225,9 @@ class FirstViewController: UIViewController {
             if let previous = previousLabel {
                 toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 1))
             } else {
-
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth))
-
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth + 13))
             }
-
+            
             NSLayoutConstraint.activate(toAmountConstraints)
             previousLabel = toAmountLabel
         }
@@ -252,7 +240,7 @@ class FirstViewController: UIViewController {
         
         animateDigits()
     }
-
+    
     private func createtoAmountLabel(with text: String) -> UILabel {
         let toAmountLabel = UILabel()
         toAmountLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -262,8 +250,8 @@ class FirstViewController: UIViewController {
         toAmountLabel.alpha = 0.0
         return toAmountLabel
     }
-
-
+    
+    
     @objc func exchangeButtonTapped() {
         guard let fromAmountText = fromAmountTextField.text, let fromAmount = Double(fromAmountText.replacingOccurrences(of: ",", with: "")) else { return }
         
@@ -336,40 +324,43 @@ class FirstViewController: UIViewController {
     
     //MARK: - 환율 API 불러오기
     private func fetchCurrencyData() {
-          CurrencyService.shared.fetchExchangeRates { [weak self] exchangeRates in
-              DispatchQueue.main.async {
-                  guard let self = self, let rates = exchangeRates else {
-                      print("Failed to fetch data")
-                      return
-                  }
-
-                  self.ttsDictionary = self.createTtsDictionary(from: rates)
-                  print("Updated TTS Dictionary: \(self.ttsDictionary)")
-                  
-                  // 날짜 확인 후 알림 표시
-                  let currentDate = Date()
-                  let validDate = CurrencyService.shared.getValidSearchDate(date: currentDate)
-                  let today = self.formattedDate(from: currentDate)
-                  if validDate != today {
-                      self.showAlertForPastData(date: validDate)
-                  }
-              }
-          }
-      }
-
-
+        CurrencyService.shared.fetchExchangeRates { [weak self] exchangeRates in
+            DispatchQueue.main.async {
+                guard let self = self, let rates = exchangeRates else {
+                    print("Failed to fetch data")
+                    return
+                }
+                
+                //                self.ttsDictionary = self.createTtsDictionary(from: rates)
+                //                print("Updated TTS Dictionary: \(self.ttsDictionary)")
+                
+                self.currencyDetails = self.createCurrencyDetails(from: rates)
+                print("Updated Currency Details: \(self.currencyDetails)")
+                
+                // 날짜 확인 후 알림 표시
+                let currentDate = Date()
+                let validDate = CurrencyService.shared.getValidSearchDate(date: currentDate)
+                let today = self.formattedDate(from: currentDate)
+                if validDate != today {
+                    self.showAlertForPastData(date: validDate)
+                }
+            }
+        }
+    }
+    
+    
     private func showAlertForPastData(date: String) {
-            let alert = UIAlertController(title: "이전 날짜 데이터 사용", message: "현재 \(date)의 환율 정보를 표시하고 있습니다.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-
-        private func formattedDate(from date: Date) -> String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            return dateFormatter.string(from: date)
-        }
-
+        let alert = UIAlertController(title: "이전 날짜 데이터 사용", message: "현재 \(date)의 환율 정보를 표시하고 있습니다.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func formattedDate(from date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.string(from: date)
+    }
+    
     //MARK: - 받아온 데이터 Dictionary 로 저장
     func createTtsDictionary(from rates: [ExchangeRate]) -> [String: String] {
         let dictionary = rates.reduce(into: [String: String]()) { (dict, rate) in
@@ -377,59 +368,66 @@ class FirstViewController: UIViewController {
         }
         return dictionary
     }
-
     
     
+        func createCurrencyDetails(from rates: [ExchangeRate]) -> [String: CurrencyDetail] {
+               var details = [String: CurrencyDetail]()
     
+               for rate in rates {
+                   let parts = rate.cur_nm.components(separatedBy: " ")
+                   guard parts.count >= 2 else { continue }
     
-//     private func updateConversionAmount(text: String) {
-//         guard let selectedCurrency = toCountryLabel.text,
-//               let rateString = ttsDictionary[selectedCurrency],
-//               let rate = Double(rateString.replacingOccurrences(of: ",", with: "")),
-//               let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
-//             print("환율 데이터가 없거나 입력값 문제 발생")
-//            
-//             return
-//         }
-//         
-//         let convertedAmount = amount / rate
-//         let formattedAmount = String(format: "%.2f", convertedAmount)
-//         print("환산된 금액: \(formattedAmount)")
-//         displayConvertedAmount(amount: formattedAmount)
-//     }
-     
-     private func displayConvertedAmount(amount: String) {
-         setuptoAmountLabels(with: amount)
-     }
-     
+                   let currencyUnit = parts.last!
+                   let countryName = parts.dropLast().joined(separator: " ")
+    
+                   details[countryName] = CurrencyDetail(
+                       countryName: countryName,
+                       currencyName: rate.cur_unit,
+                       currencyUnit: currencyUnit,
+                       tts: rate.tts
+                   )
+               }
+    
+               return details
+           }
   
+    private func updateConversionAmount(text: String) {
+        guard let countryButtonTitle = toCountryButton.title(for: .normal),
+              let selectedCountry = extractCountryName(from: countryButtonTitle),
+              let currencyDetail = currencyDetails[selectedCountry],
+              let rate = Double(currencyDetail.tts.replacingOccurrences(of: ",", with: "")),
+              let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
+            print("환율 데이터가 없거나 입력값 문제 발생")
+            return
+        }
+
+        // 100엔 단위로 표시된 환율을 한 엔 단위로 조정
+        let adjustedRate = currencyDetail.currencyName.contains("JPY(100)") ? rate / 100 : rate
+
+        let convertedAmount = amount / adjustedRate
+        let formattedAmount = String(format: "%.2f", convertedAmount)
+        print("환산된 금액: \(formattedAmount)")
+
+        displayConvertedAmount(amount: formattedAmount)
+    }
+    
+    private func displayConvertedAmount(amount: String) {
+      setuptoAmountLabels(with: amount)
+        
+    }
+    
+    
+    func extractCountryName(from title: String) -> String? {
+        let components = title.split(separator: " ")
+        guard components.count > 1 else { return nil }
+        return String(components[1])
+    }
     
     
     
-    // MARK: - 환율 계산
-//    func convertKRWtoForeignCurrency(krwAmount: Double, targetCurrency: String, ttsDictionary: [String: String]) -> String {
-//        // 통화 이름을 통해 환율 찾기
-//        guard let rateString = ttsDictionary[targetCurrency],
-//              let rate = Double(rateString.replacingOccurrences(of: ",", with: "")) else {
-//            return "환율 정보 없음"
-//        }
-//        
-//        // 계산: 한화 금액 / 환율 = 변환 통화 금액
-//        let foreignAmount = krwAmount / rate
-//        
-//        // 결과 포매팅: 소수점 두 자리까지 표시
-//        let formattedAmount = String(format: "%.2f", foreignAmount)
-//        
-//        return "\(formattedAmount) \(targetCurrency)"
-//    }
-//    
     
     
 }
-
-
-
-
 
 //MARK: - Animation
 extension FirstViewController {
@@ -553,21 +551,21 @@ extension FirstViewController {
     }
 
     private func animateDigits() {
-        DispatchQueue.main.async {
-            let reversedLabels = Array(self.toAmountLabels.reversed())
-            let reversedTopConstraints = Array(self.toAmountTopConstraints.reversed())
-            
-            for (index, (label, topConstraint)) in zip(reversedLabels, reversedTopConstraints).enumerated() {
-                let delay = Double(index) * 0.1
+           DispatchQueue.main.async {
+               let reversedLabels = Array(self.toAmountLabels.reversed())
+               let reversedTopConstraints = Array(self.toAmountTopConstraints.reversed())
+               
+               for (index, (label, topConstraint)) in zip(reversedLabels, reversedTopConstraints).enumerated() {
+                   let delay = Double(index) * 0.1
 
-                UIView.animate(withDuration: 0.3, delay: delay, options: .curveEaseInOut, animations: {
-                    topConstraint.constant += 30
-                    label.alpha = 1.0
-                    self.view.layoutIfNeeded()
-                }, completion: nil)
-            }
-        }
-    }
+                   UIView.animate(withDuration: 0.3, delay: delay, options: .curveEaseInOut, animations: {
+                       topConstraint.constant += 30
+                       label.alpha = 1.0
+                       self.view.layoutIfNeeded()
+                   }, completion: nil)
+               }
+           }
+       }
 
     private func animateHamburgers() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
@@ -633,7 +631,7 @@ extension FirstViewController: UITextFieldDelegate {
             
             if let text = textField.text, !text.isEmpty {
                 print("계산 시작\(text)")
-            //    updateConversionAmount(text: text)
+                updateConversionAmount(text: text)
             }
             // updateConversionAmount(text: formattedNumber)
         } else {
@@ -659,30 +657,34 @@ extension FirstViewController: UITextFieldDelegate {
 
 extension FirstViewController: CircularViewControllerDelegate {
     func countrySelected(_ countryName: String) {
-           print("전달받은 국가 정보: \(countryName)")  // 디버깅을 위한 로그 추가
+            print("전달받은 국가 정보: \(countryName)")
 
-           let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
-           if components.count == 2 {
-               let country = components[0]
-               let currencyCode = components[1]
+            let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
+            if components.count == 2 {
+                let country = components[0]
+                let currencyCode = components[1]
 
-               // 국가 이름과 일치하는 튜플 찾기
-               if let countryTuple = countries.first(where: { $0.name == country }) {
-                   let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
-                   toCountryButton.setTitle(fullCountryName, for: .normal)
-                   toAmountSuffixLabel.text = currencyCode
-                   print("국가: \(fullCountryName), 통화: \(currencyCode)")  // 디버깅을 위한 로그 추가
-               } else {
-                   toCountryButton.setTitle("국가 정보 없음", for: .normal)
-                   toAmountSuffixLabel.text = "통화 정보 없음"
-                   print("국가 정보 미발견: \(country)")  // 디버깅을 위한 로그 추가
-               }
-           } else {
-               toCountryButton.setTitle("형식 오류", for: .normal)
-               toAmountSuffixLabel.text = "통화 정보 없음"
-               print("잘못된 형식: \(countryName)")  // 디버깅을 위한 로그 추가
-           }
-       }
+                if let countryTuple = countries.first(where: { $0.name == country }) {
+                    let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
+                    toCountryButton.setTitle(fullCountryName, for: .normal)
+                    toAmountSuffixLabel.text = currencyCode
+                    print("국가: \(fullCountryName), 통화: \(currencyCode)")
+
+                    // 자동으로 환율 계산을 트리거합니다.
+                    if let fromAmountText = fromAmountTextField.text, !fromAmountText.isEmpty {
+                        updateConversionAmount(text: fromAmountText)
+                    }
+                } else {
+                    toCountryButton.setTitle("국가 정보 없음", for: .normal)
+                    toAmountSuffixLabel.text = "통화 정보 없음"
+                    print("국가 정보 미발견: \(country)")
+                }
+            } else {
+                toCountryButton.setTitle("형식 오류", for: .normal)
+                toAmountSuffixLabel.text = "통화 정보 없음"
+                print("잘못된 형식: \(countryName)")
+            }
+        }
     
     @objc func toCountryButtonTapped() {
         let pickerVC = CircularViewController()
@@ -693,6 +695,3 @@ extension FirstViewController: CircularViewControllerDelegate {
     }
     
 }
-
-
-
