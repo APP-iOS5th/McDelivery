@@ -200,6 +200,7 @@ extension SecondViewController: UITextFieldDelegate {
 }
 
 extension SecondViewController:UITableViewDelegate,UITableViewDataSource {
+  
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
     }
@@ -221,8 +222,6 @@ extension SecondViewController:UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 90
     }
-    
-
     
 }
         
