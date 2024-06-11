@@ -94,7 +94,6 @@ class FirstViewController: UIViewController {
         fromCountryLabel.textColor = .white
         fromCountryLabel.font = UIFont.systemFont(ofSize: 14)
         
-        
         toCountryButton.setTitle("🇺🇸 미국", for: .normal)
         toCountryButton.setTitleColor(.white, for: .normal)
         toCountryButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
@@ -151,7 +150,7 @@ class FirstViewController: UIViewController {
         NSLayoutConstraint.activate([
             
             fromCountryLabel.centerXAnchor.constraint(equalTo: toCountryButton.centerXAnchor),
-            fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 90),
+            fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60),
             //대한민국
             
             toCountryButton.topAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 17),
@@ -173,13 +172,13 @@ class FirstViewController: UIViewController {
             exchangeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             //환전버튼
             
-            toAmountSuffixLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 300),
+            toAmountSuffixLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 260),
             toAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             //달러
             
             bigMacCountbox.topAnchor.constraint(equalTo: toAmountSuffixLabel.bottomAnchor, constant: 60),
             bigMacCountbox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            bigMacCountbox.widthAnchor.constraint(equalToConstant: 327),
+            bigMacCountbox.widthAnchor.constraint(equalToConstant: 333),
             bigMacCountbox.heightAnchor.constraint(equalToConstant: 216),
             
             tooltipButton.topAnchor.constraint(equalTo: bigMacCountbox.bottomAnchor, constant: 5),
@@ -216,7 +215,7 @@ class FirstViewController: UIViewController {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             view.addSubview(toAmountLabel)
             
-            let toAmountTopConstraint = toAmountLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 330)
+            let toAmountTopConstraint = toAmountLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 290)
             toAmountTopConstraints.append(toAmountTopConstraint)
             toAmountLabels.append(toAmountLabel)
             
@@ -301,7 +300,7 @@ class FirstViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             newTooltipView.topAnchor.constraint(equalTo: tooltipButton.bottomAnchor, constant: 8),
-            newTooltipView.centerXAnchor.constraint(equalTo: tooltipButton.centerXAnchor),
+            newTooltipView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             newTooltipView.widthAnchor.constraint(lessThanOrEqualToConstant: 250)
         ])
         
