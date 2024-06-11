@@ -54,8 +54,6 @@ class FirstViewController: UIViewController {
         
         super.viewDidLoad()
         setupUI()
-        
-        
         animatetoAmounts()
         setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
         setupHamburgerLabelsAndCoverBoxes()
@@ -63,8 +61,6 @@ class FirstViewController: UIViewController {
         animateDigits()
         animateHamburgers()
         fetchCurrencyData()
-        //    setupTextField()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,11 +73,6 @@ class FirstViewController: UIViewController {
     
     func setupUI() {
         view.addSubview(fromCountryLabel)
-        
-        
-        //  view.addSubview(toCountryLabel)
-        
-        
         view.addSubview(fromAmountTextField)
         view.addSubview(fromAmountSuffixLabel)
         view.addSubview(toAmountSuffixLabel)
@@ -92,10 +83,6 @@ class FirstViewController: UIViewController {
         
         fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         toCountryButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        // toCountryLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        
         fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
         fromAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
         toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -207,22 +194,25 @@ class FirstViewController: UIViewController {
         
         var totalWidth: CGFloat = 0
         var labelWidths: [CGFloat] = []
-        
+
+        for label in toAmountLabels {
+            label.removeFromSuperview()
+        }
+        toAmountLabels.removeAll()
+        toAmountTopConstraints.removeAll()
         
         for digit in digits {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             let labelWidth = toAmountLabel.intrinsicContentSize.width
             labelWidths.append(labelWidth)
-            
-            totalWidth += labelWidth + 1.5
+            totalWidth += labelWidth + 5
         }
-        
+
         if !labelWidths.isEmpty {
-            totalWidth -= 1
+            totalWidth -= 5
         }
-        
-        for(index, digit) in digits.enumerated() {
-            
+
+        for (index, digit) in digits.enumerated() {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             view.addSubview(toAmountLabel)
             
@@ -235,15 +225,13 @@ class FirstViewController: UIViewController {
             if let previous = previousLabel {
                 toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 1))
             } else {
-                
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth))
-                
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth + 13))
             }
             
             NSLayoutConstraint.activate(toAmountConstraints)
             previousLabel = toAmountLabel
         }
-        
+
         if let lastLabel = toAmountLabels.last {
             NSLayoutConstraint.activate([
                 lastLabel.trailingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -1)
@@ -402,55 +390,29 @@ class FirstViewController: UIViewController {
     
                return details
            }
-    ////
-    //    private func updateConversionAmount(text: String) {
-    //            guard let rateUSD = Double(currencyDetails["미국"]?.tts.replacingOccurrences(of: ",", with: "") ?? ""),
-    //                  let amount = Double(text.replacingOccurrences(of: ",", with: "")),
-    //                  let selectedCountry = toCountryLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines),
-    //                  let bigMacPrice = McCounter_addedSearch().bigMacPricesInUSD[selectedCountry] else {
-    //                print("환율 데이터가 없거나 입력값 문제 발생")
-    //                return
-    //            }
-    //
-    //            // 입력된 한화를 미국 달러로 환산
-    //            let convertedAmountInUSD = amount / rateUSD
-    //            // 환산된 달러로 해당 나라의 빅맥을 몇 개 살 수 있는지 계산
-    //            let bigMacsYouCanBuy = Int(convertedAmountInUSD / bigMacPrice)
-    //
-    //            let formattedAmount = String(format: "%.2f", convertedAmountInUSD)
-    //            print("환산된 금액 (USD): \(formattedAmount)")
-    //            print("해당 국가에서 구매 가능한 빅맥 수: \(bigMacsYouCanBuy)")
-    //
-    //            displayConvertedAmount(amount: formattedAmount)
-    //     //      setupSlotBoxesAndNumericViews(inside: bigMacCountbox, withBigMacCount: bigMacsYouCanBuy)
-    //           // displayBigMacCount(bigMacsYouCanBuy)
-    //        }
-    
+  
     private func updateConversionAmount(text: String) {
         guard let countryButtonTitle = toCountryButton.title(for: .normal),
               let selectedCountry = extractCountryName(from: countryButtonTitle),
-              let rateUSD = Double(currencyDetails["미국"]?.tts.replacingOccurrences(of: ",", with: "") ?? ""),
               let currencyDetail = currencyDetails[selectedCountry],
               let rate = Double(currencyDetail.tts.replacingOccurrences(of: ",", with: "")),
-              let amount = Double(text.replacingOccurrences(of: ",", with: "")),
-              let bigMacPrice = McCounter_addedSearch().bigMacPricesInUSD[selectedCountry] else {
+              let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
             print("환율 데이터가 없거나 입력값 문제 발생")
-//            print("선택된 국가: \(String(describing: toCountryLabel.text))")
-//            print("사전에서 찾은 환율: \(String(describing: currencyDetails[toCountryLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""]))")
             return
         }
-        let convertedAmountInUSD = amount / rateUSD
-        let bigMacsYouCanBuy = Int(convertedAmountInUSD / bigMacPrice)
-        
-        let convertedAmount = amount / rate
+
+        // 100엔 단위로 표시된 환율을 한 엔 단위로 조정
+        let adjustedRate = currencyDetail.currencyName.contains("JPY(100)") ? rate / 100 : rate
+
+        let convertedAmount = amount / adjustedRate
         let formattedAmount = String(format: "%.2f", convertedAmount)
         print("환산된 금액: \(formattedAmount)")
-        print("해당 국가에서 구매 가능한 빅맥 수: \(bigMacsYouCanBuy)")
-     //   displayConvertedAmount(amount: formattedAmount)
+
+        displayConvertedAmount(amount: formattedAmount)
     }
     
     private func displayConvertedAmount(amount: String) {
-//        setuptoAmountLabels(with: amount)
+      setuptoAmountLabels(with: amount)
         
     }
     
@@ -589,21 +551,21 @@ extension FirstViewController {
     }
 
     private func animateDigits() {
-        DispatchQueue.main.async {
-            let reversedLabels = Array(self.toAmountLabels.reversed())
-            let reversedTopConstraints = Array(self.toAmountTopConstraints.reversed())
-            
-            for (index, (label, topConstraint)) in zip(reversedLabels, reversedTopConstraints).enumerated() {
-                let delay = Double(index) * 0.1
+           DispatchQueue.main.async {
+               let reversedLabels = Array(self.toAmountLabels.reversed())
+               let reversedTopConstraints = Array(self.toAmountTopConstraints.reversed())
+               
+               for (index, (label, topConstraint)) in zip(reversedLabels, reversedTopConstraints).enumerated() {
+                   let delay = Double(index) * 0.1
 
-                UIView.animate(withDuration: 0.3, delay: delay, options: .curveEaseInOut, animations: {
-                    topConstraint.constant += 30
-                    label.alpha = 1.0
-                    self.view.layoutIfNeeded()
-                }, completion: nil)
-            }
-        }
-    }
+                   UIView.animate(withDuration: 0.3, delay: delay, options: .curveEaseInOut, animations: {
+                       topConstraint.constant += 30
+                       label.alpha = 1.0
+                       self.view.layoutIfNeeded()
+                   }, completion: nil)
+               }
+           }
+       }
 
     private func animateHamburgers() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
@@ -695,30 +657,34 @@ extension FirstViewController: UITextFieldDelegate {
 
 extension FirstViewController: CircularViewControllerDelegate {
     func countrySelected(_ countryName: String) {
-           print("전달받은 국가 정보: \(countryName)")  // 디버깅을 위한 로그 추가
+            print("전달받은 국가 정보: \(countryName)")
 
-           let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
-           if components.count == 2 {
-               let country = components[0]
-               let currencyCode = components[1]
+            let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
+            if components.count == 2 {
+                let country = components[0]
+                let currencyCode = components[1]
 
-               
-               if let countryTuple = countries.first(where: { $0.name == country }) {
-                   let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
-                   toCountryButton.setTitle(fullCountryName, for: .normal)
-                   toAmountSuffixLabel.text = currencyCode
-                   print("국가: \(fullCountryName), 통화: \(currencyCode)")
-               } else {
-                   toCountryButton.setTitle("국가 정보 없음", for: .normal)
-                   toAmountSuffixLabel.text = "통화 정보 없음"
-                   print("국가 정보 미발견: \(country)")
-               }
-           } else {
-               toCountryButton.setTitle("형식 오류", for: .normal)
-               toAmountSuffixLabel.text = "통화 정보 없음"
-               print("잘못된 형식: \(countryName)")
-           }
-       }
+                if let countryTuple = countries.first(where: { $0.name == country }) {
+                    let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
+                    toCountryButton.setTitle(fullCountryName, for: .normal)
+                    toAmountSuffixLabel.text = currencyCode
+                    print("국가: \(fullCountryName), 통화: \(currencyCode)")
+
+                    // 자동으로 환율 계산을 트리거합니다.
+                    if let fromAmountText = fromAmountTextField.text, !fromAmountText.isEmpty {
+                        updateConversionAmount(text: fromAmountText)
+                    }
+                } else {
+                    toCountryButton.setTitle("국가 정보 없음", for: .normal)
+                    toAmountSuffixLabel.text = "통화 정보 없음"
+                    print("국가 정보 미발견: \(country)")
+                }
+            } else {
+                toCountryButton.setTitle("형식 오류", for: .normal)
+                toAmountSuffixLabel.text = "통화 정보 없음"
+                print("잘못된 형식: \(countryName)")
+            }
+        }
     
     @objc func toCountryButtonTapped() {
         let pickerVC = CircularViewController()
