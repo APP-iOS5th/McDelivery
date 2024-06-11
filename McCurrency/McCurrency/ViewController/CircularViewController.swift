@@ -5,6 +5,13 @@
 //  Created by Mac on 6/9/24.
 //
 
+
+protocol CircularViewControllerDelegate: AnyObject {
+    func countrySelected(_ countryName: String)
+}
+
+
+
 import UIKit
 import AVKit
 
@@ -13,6 +20,8 @@ protocol CircularViewControllerDelegate: AnyObject {
 }
 
 class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBarDelegate {
+    
+    weak var delegate: CircularViewControllerDelegate?
     
     let countries = [
         "노르웨이 / NOK", "말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK", "스위스 / CHF", "영국 / GBP", "인도네시아 / IDR", "일본 / JPY", "중국 / CNY", "캐나다 / CAD", "홍콩 / HKD", "태국 / THB", "호주 / AUD", "뉴질랜드 / NZD", "싱가포르 / SGD"
@@ -28,6 +37,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     var lastText: String?
     
     var centerLabel: UILabel!
+
     var searchBar: UISearchBar!
     var searchBarWidthConstraint: NSLayoutConstraint!
     var addButton: UIButton!
@@ -40,10 +50,14 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         blurEffectView.frame = self.view.bounds
         self.view.addSubview(blurEffectView)
         
+
+  
+ 
         let closeButton = UIButton(type: .system)
         closeButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         closeButton.tintColor = .white
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+
         closeButton.frame = CGRect(x: -30, y: 55, width: 100, height: 50)
         self.view.addSubview(closeButton)
         
@@ -63,6 +77,8 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             addButton.widthAnchor.constraint(equalToConstant: 350),
             addButton.heightAnchor.constraint(equalToConstant: 55)
         ])
+
+ 
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGesture)
@@ -103,6 +119,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         centerLabel.textColor = .white
         self.view.addSubview(centerLabel)
         
+
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
     }
@@ -119,6 +136,8 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         delegate?.modalDidDismiss()
+
+        
     }
     
     func attributedString(for text: String, fittingWidth width: CGFloat, in label: UILabel) -> NSAttributedString {
@@ -135,9 +154,12 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         self.dismiss(animated: true, completion: nil)
     }
     
+
     // 재현님 코드 추가
     @objc func addCounntryButtonTapped() {
         
+
+ 
     }
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
@@ -187,6 +209,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     }
     
     func labelTextSending() {
+
         
     }
     
@@ -255,6 +278,33 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             self.searchBarWidthConstraint.constant = 50
             self.view.layoutIfNeeded()
             searchBar.text = nil
+
+        
         }
     }
+    
+    func blurEffect() {
+        
+                 let blurEffect = UIBlurEffect(style: .dark)
+                      let blurEffectView = UIVisualEffectView(effect: blurEffect)
+      
+      
+                      blurEffectView.frame = self.view.bounds
+                      blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+      
+      
+                      view.addSubview(blurEffectView)
+      
+      
+                      let backgroundView = UIView(frame: self.view.bounds)
+                      backgroundView.backgroundColor = UIColor.backgroundColor.withAlphaComponent(0.3)
+                      backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                      blurEffectView.contentView.addSubview(backgroundView)
+        
+        
+        
+        
+    }
+    
+    
 }
