@@ -8,10 +8,10 @@
 import UIKit
 
 class FirstViewController: UIViewController {
-
+    
     var totalWidth: CGFloat = 0
     var labelWidths: [CGFloat] = []
-    
+    var currencyDetails: [String: CurrencyDetail] = [:]
     
     var ttsDictionary: [String: String] = [:] {
         didSet {
@@ -70,7 +70,14 @@ class FirstViewController: UIViewController {
   
 
         fetchCurrencyData()
-    //    setupTextField()
+        //    setupTextField()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // 데이터 로딩 후 딜레이를 주어 출력
+               print("currencyDetails:")
+               for (country, details) in self.currencyDetails {
+                   print("\(country): \(details)")
+               }
+           }
         
 
     }
@@ -87,7 +94,7 @@ class FirstViewController: UIViewController {
         view.addSubview(fromCountryLabel)
         
         view.addSubview(toCountryLabel)
-       
+        
         view.addSubview(fromAmountTextField)
         view.addSubview(fromAmountSuffixLabel)
         view.addSubview(toAmountSuffixLabel)
@@ -100,7 +107,7 @@ class FirstViewController: UIViewController {
         fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         toCountryButton.translatesAutoresizingMaskIntoConstraints = false
         toCountryLabel.translatesAutoresizingMaskIntoConstraints = false
-       
+        
         fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
         fromAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
         toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +119,7 @@ class FirstViewController: UIViewController {
         fromCountryLabel.textColor = .white
         fromCountryLabel.font = UIFont.systemFont(ofSize: 14)
         
-        toCountryLabel.text = "미국 달러"
+        toCountryLabel.text = "미국"
         toCountryLabel.textColor = .white
         toCountryLabel.font = UIFont.systemFont(ofSize: 14)
         toCountryLabel.isUserInteractionEnabled = true
@@ -123,7 +130,7 @@ class FirstViewController: UIViewController {
         
         fromAmountTextField.delegate = self
         
-    
+        
         let placeholderAttributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.lightGray,
             .font: UIFont.interBoldFont(ofSize: 40)
@@ -208,7 +215,7 @@ class FirstViewController: UIViewController {
         ])
     }
     
-   
+    
     
     private func setuptoAmountLabels(with text: String) {
         let formattedText = text.formattedWithCommas()
@@ -220,12 +227,12 @@ class FirstViewController: UIViewController {
         
         
         for label in toAmountLabels {
-               label.removeFromSuperview()
-           }
-           toAmountLabels.removeAll()
-           toAmountTopConstraints.removeAll()
-
-         
+            label.removeFromSuperview()
+        }
+        toAmountLabels.removeAll()
+        toAmountTopConstraints.removeAll()
+        
+        
         
         for digit in digits {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
@@ -259,7 +266,7 @@ class FirstViewController: UIViewController {
             NSLayoutConstraint.activate(toAmountConstraints)
             previousLabel = toAmountLabel
         }
-    animateDigits()
+        animateDigits()
         
     }
     private func createtoAmountLabel(with text: String) -> UILabel {
@@ -271,7 +278,7 @@ class FirstViewController: UIViewController {
         toAmountLabel.alpha = 0.0
         return toAmountLabel
     }
-   
+    
     @objc func exchangeButtonTapped() {
         guard let fromAmountText = fromAmountTextField.text, let fromAmount = Double(fromAmountText.replacingOccurrences(of: ",", with: "")) else { return }
         
@@ -344,93 +351,120 @@ class FirstViewController: UIViewController {
     
     //MARK: - 환율 API 불러오기
     private func fetchCurrencyData() {
-          CurrencyService.shared.fetchExchangeRates { [weak self] exchangeRates in
-              DispatchQueue.main.async {
-                  guard let self = self, let rates = exchangeRates else {
-                      print("Failed to fetch data")
-                      return
-                  }
-
-                  self.ttsDictionary = self.createTtsDictionary(from: rates)
-                  print("Updated TTS Dictionary: \(self.ttsDictionary)")
-                  
-                  // 날짜 확인 후 알림 표시
-                  let currentDate = Date()
-                  let validDate = CurrencyService.shared.getValidSearchDate(date: currentDate)
-                  let today = self.formattedDate(from: currentDate)
-                  if validDate != today {
-                      self.showAlertForPastData(date: validDate)
-                  }
-              }
-          }
-      }
-
-
+        CurrencyService.shared.fetchExchangeRates { [weak self] exchangeRates in
+            DispatchQueue.main.async {
+                guard let self = self, let rates = exchangeRates else {
+                    print("Failed to fetch data")
+                    return
+                }
+                
+//                self.ttsDictionary = self.createTtsDictionary(from: rates)
+//                print("Updated TTS Dictionary: \(self.ttsDictionary)")
+                
+                self.currencyDetails = self.createCurrencyDetails(from: rates)
+                print("Updated Currency Details: \(self.currencyDetails)")
+                
+                // 날짜 확인 후 알림 표시
+                let currentDate = Date()
+                let validDate = CurrencyService.shared.getValidSearchDate(date: currentDate)
+                let today = self.formattedDate(from: currentDate)
+                if validDate != today {
+                    self.showAlertForPastData(date: validDate)
+                }
+            }
+        }
+    }
+    
+    
     private func showAlertForPastData(date: String) {
-            let alert = UIAlertController(title: "이전 날짜 데이터 사용", message: "현재 \(date)의 환율 정보를 표시하고 있습니다.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-
-        private func formattedDate(from date: Date) -> String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            return dateFormatter.string(from: date)
-        }
-
+        let alert = UIAlertController(title: "이전 날짜 데이터 사용", message: "현재 \(date)의 환율 정보를 표시하고 있습니다.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func formattedDate(from date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.string(from: date)
+    }
+    
     //MARK: - 받아온 데이터 Dictionary 로 저장
-    func createTtsDictionary(from rates: [ExchangeRate]) -> [String: String] {
-        let dictionary = rates.reduce(into: [String: String]()) { (dict, rate) in
-            dict[rate.cur_nm] = rate.tts
+    
+    func createCurrencyDetails(from rates: [ExchangeRate]) -> [String: CurrencyDetail] {
+        var details = [String: CurrencyDetail]()
+
+        for rate in rates {
+            let parts = rate.cur_nm.components(separatedBy: " ")
+            guard parts.count >= 2 else { continue }
+
+            let currencyUnit = parts.last!
+            let countryName = parts.dropLast().joined(separator: " ")
+
+            details[countryName] = CurrencyDetail(
+                countryName: countryName,
+                currencyName: rate.cur_unit,
+                currencyUnit: currencyUnit,
+                tts: rate.tts
+            )
         }
-        return dictionary
+
+        return details
+    }
+    
+    
+    
+    
+//    private func updateConversionAmount(text: String) {
+//        guard let selectedCountry = toCountryLabel.text,
+//              let currencyDetail = currencyDetails[selectedCountry],
+//              let rateString = currencyDetail.tts.replacingOccurrences(of: ",", with: ""),
+//              let rate = Double(rateString),
+//              let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
+//            print("환율 데이터가 없거나 입력값 문제 발생")
+//            print("선택된 국가: \(String(describing: toCountryLabel.text))")
+//            print("사전에서 찾은 환율: \(String(describing: currencyDetails[selectedCountry]))")
+//            return
+//        }
+//
+//        let convertedAmount = amount / rate
+//        let formattedAmount = String(format: "%.2f", convertedAmount)
+//        print("환산된 금액: \(formattedAmount)")
+//        displayConvertedAmount(amount: formattedAmount)
+//    }
+
+    private func updateConversionAmount(text: String) {
+        guard let selectedCountry = toCountryLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+              let currencyDetail = currencyDetails[selectedCountry],
+              let rate = Double(currencyDetail.tts.replacingOccurrences(of: ",", with: "")),
+              let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
+            print("환율 데이터가 없거나 입력값 문제 발생")
+            print("선택된 국가: \(String(describing: toCountryLabel.text))")
+            print("사전에서 찾은 환율: \(String(describing: currencyDetails[toCountryLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""]))")
+            return
+        }
+
+        let convertedAmount = amount / rate
+        let formattedAmount = String(format: "%.2f", convertedAmount)
+        print("환산된 금액: \(formattedAmount)")
+        displayConvertedAmount(amount: formattedAmount)
     }
 
     
+    private func displayConvertedAmount(amount: String) {
+        setuptoAmountLabels(with: amount)
+    }
     
     
     
-     private func updateConversionAmount(text: String) {
-         guard let selectedCurrency = toCountryLabel.text,
-               let rateString = ttsDictionary[selectedCurrency],
-               let rate = Double(rateString.replacingOccurrences(of: ",", with: "")),
-               let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
-             print("환율 데이터가 없거나 입력값 문제 발생")
-            
-             return
-         }
-         
-         let convertedAmount = amount / rate
-         let formattedAmount = String(format: "%.2f", convertedAmount)
-         print("환산된 금액: \(formattedAmount)")
-         displayConvertedAmount(amount: formattedAmount)
-     }
-     
-     private func displayConvertedAmount(amount: String) {
-         setuptoAmountLabels(with: amount)
-     }
-     
-  
+    
+    
+    
+    
+    
     
     
     
     // MARK: - 환율 계산
-//    func convertKRWtoForeignCurrency(krwAmount: Double, targetCurrency: String, ttsDictionary: [String: String]) -> String {
-//        // 통화 이름을 통해 환율 찾기
-//        guard let rateString = ttsDictionary[targetCurrency],
-//              let rate = Double(rateString.replacingOccurrences(of: ",", with: "")) else {
-//            return "환율 정보 없음"
-//        }
-//        
-//        // 계산: 한화 금액 / 환율 = 변환 통화 금액
-//        let foreignAmount = krwAmount / rate
-//        
-//        // 결과 포매팅: 소수점 두 자리까지 표시
-//        let formattedAmount = String(format: "%.2f", foreignAmount)
-//        
-//        return "\(formattedAmount) \(targetCurrency)"
-//    }
-//    
     
     
 }
@@ -662,9 +696,15 @@ extension FirstViewController: UITextFieldDelegate {
 
 extension FirstViewController: CircularViewControllerDelegate {
     func countrySelected(_ countryName: String) {
-        toCountryLabel.text = countryName
- 
-    }
+           let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
+           if components.count == 2 {
+               toCountryLabel.text = components[0] // 나라 이름
+               toAmountSuffixLabel.text = components[1] // 통화 단위
+           } else {
+               toCountryLabel.text = countryName
+               toAmountSuffixLabel.text = "통화 정보 없음"
+           }
+       }
     
     @objc func toCountryButtonTapped() {
         let pickerVC = CircularViewController()
