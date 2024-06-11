@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FirstViewController: UIViewController, UITextFieldDelegate, CircularViewControllerDelegate {
+class FirstViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Properties
     let fromCountryLabel = UILabel()
@@ -234,8 +234,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate, CircularViewCo
     
     @objc func toCountryButtonTapped() {
         let viewController = CircularViewController()
-        viewController.modalPresentationStyle = .overCurrentContext
-        viewController.delegate = self
+        viewController.modalPresentationStyle = .overFullScreen
         self.present(viewController, animated: true, completion: nil)
     }
     
@@ -505,8 +504,5 @@ extension FirstViewController {
                 self.numericMotionViews.forEach { $0.animateText() }
             }
         }
-    }
-    func modalDidDismiss() {
-        self.tabBarController?.tabBar.isHidden = false
     }
 }

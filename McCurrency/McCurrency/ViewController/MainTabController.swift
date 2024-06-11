@@ -45,4 +45,7 @@ class MainTabController: UITabBarController {
         
         viewControllers = [nav1, nav2]
     }
+    func modalDidDismiss() {
+        self.tabBarController?.tabBar.isHidden = false
+    }
 }
