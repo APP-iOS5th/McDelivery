@@ -97,7 +97,6 @@ class FirstViewController: UIViewController {
         toCountryButton.setTitle("🇺🇸 미국", for: .normal)
         toCountryButton.setTitleColor(.white, for: .normal)
         toCountryButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        
         toCountryButton.backgroundColor = UIColor.boxColor
         toCountryButton.layer.cornerRadius = 5
         toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
