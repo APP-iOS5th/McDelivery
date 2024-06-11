@@ -156,7 +156,7 @@ class SecondViewController: UIViewController {
 
         
 extension SecondViewController: UITextFieldDelegate {
-  
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
@@ -166,12 +166,12 @@ extension SecondViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
-
+        
         if updatedText.count > 13 {
             return false
         }
         
-       
+        
         let allowedCharacters = CharacterSet(charactersIn: "0123456789").inverted
         let filtered = string.components(separatedBy: allowedCharacters).joined(separator: "")
         if string != filtered {
@@ -191,17 +191,16 @@ extension SecondViewController: UITextFieldDelegate {
         
         return false
     }
-}
-
-        
-extension SecondViewController:UITableViewDelegate,UITableViewDataSource {
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
     
+}
+
+extension SecondViewController:UITableViewDelegate,UITableViewDataSource {
+  
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
     }
@@ -223,8 +222,6 @@ extension SecondViewController:UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 90
     }
-    
-
     
 }
         

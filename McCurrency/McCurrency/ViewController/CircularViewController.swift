@@ -5,10 +5,19 @@
 //  Created by Mac on 6/9/24.
 //
 
+
+protocol CircularViewControllerDelegate: AnyObject {
+    func countrySelected(_ countryName: String)
+}
+
+
+
 import UIKit
 import AVKit
 
 class CircularViewController: UIViewController {
+    
+    weak var delegate: CircularViewControllerDelegate?
     
     let countries = [
         "Switzerland", "Norway", "Uruguay", "Sweden", "Euro Area", "United States", "Canada", "Australia", "Brazil",
@@ -25,19 +34,21 @@ class CircularViewController: UIViewController {
     
     var resultLabel: UILabel!
     var centerLabel: UILabel!
+  
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        //view.backgroundColor = UIColor.backgroundColor.withAlphaComponent(0.7)
+        view.backgroundColor = .clear
+        blurEffect()
+        let closeButton = UIButton(type: .system)
+        closeButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        closeButton.tintColor = .white
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         
-//        navigationController?.setNavigationBarHidden(false, animated: false)
-//        navigationController?.navigationBar.barTintColor = .black
-//        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        
-        let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
-        backButton.tintColor = .white
-        navigationItem.leftBarButtonItem = backButton
+        closeButton.frame = CGRect(x: -30, y: 55, width: 100, height: 50)
+        self.view.addSubview(closeButton)
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGesture)
@@ -78,6 +89,30 @@ class CircularViewController: UIViewController {
         centerLabel.layer.borderWidth = 1.0
         centerLabel.textColor = .white
         self.view.addSubview(centerLabel)
+        
+        let addButton:UIButton = UIButton()
+        addButton.setTitle("추가하기", for: .normal)
+        addButton.tintColor = .white
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        
+        self.view.addSubview(addButton)
+        
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+        
+            addButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            addButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 16),
+            addButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 300),
+            addButton.heightAnchor.constraint(equalToConstant: 50),
+        
+        
+        ])
+//        
+//        
+       
+        
+        
     }
     
     func attributedString(for text: String, fittingWidth width: CGFloat, in label: UILabel) -> NSAttributedString {
@@ -89,8 +124,14 @@ class CircularViewController: UIViewController {
         return attributedText
     }
     
-    @objc func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
+    @objc func closeButtonTapped() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    
+    @objc func addButtonTapped() {
+        self.dismiss(animated: true)
     }
     
     @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
@@ -140,18 +181,50 @@ class CircularViewController: UIViewController {
         })
     }
     
-    func labelTextSending()  {
-        let circleCenter =  CGPoint(x: -70, y: view.frame.height / 2 + 20)
-        let circleRadiusX: CGFloat = 250
-        let circleRadiusY: CGFloat = 300
-        let sendingNearOne = circleCenter.x + circleRadiusX
+    func labelTextSending() {
+        let focusPoint = CGPoint(x: view.center.x, y: view.frame.height / 2 + 20)
+        
+        var closestLabel: UILabel?
+        var minDistance = CGFloat.greatestFiniteMagnitude
         
         for label in labels {
-            if abs(label.center.x - sendingNearOne) < 5 {
-                if let labelText = label.text {
-                    resultLabel.text = "\(labelText)"
-                }
+            let distance = hypot(label.center.x - focusPoint.x, label.center.y - focusPoint.y)
+            if distance < minDistance {
+                closestLabel = label
+                minDistance = distance
             }
         }
+        
+        if let focusedLabel = closestLabel {
+            resultLabel.text = focusedLabel.text
+            print("선택된 국가: \(String(describing: resultLabel.text))")
+            
+            delegate?.countrySelected(focusedLabel.text ?? "")
+        }
     }
+    
+    func blurEffect() {
+        
+                 let blurEffect = UIBlurEffect(style: .dark)
+                      let blurEffectView = UIVisualEffectView(effect: blurEffect)
+      
+      
+                      blurEffectView.frame = self.view.bounds
+                      blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+      
+      
+                      view.addSubview(blurEffectView)
+      
+      
+                      let backgroundView = UIView(frame: self.view.bounds)
+                      backgroundView.backgroundColor = UIColor.backgroundColor.withAlphaComponent(0.3)
+                      backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                      blurEffectView.contentView.addSubview(backgroundView)
+        
+        
+        
+        
+    }
+    
+    
 }

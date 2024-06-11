@@ -7,12 +7,21 @@
 
 import UIKit
 
-class FirstViewController: UIViewController, UITextFieldDelegate {
+class FirstViewController: UIViewController {
+
+    var totalWidth: CGFloat = 0
+    var labelWidths: [CGFloat] = []
     
+    
+    var ttsDictionary: [String: String] = [:] {
+        didSet {
+            print("환율정보 업데이트 완료\(self)")
+        }
+    }
     //MARK: - Properties
     let fromCountryLabel = UILabel()
+    
     let toCountryLabel = UILabel()
-    let countryPickerView = UIPickerView()
     let countries: [(flag: String, name: String)] = [
         ("🇨🇭", "스위스"), ("🇳🇴", "노르웨이"), ("🇺🇾", "우루과이"), ("🇸🇪", "스웨덴"),
         ("🇪🇺", "유럽 연합"), ("🇺🇸", "미국"), ("🇨🇦", "캐나다"), ("🇦🇺", "오스트레일리아"),
@@ -46,18 +55,18 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - LifeCycles
     override func viewDidLoad() {
-
+        
         super.viewDidLoad()
         setupUI()
-        setuptoAmountLabels(with: "100000")
         animatetoAmounts()
         setupSlotBoxesAndNumericViews(inside: bigMacCountbox)
         setupHamburgerLabelsAndCoverBoxes()
         bringHamburgersToFront()
         animateDigits()
         animateHamburgers()
-        //        fetchCurrencyData()
-
+        fetchCurrencyData()
+    //    setupTextField()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -70,8 +79,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     func setupUI() {
         view.addSubview(fromCountryLabel)
+        
         view.addSubview(toCountryLabel)
-        view.addSubview(countryPickerView)
+       
         view.addSubview(fromAmountTextField)
         view.addSubview(fromAmountSuffixLabel)
         view.addSubview(toAmountSuffixLabel)
@@ -84,7 +94,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         toCountryButton.translatesAutoresizingMaskIntoConstraints = false
         toCountryLabel.translatesAutoresizingMaskIntoConstraints = false
-        countryPickerView.translatesAutoresizingMaskIntoConstraints = false
+       
         fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
         fromAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
         toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -96,7 +106,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         fromCountryLabel.textColor = .white
         fromCountryLabel.font = UIFont.systemFont(ofSize: 14)
         
-        toCountryLabel.text = "🇺🇸 미국"
+        toCountryLabel.text = "미국 달러"
         toCountryLabel.textColor = .white
         toCountryLabel.font = UIFont.systemFont(ofSize: 14)
         toCountryLabel.isUserInteractionEnabled = true
@@ -107,7 +117,12 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         
         fromAmountTextField.delegate = self
         
-        fromAmountTextField.text = "1,300,000"
+    
+        let placeholderAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.lightGray,
+            .font: UIFont.interBoldFont(ofSize: 40)
+        ]
+        fromAmountTextField.attributedPlaceholder = NSAttributedString(string: "0", attributes: placeholderAttributes)
         fromAmountTextField.textColor = .white
         fromAmountTextField.font = UIFont.interLightFont(ofSize: 36)
         fromAmountTextField.borderStyle = .none
@@ -160,11 +175,6 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             toCountryLabel.centerXAnchor.constraint(equalTo: toCountryButton.centerXAnchor),
             //미국
             
-            countryPickerView.bottomAnchor.constraint(equalTo: toCountryLabel.topAnchor, constant: 300),
-            countryPickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            countryPickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            //나라선택피커
-            
             fromAmountTextField.topAnchor.constraint(equalTo: fromCountryLabel.bottomAnchor, constant: 20),
             fromAmountTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             //원화 입력가능
@@ -191,41 +201,61 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             tooltipButton.trailingAnchor.constraint(equalTo: bigMacCountbox.trailingAnchor, constant: -10)
         ])
     }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // 현재 텍스트 필드의 텍스트 길이를 가져옴
-        guard let text = textField.text else { return true }
-        let newLength = text.count + string.count - range.length
-        return newLength <= maxCharacters // 최대 글자 수를 초과하지 않도록 함
-    }
-    
+
     private func setuptoAmountLabels(with text: String) {
         let formattedText = text.formattedWithCommas()
         let digits = Array(formattedText)
         var previousLabel: UILabel? = nil
         
+        var totalWidth: CGFloat = 0
+        var labelWidths: [CGFloat] = []
+
+        for label in toAmountLabels {
+            label.removeFromSuperview()
+        }
+        toAmountLabels.removeAll()
+        toAmountTopConstraints.removeAll()
+        
         for digit in digits {
+            let toAmountLabel = createtoAmountLabel(with: String(digit))
+            let labelWidth = toAmountLabel.intrinsicContentSize.width
+            labelWidths.append(labelWidth)
+            totalWidth += labelWidth + 5
+        }
+
+        if !labelWidths.isEmpty {
+            totalWidth -= 5
+        }
+
+        for (index, digit) in digits.enumerated() {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             view.addSubview(toAmountLabel)
             
-            let toAmountTopConstraint = toAmountLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 300)
+            let toAmountTopConstraint = toAmountLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 330)
             toAmountTopConstraints.append(toAmountTopConstraint)
             toAmountLabels.append(toAmountLabel)
             
             var toAmountConstraints = [toAmountTopConstraint]
             
             if let previous = previousLabel {
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 5))
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: 1))
             } else {
-                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 140))
+                toAmountConstraints.append(toAmountLabel.leadingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -totalWidth + 13))
             }
             
             NSLayoutConstraint.activate(toAmountConstraints)
             previousLabel = toAmountLabel
         }
+
+        if let lastLabel = toAmountLabels.last {
+            NSLayoutConstraint.activate([
+                lastLabel.trailingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -1)
+            ])
+        }
+        
+        animateDigits()
     }
-    
-    
+
     private func createtoAmountLabel(with text: String) -> UILabel {
         let toAmountLabel = UILabel()
         toAmountLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -235,13 +265,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         toAmountLabel.alpha = 0.0
         return toAmountLabel
     }
-    
-    @objc func toCountryButtonTapped() {
-        let viewController = CircularViewController()
-        viewController.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(viewController, animated: true)
-    }
-    
+
     @objc func exchangeButtonTapped() {
         guard let fromAmountText = fromAmountTextField.text, let fromAmount = Double(fromAmountText.replacingOccurrences(of: ",", with: "")) else { return }
         
@@ -310,49 +334,106 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-}
+    
+    
+    //MARK: - 환율 API 불러오기
+    private func fetchCurrencyData() {
+          CurrencyService.shared.fetchExchangeRates { [weak self] exchangeRates in
+              DispatchQueue.main.async {
+                  guard let self = self, let rates = exchangeRates else {
+                      print("Failed to fetch data")
+                      return
+                  }
 
-//    private func fetchCurrencyData() {
-//        CurrencyService.shared.fetchExchangeRates(searchDate: nil) { [weak self] exchangeRates in
-//            DispatchQueue.main.async {
-//                if let rates = exchangeRates {
-//                    let ttsDictionary = self?.createTtsDictionary(from: rates)
-//
-//                    if let ttsDictionary = ttsDictionary {
-//                        let desiredKey = "바레인 디나르" // 원하는 키 설정
-//                        if let ttsValue = ttsDictionary[desiredKey] {
-//                            self?.titleLabel.text = desiredKey
-//                            self?.titleLabel2.text = ttsValue
-//                        } else {
-//                            self?.titleLabel.text = "No data"
-//                            self?.titleLabel2.text = "No data"
-//                        }
-//                        print("TTS Dictionary: \(ttsDictionary)")
-//                    }
-//                } else {
-//                    self?.titleLabel.text = "Failed to fetch data"
-//                    self?.titleLabel2.text = "Failed to fetch data"
-//                }
-//            }
+                  self.ttsDictionary = self.createTtsDictionary(from: rates)
+                  print("Updated TTS Dictionary: \(self.ttsDictionary)")
+                  
+                  // 날짜 확인 후 알림 표시
+                  let currentDate = Date()
+                  let validDate = CurrencyService.shared.getValidSearchDate(date: currentDate)
+                  let today = self.formattedDate(from: currentDate)
+                  if validDate != today {
+                      self.showAlertForPastData(date: validDate)
+                  }
+              }
+          }
+      }
+
+
+    private func showAlertForPastData(date: String) {
+            let alert = UIAlertController(title: "이전 날짜 데이터 사용", message: "현재 \(date)의 환율 정보를 표시하고 있습니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+
+        private func formattedDate(from date: Date) -> String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            return dateFormatter.string(from: date)
+        }
+
+    //MARK: - 받아온 데이터 Dictionary 로 저장
+    func createTtsDictionary(from rates: [ExchangeRate]) -> [String: String] {
+        let dictionary = rates.reduce(into: [String: String]()) { (dict, rate) in
+            dict[rate.cur_nm] = rate.tts
+        }
+        return dictionary
+    }
+
+    
+    
+    
+    
+     private func updateConversionAmount(text: String) {
+         guard let selectedCurrency = toCountryLabel.text,
+               let rateString = ttsDictionary[selectedCurrency],
+               let rate = Double(rateString.replacingOccurrences(of: ",", with: "")),
+               let amount = Double(text.replacingOccurrences(of: ",", with: "")) else {
+             print("환율 데이터가 없거나 입력값 문제 발생")
+            
+             return
+         }
+         
+         let convertedAmount = amount / rate
+         let formattedAmount = String(format: "%.2f", convertedAmount)
+         print("환산된 금액: \(formattedAmount)")
+         displayConvertedAmount(amount: formattedAmount)
+     }
+     
+     private func displayConvertedAmount(amount: String) {
+         setuptoAmountLabels(with: amount)
+     }
+     
+  
+    
+    
+    
+    // MARK: - 환율 계산
+//    func convertKRWtoForeignCurrency(krwAmount: Double, targetCurrency: String, ttsDictionary: [String: String]) -> String {
+//        // 통화 이름을 통해 환율 찾기
+//        guard let rateString = ttsDictionary[targetCurrency],
+//              let rate = Double(rateString.replacingOccurrences(of: ",", with: "")) else {
+//            return "환율 정보 없음"
 //        }
+//        
+//        // 계산: 한화 금액 / 환율 = 변환 통화 금액
+//        let foreignAmount = krwAmount / rate
+//        
+//        // 결과 포매팅: 소수점 두 자리까지 표시
+//        let formattedAmount = String(format: "%.2f", foreignAmount)
+//        
+//        return "\(formattedAmount) \(targetCurrency)"
 //    }
-//
-func createTtsDictionary(from rates: [ExchangeRate]) -> [String: String] {
-    let dictionary = rates.reduce(into: [String: String]()) { (dict, rate) in
-        dict[rate.cur_nm] = rate.tts
-    }
-    return dictionary
+//    
+    
+    
 }
 
-extension String {
-    func formattedWithCommas() -> String {
-        guard let number = Int(self) else { return self }
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        return numberFormatter.string(from: NSNumber(value: number)) ?? self
-    }
-}
 
+
+
+
+//MARK: - Animation
 extension FirstViewController {
     private func setupSlotBoxesAndNumericViews(inside backgroundView: UIView) {
         for _ in 0..<3 {
@@ -465,20 +546,22 @@ extension FirstViewController {
         coverBox.clipsToBounds = true
         return coverBox
     }
-}
-
-extension FirstViewController {
+    
     private func bringHamburgersToFront() {
         for hamburgerLabel in self.hamburgerLabels {
             bigMacCountbox.bringSubviewToFront(hamburgerLabel)
         }
     }
-    
+
     private func animateDigits() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            for (index, topConstraint) in self.toAmountTopConstraints.reversed().enumerated() {
-                let label = self.toAmountLabels.reversed()[index]
-                UIView.animate(withDuration: 0.3, delay: Double(index) * 0.15, options: .curveEaseInOut, animations: {
+        DispatchQueue.main.async {
+            let reversedLabels = Array(self.toAmountLabels.reversed())
+            let reversedTopConstraints = Array(self.toAmountTopConstraints.reversed())
+            
+            for (index, (label, topConstraint)) in zip(reversedLabels, reversedTopConstraints).enumerated() {
+                let delay = Double(index) * 0.1
+
+                UIView.animate(withDuration: 0.3, delay: delay, options: .curveEaseInOut, animations: {
                     topConstraint.constant += 30
                     label.alpha = 1.0
                     self.view.layoutIfNeeded()
@@ -486,10 +569,10 @@ extension FirstViewController {
             }
         }
     }
-    
+
     private func animateHamburgers() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-            for (index, topConstraint) in self.hamburgerTopConstraints.enumerated() {
+            for (index, _) in self.hamburgerTopConstraints.enumerated() {
                 let label = self.hamburgerLabels[index]
                 let coverBox = self.coverBoxes[index]
                 
@@ -509,4 +592,87 @@ extension FirstViewController {
             }
         }
     }
+    
 }
+
+//MARK: - UITextFieldDelegate
+extension FirstViewController: UITextFieldDelegate {
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.view.endEditing(true)
+    }
+   
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+    }
+    
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? "0"
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        
+        if updatedText.count > 13 {
+            return false
+        }
+        
+        let allowedCharacters = CharacterSet(charactersIn: "0123456789,").inverted
+        let filtered = string.components(separatedBy: allowedCharacters).joined(separator: "")
+        if string != filtered {
+            return false
+        }
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.groupingSeparator = ","
+        
+        if let number = Double(updatedText.replacingOccurrences(of: ",", with: "")) {
+            let formattedNumber = numberFormatter.string(from: NSNumber(value: number)) ?? ""
+            textField.text = formattedNumber
+            print("formattedNumber\(formattedNumber)")
+            
+            if let text = textField.text, !text.isEmpty {
+                print("계산 시작\(text)")
+                updateConversionAmount(text: text)
+            }
+            // updateConversionAmount(text: formattedNumber)
+        } else {
+            textField.text = ""
+        }
+        
+        
+        return false
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        print("키보드 닫힘")
+        
+        textField.resignFirstResponder()
+        
+        return true
+        
+    }
+    
+    
+}
+
+extension FirstViewController: CircularViewControllerDelegate {
+    func countrySelected(_ countryName: String) {
+        toCountryLabel.text = countryName
+ 
+    }
+    
+    @objc func toCountryButtonTapped() {
+        let pickerVC = CircularViewController()
+        pickerVC.delegate = self
+        pickerVC.modalPresentationStyle = .overFullScreen
+        pickerVC.modalTransitionStyle = .crossDissolve
+        self.present(pickerVC, animated: true, completion: nil)
+    }
+    
+}
+
+
+
