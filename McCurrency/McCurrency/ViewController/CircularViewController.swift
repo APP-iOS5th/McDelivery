@@ -6,16 +6,12 @@
 //
 
 
-protocol CircularViewControllerDelegate: AnyObject {
-    func countrySelected(_ countryName: String)
-}
-
-
-
 import UIKit
 import AVKit
 
-
+protocol CircularViewControllerDelegate: AnyObject {
+    func countrySelected(_ countryName: String)
+}
 
 class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBarDelegate {
 
@@ -24,10 +20,11 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     var selectedCountryLabel: UILabel?
     
     let countries = [
-        "노르웨이 / NOK", "말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK", "스위스 / CHF", "영국 / GBP", "인도네시아 / IDR", "일본 / JPY", "중국 / CNY", "캐나다 / CAD", "홍콩 / HKD", "태국 / THB", "호주 / AUD", "뉴질랜드 / NZD", "싱가포르 / SGD"
+        "노르웨이 / NOK", "말레이시아 / MYR", "미국 / USD", "스웨덴 / SEK", "스위스 / CHF", "영국 / GBP",
+        "인도네시아 / IDR", "일본 / JPY", "중국 / CNY", "캐나다 / CAD", "홍콩 / HKD", "태국 / THB",
+        "호주 / AUD", "뉴질랜드 / NZD", "싱가포르 / SGD"
     ]
     
-  
     var filteredCountries: [String] = []
 
     var labels: [UILabel] = []
@@ -38,8 +35,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     var lastText: String?
     var resultLabel: UILabel = UILabel()
     var centerLabel: UILabel!
-   
-
+    
     var searchBar: UISearchBar!
     var searchBarWidthConstraint: NSLayoutConstraint!
 
@@ -48,29 +44,49 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupBlurEffect()
+        setupCloseButton()
+        setupAddButton()
+        setupSearchBar()
+        
+        filteredCountries = countries
+        displayCountries(filteredCountries)
+        
+        setupCenterLabel()
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        view.addGestureRecognizer(panGesture)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    private func setupBlurEffect() {
         let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = self.view.bounds
         self.view.addSubview(blurEffectView)
-        
+
+    }
+    
+    private func setupCloseButton() {
 
         let closeButton = UIButton(type: .system)
         closeButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         closeButton.tintColor = .white
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
 
-        
-
-
         closeButton.frame = CGRect(x: -30, y: 55, width: 100, height: 50)
         self.view.addSubview(closeButton)
-        
+    }
+    
+    private func setupAddButton() {
         addButton = UIButton(type: .system)
         addButton.setTitle("추가하기", for: .normal)
         addButton.setTitleColor(.black, for: .normal)
         addButton.backgroundColor = .AddButton
         addButton.tintColor = .black
-        addButton.addTarget(self, action: #selector(addCounntryButtonTapped), for: .touchUpInside)
+        addButton.addTarget(self, action: #selector(addCountryButtonTapped), for: .touchUpInside)
         addButton.layer.cornerRadius = 10
         self.view.addSubview(addButton)
         addButton.translatesAutoresizingMaskIntoConstraints = false
@@ -81,14 +97,15 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             addButton.widthAnchor.constraint(equalToConstant: 350),
             addButton.heightAnchor.constraint(equalToConstant: 55)
         ])
+
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGesture)
         
+
         searchBar = UISearchBar()
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
-        
         searchBar.backgroundImage = UIImage()
         
         let searchTextField = searchBar.searchTextField
@@ -109,17 +126,15 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             searchBar.heightAnchor.constraint(equalToConstant: 40),
             searchBarWidthConstraint
         ])
-        
-        // 초기화 시 모든 countries를 표시
-        filteredCountries = countries
-        
-        displayCountries(filteredCountries)
-        
+    }
+    
+    private func setupCenterLabel() {
         centerLabel = UILabel(frame: CGRect(x: 0, y: self.view.frame.height / 2, width: self.view.frame.width, height: 40))
         centerLabel.layer.borderColor = UIColor.CenterHighlighted.cgColor
         centerLabel.layer.borderWidth = 1.0
         centerLabel.textColor = .white
         self.view.addSubview(centerLabel)
+
         
         let addButton:UIButton = UIButton()
         addButton.setTitle("추가하기", for: .normal)
@@ -145,6 +160,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
+
     }
     
     @objc func dismissKeyboard() {
@@ -181,16 +197,14 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
 
     }
     
-    // 재현님 코드 추가
-    @objc func addCounntryButtonTapped() {
 
-       
+    // 재현님 코드 추가
+
+    @objc func addCountryButtonTapped() {
         if let countryText = selectedCountryLabel?.text {
-                   delegate?.countrySelected(countryText)
-                   dismiss(animated: true)
-               }
-      
- 
+            delegate?.countrySelected(countryText)
+            dismiss(animated: true)
+        }
 
     }
     
@@ -242,29 +256,29 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     
     func labelTextSending() {
 
-            let focusPoint = CGPoint(x: view.center.x, y: view.frame.height / 2 + 20)
-            var closestLabel: UILabel?
-            var minDistance = CGFloat.greatestFiniteMagnitude
-            
-            for label in labels {
-                let distance = hypot(label.center.x - focusPoint.x, label.center.y - focusPoint.y)
-                if distance < minDistance {
-                    closestLabel = label
-                    minDistance = distance
-                }
-            }
-            
-            if let focusedLabel = closestLabel {
-                resultLabel.text = focusedLabel.text
-                selectedCountryLabel = focusedLabel // 현재 선택된 라벨 저장
+        let focusPoint = CGPoint(x: view.center.x, y: view.frame.height / 2 + 20)
+        var closestLabel: UILabel?
+        var minDistance = CGFloat.greatestFiniteMagnitude
+        
+        for label in labels {
+            let distance = hypot(label.center.x - focusPoint.x, label.center.y - focusPoint.y)
+            if distance < minDistance {
+                closestLabel = label
+                minDistance = distance
             }
         }
+        
+        if let focusedLabel = closestLabel {
+            resultLabel.text = focusedLabel.text
+            selectedCountryLabel = focusedLabel // 현재 선택된 라벨 저장
+        }
+    }
 
     
     
 
     func filterCountries(for searchText: String) {
-        if (searchText.isEmpty) {
+        if searchText.isEmpty {
             filteredCountries = countries
         } else {
             filteredCountries = countries.filter { country in
@@ -285,7 +299,6 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         let circleRadiusY: CGFloat = 320
         
         let extendedCountries = countries + countries
-
         
         for (index, country) in extendedCountries.enumerated() {
             let angle = 2 * CGFloat.pi * CGFloat(index) / CGFloat(extendedCountries.count)
@@ -301,10 +314,51 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             label.attributedText = attributedString(for: country, fittingWidth: 150, in: label)
             label.transform = CGAffineTransform(rotationAngle: angle)
             
+            // 탭 제스처 추가
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleLabelTap(_:)))
+            label.isUserInteractionEnabled = true
+            label.addGestureRecognizer(tapGesture)
+            
             self.labels.append(label)
             self.view.addSubview(label)
         }
     }
+    // 다중선택 가능. 탭2에서 활용해요.
+//    @objc func handleLabelTap(_ gesture: UITapGestureRecognizer) {
+//        guard let tappedLabel = gesture.view as? UILabel else { return }
+//        
+//        if tappedLabel.subviews.isEmpty {
+//            let checkmark = UIImageView(image: UIImage(systemName: "checkmark"))
+//            checkmark.tintColor = .mainColor
+//            checkmark.translatesAutoresizingMaskIntoConstraints = false
+//            tappedLabel.addSubview(checkmark)
+//            
+//            NSLayoutConstraint.activate([
+//                checkmark.leadingAnchor.constraint(equalTo: tappedLabel.trailingAnchor, constant: -10),
+//                checkmark.centerYAnchor.constraint(equalTo: tappedLabel.centerYAnchor)
+//            ])
+//        } else {
+//            tappedLabel.subviews.forEach { $0.removeFromSuperview() }
+//        }
+//    }
+    
+    @objc func handleLabelTap(_ gesture: UITapGestureRecognizer) {
+           guard let tappedLabel = gesture.view as? UILabel else { return }
+
+           selectedCountryLabel?.subviews.forEach { $0.removeFromSuperview() }
+
+           let checkmark = UIImageView(image: UIImage(systemName: "checkmark"))
+           checkmark.tintColor = .mainColor
+           checkmark.translatesAutoresizingMaskIntoConstraints = false
+           tappedLabel.addSubview(checkmark)
+           
+           NSLayoutConstraint.activate([
+               checkmark.leadingAnchor.constraint(equalTo: tappedLabel.trailingAnchor, constant: -20),
+               checkmark.centerYAnchor.constraint(equalTo: tappedLabel.centerYAnchor)
+           ])
+
+           selectedCountryLabel = tappedLabel
+       }
     
     // UITextFieldDelegate method
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -332,3 +386,4 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         }
     }
 }
+
