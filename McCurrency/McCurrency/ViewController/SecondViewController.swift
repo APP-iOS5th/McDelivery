@@ -78,6 +78,7 @@ class SecondViewController: UIViewController {
     
     func setupPriceViews() {
         let textField = UITextField()
+        textField.keyboardType = .numberPad
         textField.placeholder = "0"
         let placeholderAttributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.lightGray,
