@@ -7,27 +7,44 @@
 
 import UIKit
 
-struct CountryDummy {
+struct SelectedCountry: Codable {
     var countryName: String
-    let imageName: String
     let count: Int
 }
 
 class SecondViewController: UIViewController {
-   
+    
     
     // MARK: - Properties
-    
-    var dummyData: [CountryDummy] = [
-        CountryDummy(countryName: "🇺🇸미국", imageName: "flag", count: 187),
-        CountryDummy(countryName: "🇰🇷한국", imageName: "flag", count: 304),
-        CountryDummy(countryName: "🇯🇵일본", imageName: "flag", count: 176)
-    ]
+    var ttsValue: String = ""
+    var selectedCountry: [SelectedCountry] = [] {
+        didSet {
+            print("country \(selectedCountry)")
+        }
+    }
     
     let countries: [(flag: String, name: String)] = [
         ("🇳🇴", "노르웨이"), ("🇲🇾", "말레이시아"),("🇺🇸", "미국"), ("🇸🇪", "스웨덴"),("🇨🇭", "스위스"),("🇬🇧", "영국"),("🇮🇩", "인도네시아"),("🇯🇵", "일본"),("🇨🇳", "중국"),("🇨🇦", "캐나다"),
         ("🇭🇰", "홍콩"),("🇹🇭","태국"),("🇦🇺", "호주"),("🇳🇿","뉴질랜드"),("🇸🇬","싱가포르")
         
+    ]
+    
+    let bigMacPricesInUSD: [String: Double] = [
+        "노르웨이": 6.23,
+        "말레이시아": 2.34,
+        "미국": 5.69,
+        "스웨덴": 6.15,
+        "스위스": 6.71,
+        "영국": 4.50,
+        "인도네시아": 2.36,
+        "일본": 3.50,
+        "중국": 3.37,
+        "캐나다": 6.77,
+        "홍콩": 2.81,
+        "태국": 4.40,
+        "호주": 5.73,
+        "뉴질랜드":5.33,
+        "싱가포르":5.18
     ]
     
     private let koreaLabel: UILabel = {
@@ -50,13 +67,15 @@ class SecondViewController: UIViewController {
         view.backgroundColor = .backgroundColor
         autoLayout()
         setupPriceViews()
-        
+        setupEmptyView()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CountryCell.self, forCellReuseIdentifier: CountryCell.cellId)
         tableView.separatorStyle = .none
         
         setupAddButton()
+        let loadedCountries = loadCountries()
+        self.selectedCountry = loadedCountries
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,7 +85,15 @@ class SecondViewController: UIViewController {
     }
     
     // MARK: - Functions
-    
+    private func setupEmptyView() {
+        let label = UILabel()
+        label.text = "나라를 선택하세요!"
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 18)
+        tableView.backgroundView = label
+        tableView.backgroundView?.isHidden = true
+    }
     private func autoLayout() {
         view.addSubview(koreaLabel)
         
@@ -78,6 +105,7 @@ class SecondViewController: UIViewController {
     
     func setupPriceViews() {
         let textField = UITextField()
+        textField.keyboardType = .numberPad
         textField.placeholder = "0"
         let placeholderAttributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.lightGray,
@@ -154,6 +182,51 @@ class SecondViewController: UIViewController {
         ])
     }
     
+    func saveCountries(countries: [SelectedCountry]) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(countries) {
+            UserDefaults.standard.set(encoded, forKey: "SelectedCountries")
+        }
+    }
+    
+    
+    func loadCountries() -> [SelectedCountry] {
+        if let savedCountries = UserDefaults.standard.object(forKey: "SelectedCountries") as? Data {
+            let decoder = JSONDecoder()
+            if let loadedCountries = try? decoder.decode([SelectedCountry].self, from: savedCountries) {
+                return loadedCountries
+            }
+        }
+        return []
+    }
+
+    func mcCount(amountKRW: Double, ttsString: String) {
+        guard let exchangeRateUSD = Double(ttsString) else {
+            print("환율 정보가 유효하지 않습니다: \(ttsString)")
+            return
+        }
+        let amountUSD = amountKRW / exchangeRateUSD
+        print("환율 적용 후 USD: \(amountUSD)")
+
+        selectedCountry = selectedCountry.map { country in
+            let countryName = country.countryName.components(separatedBy: " ").dropFirst().joined(separator: " ")
+            print("검색 중인 나라: \(countryName)")
+            
+            if let priceUSD = bigMacPricesInUSD[countryName] {
+                let count = Int(amountUSD / priceUSD)
+                print("나라: \(countryName), 빅맥 구매 가능 개수: \(count)")
+                return SelectedCountry(countryName: country.countryName, count: count)
+            } else {
+                print("빅맥 가격 정보를 찾을 수 없음: \(countryName)")
+            }
+            return country
+        }
+
+        // 메인 스레드에서 테이블 뷰 갱신
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
     
 }
 
@@ -161,34 +234,42 @@ extension SecondViewController: UITextFieldDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
-    
+ 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let currentText = textField.text ?? "" // 현재 텍스트 필드의 텍스트를 가져오는것.
-        let updatedText = (currentText as NSString?)?.replacingCharacters(in: range, with: string) ?? string
+        let currentText = textField.text ?? "" // 현재 텍스트 필드의 텍스트
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        
+       
+        let unformattedText = updatedText.replacingOccurrences(of: ",", with: "")
         
         if updatedText.count > 13 {
-            return false // 업데이트 된 텍스트의 길이가 13자를 초과하면 허용 안함.
+            return false // 업데이트된 텍스트의 길이가 13자를 초과하면 허용하지 않음.
         }
         
         let allowedCharacters = CharacterSet(charactersIn: "0123456789").inverted
         let filtered = string.components(separatedBy: allowedCharacters).joined(separator: "")
-        if string != filtered { //숫자가 아니면 입력 허용 안함
+        if string != filtered { // 숫자가 아니면 입력 허용하지 않음
             return false
         }
         
+        // 숫자 포맷터를 설정하여 콤마를 삽입
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         numberFormatter.groupingSeparator = ","
-        //소숫점 표시
+        numberFormatter.locale = Locale(identifier: "en_US") // 숫자 포맷을 미국식으로 설정
         
-        if let number = Double(updatedText.replacingOccurrences(of: ",", with: "")) {
-            let formattedNumber = numberFormatter.string(from: NSNumber(value: number)) ?? ""
-            textField.text = formattedNumber
+        // Double 변환을 시도하고 성공하면 포맷팅된 숫자로 텍스트 필드를 업데이트
+        if let number = Double(unformattedText) {
+            textField.text = numberFormatter.string(from: NSNumber(value: number))
+            mcCount(amountKRW: number, ttsString: ttsValue) // 변환된 금액으로 mcCount 함수 호출
+            return false // 텍스트 필드 업데이트를 직접 제어
+        } else if unformattedText.isEmpty {
+            textField.text = "" // 입력된 텍스트가 비었을 때 텍스트 필드를 비움
         } else {
-            textField.text = ""
+            print("금액 변환 실패: \(unformattedText)")
         }
         
-        return false
+        return false // 기본 동작을 방지하고, 수동으로 텍스트 필드를 업데이트
     }
 }
 
@@ -199,7 +280,9 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dummyData.count
+        let count = selectedCountry.count
+            tableView.backgroundView?.isHidden = count > 0
+            return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -207,16 +290,14 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let data = dummyData[indexPath.row]
+        let data = selectedCountry[indexPath.row]
         cell.delegate = self
         cell.toCountryButton.tag = indexPath.row
         cell.toCountryButton.addTarget(self, action: #selector(countryButtonTapped(_:)), for: .touchUpInside)
-  //       cell.countryView.delegate = self
-//        cell.countryView.configure(with: data.countryName, imageName: data.imageName)
         cell.toCountryButton.setTitle(data.countryName, for: .normal)
         cell.hamburgerImage.image = UIImage(named: "Hamburger")
         cell.countLabel.text = "\(data.count) 개"
-        
+      
         return cell
     }
     
@@ -227,7 +308,8 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     // 셀 삭제 기능 추가
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            dummyData.remove(at: indexPath.row)
+            selectedCountry.remove(at: indexPath.row)
+            saveCountries(countries: selectedCountry)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
@@ -256,33 +338,61 @@ extension SecondViewController: CircularViewControllerDelegate {
     }
     
     func countrySelected(_ countryName: String, context: PresentationContext) {
-        let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
+        let components = countryName.split(separator: "/").map { String($0).trimmingCharacters(in: .whitespaces) }
         let countryOnly = components[0]
+
+        // 국가 튜플 찾기
+        guard let countryTuple = countries.first(where: { $0.name == countryOnly }) else {
+            print("선택된 국가 정보를 찾을 수 없습니다.")
+            return
+        }
+        
+        let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
 
         switch context {
         case .fromSecondVCAddButton:
             // 새 국가를 목록에 추가하는 로직
-            if let countryTuple = countries.first(where: { $0.name == countryOnly }) {
-                let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
-                let newCountry = CountryDummy(countryName: fullCountryName, imageName: "flag", count: 0)
-                dummyData.append(newCountry)
-                let indexPath = IndexPath(row: dummyData.count - 1, section: 0)
-                tableView.insertRows(at: [indexPath], with: .automatic)
-                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            if selectedCountry.contains(where: { $0.countryName == fullCountryName }) {
+                showAlert(message: "이미 선택된 국가입니다!")
+                return
             }
+            addNewCountry(fullCountryName)
+            
         case .fromSecondVCCell:
             // 선택된 셀의 국가를 업데이트하는 로직
-            if let indexPath = tableView.indexPathForSelectedRow,
-               let countryTuple = countries.first(where: { $0.name == countryOnly }) {
-                let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
-                dummyData[indexPath.row].countryName = fullCountryName
-                tableView.reloadRows(at: [indexPath], with: .none)
+            if let indexPath = tableView.indexPathForSelectedRow {
+                if selectedCountry[indexPath.row].countryName != fullCountryName && selectedCountry.contains(where: { $0.countryName == fullCountryName }) {
+                    showAlert(message: "이미 선택된 국가입니다!")
+                    return
+                }
+                updateCountry(at: indexPath, with: fullCountryName)
             }
         default:
             break
         }
     }
 
+    private func addNewCountry(_ countryName: String) {
+        let newCountry = SelectedCountry(countryName: countryName, count: 0)
+        selectedCountry.append(newCountry)
+        saveCountries(countries: selectedCountry)
+        let indexPath = IndexPath(row: selectedCountry.count - 1, section: 0)
+        tableView.insertRows(at: [indexPath], with: .automatic)
+        tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+    }
+
+    private func updateCountry(at indexPath: IndexPath, with countryName: String) {
+        selectedCountry[indexPath.row].countryName = countryName
+        tableView.reloadRows(at: [indexPath], with: .none)
+    }
+
+    private func showAlert(message: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "중복된 나라입니다!!", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 }
 
 extension SecondViewController: CountryCellDelegate {
@@ -298,5 +408,14 @@ extension SecondViewController: CountryCellDelegate {
        }
 
        
+    
+}
+extension SecondViewController:FirstViewControllerDelegate {
+    func didSendData(_ data: String) {
+        print("data\(data)")
+        self.ttsValue = data
+        
+    }
+    
     
 }

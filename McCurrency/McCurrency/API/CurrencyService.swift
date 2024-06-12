@@ -9,6 +9,24 @@ import UIKit
 
 class CurrencyService {
     
+    let bigMacPricesInUSD: [String: Double] = [
+        "노르웨이": 6.23,
+        "말레이시아": 2.34,
+        "미국": 5.69,
+        "스웨덴": 6.15,
+        "스위스": 6.71,
+        "영국": 4.50,
+        "인도네시아": 2.36,
+        "일본": 3.50,
+        "중국": 3.37,
+        "캐나다": 6.77,
+        "홍콩": 2.81,
+        "태국": 4.40,
+        "호주": 5.73,
+        "뉴질랜드":5.33,
+        "싱가포르":5.18
+    ]
+    
     static let shared = CurrencyService()
     private let apiKey = "QthgPxCuwN0r9U3l7zgYnf5XRtknKnM0"
 

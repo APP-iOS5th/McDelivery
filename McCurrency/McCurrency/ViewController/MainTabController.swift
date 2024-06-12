@@ -59,7 +59,7 @@ class MainTabController: UITabBarController, UITabBarControllerDelegate {
         
         nav1.tabBarItem.title = "Currency"
         nav2.tabBarItem.title = "Index"
-        
+        firstVC.delegate = secondVC
         viewControllers = [nav1, nav2]
     }
     

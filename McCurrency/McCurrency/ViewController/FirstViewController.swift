@@ -6,9 +6,11 @@
 //
 
     import UIKit
-
+protocol FirstViewControllerDelegate: AnyObject {
+    func didSendData(_ data: String)
+}
     class FirstViewController: UIViewController {
-        
+        weak var delegate: FirstViewControllerDelegate?
         var totalWidth: CGFloat = 0
         var labelWidths: [CGFloat] = []
         var currencyDetails: [String: CurrencyDetail] = [:]
@@ -62,6 +64,8 @@
             animateDigits()
            
             fetchCurrencyData()
+            
+          
         }
         
         override func viewWillAppear(_ animated: Bool) {
@@ -253,20 +257,6 @@
         
         
         @objc func exchangeButtonTapped() {
-//            guard let fromAmountText = fromAmountTextField.text, let fromAmount = Double(fromAmountText.replacingOccurrences(of: ",", with: "")) else { return }
-//            
-//            let exchangeRate = 1300.0
-//            let toAmount = fromAmount / exchangeRate
-//            
-//            let formattedToAmount = String(format: "%.2f", toAmount)
-//            let characters = Array(formattedToAmount)
-//            
-//            for (index, label) in toAmountLabels.enumerated() {
-//                if index < characters.count {
-//                    label.text = String(characters[index])
-//                }
-//            }
-//            toAmountSuffixLabel.textColor = .white
         }
         
         @objc func showTooltip() {
@@ -330,7 +320,7 @@
                         print("Failed to fetch data")
                         return
                     }
-
+                    
                     self.currencyDetails = self.createCurrencyDetails(from: rates)
                     print("Updated Currency Details: \(self.currencyDetails)")
                     
@@ -341,6 +331,11 @@
                     if validDate != today {
                         self.showAlertForPastData(date: validDate)
                     }
+                    
+                    let usRateString = self.currencyDetails["미국"]?.tts.replacingOccurrences(of: ",", with: "")
+                    self.delegate?.didSendData(usRateString ?? "")
+                    
+                    
                 }
             }
         }
@@ -387,35 +382,45 @@
         
                    return details
                }
-      
+
         private func updateConversionAmount(text: String) {
             guard let countryButtonTitle = toCountryButton.title(for: .normal),
                   let selectedCountry = extractCountryName(from: countryButtonTitle),
                   let currencyDetail = currencyDetails[selectedCountry],
                   let rate = Double(currencyDetail.tts.replacingOccurrences(of: ",", with: "")),
                   let amount = Double(text.replacingOccurrences(of: ",", with: "")),
-                  let bigMacPrice = McCounter().bigMacPricesInUSD[selectedCountry] else {
+                  let bigMacPrice = McCounter().bigMacPricesInUSD[selectedCountry], // 각 나라의 빅맥 가격 (USD)
+                  let usRateString = currencyDetails["미국"]?.tts.replacingOccurrences(of: ",", with: ""),
+                  let usRate = Double(usRateString) else {
                 print("환율 데이터가 없거나 입력값 문제 발생")
                 return
             }
-
+           
             // JPY(100)과 같은 통화 처리
             let adjustedRate = currencyDetail.currencyName.contains("JPY(100)") ? rate / 100 : rate
 
+            // 입력 금액을 해당 국가의 환율로 환산
             let convertedAmount = amount / adjustedRate
             let formattedAmount = String(format: "%.2f", convertedAmount)
             print("환산된 금액: \(formattedAmount)")
 
-            // 빅맥 구매 가능 개수 계산
-            let bigMacsCanBuy = Int(convertedAmount / bigMacPrice)
+            // 입력 금액을 미국 환율로 환산하여 USD 계산
+            let usdAmount = amount / usRate
+            let formattedUSDAmount = String(format: "%.2f", usdAmount)
+            print("USD로 환산된 금액: \(formattedUSDAmount)")
+
+            // 빅맥 구매 가능 개수 계산 (각 나라별 빅맥 가격과 비교)
+            let bigMacsCanBuy = Int(usdAmount / bigMacPrice)
             print("구매 가능한 빅맥 개수: \(bigMacsCanBuy)")
 
-            displayConvertedAmount(amount: formattedAmount)
+            displayConvertedAmount(amount: formattedUSDAmount)
             setupHamburgerLabelsAndCoverBoxes()
 
             animateHamburgers()
             setupSlotBoxesAndNumericViews(inside: bigMacCountbox, with: "\(bigMacsCanBuy)")
         }
+
+
         
         private func displayConvertedAmount(amount: String) {
           setuptoAmountLabels(with: amount)
