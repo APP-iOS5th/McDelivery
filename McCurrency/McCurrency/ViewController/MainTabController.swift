@@ -7,6 +7,14 @@
 
 import UIKit
 
+
+enum PresentationContext {
+    case fromFirstVC
+    case fromSecondVCCell
+    case fromSecondVCAddButton
+}
+
+
 class MainTabController: UITabBarController, UITabBarControllerDelegate {
     let movingView = UIView()
     

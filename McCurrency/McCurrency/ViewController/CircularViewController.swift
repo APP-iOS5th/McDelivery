@@ -10,11 +10,11 @@ import UIKit
 import AVKit
 
 protocol CircularViewControllerDelegate: AnyObject {
-    func countrySelected(_ countryName: String)
+    func countrySelected(_ countryName: String, context: PresentationContext)
 }
 
 class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBarDelegate {
-    
+    var presentationContext: PresentationContext = .fromFirstVC 
     weak var delegate: CircularViewControllerDelegate?
     var selectedCountryLabel: UILabel?
     
@@ -45,7 +45,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         setupCloseButton()
         setupAddButton()
         setupSearchBar()
-        
+        customizeForContext()
         filteredCountries = countries
         displayCountries(filteredCountries)
         
@@ -56,6 +56,19 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
+    }
+    
+    
+    
+    func customizeForContext() {
+        switch presentationContext {
+        case .fromFirstVC:
+            addButton.setTitle("변경하기", for: .normal)
+        case .fromSecondVCCell:
+            addButton.setTitle("변경하기", for: .normal)
+        case .fromSecondVCAddButton:
+            addButton.setTitle("추가하기", for: .normal)
+        }
     }
     
     private func setupBlurEffect() {
@@ -141,7 +154,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     
     @objc func addCountryButtonTapped() {
         if let countryText = selectedCountryLabel?.text {
-            delegate?.countrySelected(countryText)
+            delegate?.countrySelected(countryText, context: presentationContext)
             dismiss(animated: true)
         }
     }
@@ -313,9 +326,11 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         updateCheckmark()
     }
     
+
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterCountries(for: searchText)
     }
+
     
     // UISearchBarDelegate methods
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {

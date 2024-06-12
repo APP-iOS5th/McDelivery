@@ -9,38 +9,24 @@ import UIKit
 
 class McCounter: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
+    
     // 빅맥 지수 데이터
     let bigMacPricesInUSD: [String: Double] = [
-        "Switzerland": 6.71,
-        "Norway": 6.23,
-        "Uruguay": 4.95,
-        "Sweden": 6.15,
-        "Euro Area": 5.50,
-        "United States": 5.69,
-        "Canada": 6.77,
-        "Australia": 5.73,
-        "Brazil": 4.92,
-        "United Kingdom": 4.50,
-        "South Korea": 4.30,
-        "Saudi Arabia": 4.67,
-        "Argentina": 1.77,
-        "China": 3.37,
-        "India": 1.89,
-        "Indonesia": 2.36,
-        "Philippines": 2.64,
-        "Malaysia": 2.34,
-        "Egypt": 1.46,
-        "South Africa": 2.41,
-        "Ukraine": 1.94,
-        "Hong Kong": 2.81,
-        "Vietnam": 2.84,
-        "Japan": 3.50,
-        "Romania": 2.21,
-        "Azerbaijan": 3.40,
-        "Jordan": 3.23,
-        "Moldova": 1.78,
-        "Oman": 3.58,
-        "Taiwan": 2.59
+        "노르웨이": 6.23,
+        "말레이시아": 2.34,
+        "미국": 5.69,
+        "스웨덴": 6.15,
+        "스위스": 6.71,
+        "영국": 4.50,
+        "인도네시아": 2.36,
+        "일본": 3.50,
+        "중국": 3.37,
+        "캐나다": 6.77,
+        "홍콩": 2.81,
+        "태국": 4.40,
+        "호주": 5.73,
+        "뉴질랜드":5.33,
+        "싱가포르":5.18
     ]
     
     let countries = [
