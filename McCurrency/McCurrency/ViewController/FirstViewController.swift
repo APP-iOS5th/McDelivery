@@ -46,6 +46,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - LifeCycles
     override func viewDidLoad() {
+
         super.viewDidLoad()
         setupUI()
         setuptoAmountLabels(with: "100000")
@@ -56,6 +57,8 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         animateDigits()
         animateHamburgers()
         //        fetchCurrencyData()
+
+  
     }
     
     override func viewWillAppear(_ animated: Bool) {
