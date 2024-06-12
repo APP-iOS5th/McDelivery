@@ -76,7 +76,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     
     private func setupAddButton() {
         addButton = UIButton(type: .system)
-        addButton.setTitle("추가하기", for: .normal)
+        addButton.setTitle("변경하기", for: .normal)
         addButton.setTitleColor(.black, for: .normal)
         addButton.backgroundColor = .AddButton
         addButton.tintColor = .black
