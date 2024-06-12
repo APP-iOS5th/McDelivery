@@ -8,18 +8,26 @@
 import UIKit
 
 struct CountryDummy {
-    let countryName: String
+    var countryName: String
     let imageName: String
     let count: Int
 }
 
-class SecondViewController: UIViewController, CircularViewControllerDelegate {
+class SecondViewController: UIViewController {
+   
+    
     // MARK: - Properties
     
     var dummyData: [CountryDummy] = [
-        CountryDummy(countryName: "미국", imageName: "flag", count: 187),
-        CountryDummy(countryName: "한국", imageName: "flag", count: 304),
-        CountryDummy(countryName: "일본", imageName: "flag", count: 176)
+        CountryDummy(countryName: "🇺🇸미국", imageName: "flag", count: 187),
+        CountryDummy(countryName: "🇰🇷한국", imageName: "flag", count: 304),
+        CountryDummy(countryName: "🇯🇵일본", imageName: "flag", count: 176)
+    ]
+    
+    let countries: [(flag: String, name: String)] = [
+        ("🇳🇴", "노르웨이"), ("🇲🇾", "말레이시아"),("🇺🇸", "미국"), ("🇸🇪", "스웨덴"),("🇨🇭", "스위스"),("🇬🇧", "영국"),("🇮🇩", "인도네시아"),("🇯🇵", "일본"),("🇨🇳", "중국"),("🇨🇦", "캐나다"),
+        ("🇭🇰", "홍콩"),("🇹🇭","태국"),("🇦🇺", "호주"),("🇳🇿","뉴질랜드"),("🇸🇬","싱가포르")
+        
     ]
     
     private let koreaLabel: UILabel = {
@@ -146,22 +154,7 @@ class SecondViewController: UIViewController, CircularViewControllerDelegate {
         ])
     }
     
-    @objc func showCountryPicker() {
-        let pickerVC = CircularViewController()
-        pickerVC.delegate = self
-        pickerVC.modalPresentationStyle = .overFullScreen
-        pickerVC.modalTransitionStyle = .crossDissolve
-        self.present(pickerVC, animated: true, completion: nil)
-    }
     
-    // CircularViewControllerDelegate 메서드 구현
-    func countrySelected(_ countryName: String) {
-        let newCountry = CountryDummy(countryName: countryName, imageName: "flag", count: 0)
-        dummyData.append(newCountry)
-        let indexPath = IndexPath(row: dummyData.count - 1, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic)
-        tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-    }
 }
 
 extension SecondViewController: UITextFieldDelegate {
@@ -199,7 +192,7 @@ extension SecondViewController: UITextFieldDelegate {
     }
 }
 
-extension SecondViewController: UITableViewDelegate, UITableViewDataSource, CountryFlagViewDelegate {
+extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -215,9 +208,12 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource, Coun
         }
         
         let data = dummyData[indexPath.row]
-        cell.delegate = self // Delegate 설정
-        cell.countryView.delegate = self
-        cell.countryView.configure(with: data.countryName, imageName: data.imageName)
+        cell.delegate = self
+        cell.toCountryButton.tag = indexPath.row
+        cell.toCountryButton.addTarget(self, action: #selector(countryButtonTapped(_:)), for: .touchUpInside)
+  //       cell.countryView.delegate = self
+//        cell.countryView.configure(with: data.countryName, imageName: data.imageName)
+        cell.toCountryButton.setTitle(data.countryName, for: .normal)
         cell.hamburgerImage.image = UIImage(named: "Hamburger")
         cell.countLabel.text = "\(data.count) 개"
         
@@ -239,22 +235,68 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource, Coun
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
     }
-    
-    //나라 버튼 델리게이트
-    func openCircularMenuView() {
-        let circularView = CircularViewController()
-        circularView.delegate = self
-        self.navigationController?.present(circularView, animated: true)
+    @objc func countryButtonTapped(_ sender: UIButton) {
+            let indexPath = IndexPath(row: sender.tag, section: 0)
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+            let pickerVC = CircularViewController()
+            pickerVC.delegate = self
+            pickerVC.presentationContext = .fromSecondVCCell
+            present(pickerVC, animated: true, completion: nil)
+        }
+}
+
+extension SecondViewController: CircularViewControllerDelegate {
+    @objc func showCountryPicker() {
+        let pickerVC = CircularViewController()
+        pickerVC.presentationContext = .fromSecondVCAddButton
+        pickerVC.delegate = self
+        pickerVC.modalPresentationStyle = .overFullScreen
+        pickerVC.modalTransitionStyle = .crossDissolve
+        self.present(pickerVC, animated: true, completion: nil)
     }
+    
+    func countrySelected(_ countryName: String, context: PresentationContext) {
+        let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
+        let countryOnly = components[0]
+
+        switch context {
+        case .fromSecondVCAddButton:
+            // 새 국가를 목록에 추가하는 로직
+            if let countryTuple = countries.first(where: { $0.name == countryOnly }) {
+                let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
+                let newCountry = CountryDummy(countryName: fullCountryName, imageName: "flag", count: 0)
+                dummyData.append(newCountry)
+                let indexPath = IndexPath(row: dummyData.count - 1, section: 0)
+                tableView.insertRows(at: [indexPath], with: .automatic)
+                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            }
+        case .fromSecondVCCell:
+            // 선택된 셀의 국가를 업데이트하는 로직
+            if let indexPath = tableView.indexPathForSelectedRow,
+               let countryTuple = countries.first(where: { $0.name == countryOnly }) {
+                let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
+                dummyData[indexPath.row].countryName = fullCountryName
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
+        default:
+            break
+        }
+    }
+
 }
 
 extension SecondViewController: CountryCellDelegate {
-    func countryViewDidTap(_ cell: CountryCell) {
-        // Implement your action for when the country view is tapped
-    }
-}
+    
+    
+    func buttonTapped(_ cell: CountryCell) {
+           let pickerVC = CircularViewController()
+        pickerVC.presentationContext = .fromSecondVCCell
+           pickerVC.delegate = self
+           pickerVC.modalPresentationStyle = .overFullScreen
+           pickerVC.modalTransitionStyle = .crossDissolve
+           self.present(pickerVC, animated: true, completion: nil)
+       }
 
-protocol CountryFlagViewDelegate {
-    func openCircularMenuView()
+       
+    
 }
-
