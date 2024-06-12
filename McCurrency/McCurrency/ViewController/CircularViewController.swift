@@ -310,11 +310,17 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
        }
     
     // UITextFieldDelegate method
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let currentText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? string
-        filterCountries(for: currentText)
-        return true
-    }
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        let currentText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? string
+//        filterCountries(for: currentText)
+//        return true
+//    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+          if let searchText = searchBar.searchTextField.text {
+                      filterCountries(for: searchText)
+                     }
+      }
     
     // UISearchBarDelegate methods
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
