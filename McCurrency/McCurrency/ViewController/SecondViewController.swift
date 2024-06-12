@@ -338,34 +338,61 @@ extension SecondViewController: CircularViewControllerDelegate {
     }
     
     func countrySelected(_ countryName: String, context: PresentationContext) {
-        let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
+        let components = countryName.split(separator: "/").map { String($0).trimmingCharacters(in: .whitespaces) }
         let countryOnly = components[0]
+
+        // 국가 튜플 찾기
+        guard let countryTuple = countries.first(where: { $0.name == countryOnly }) else {
+            print("선택된 국가 정보를 찾을 수 없습니다.")
+            return
+        }
+        
+        let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
 
         switch context {
         case .fromSecondVCAddButton:
             // 새 국가를 목록에 추가하는 로직
-            if let countryTuple = countries.first(where: { $0.name == countryOnly }) {
-                let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
-                let newCountry = SelectedCountry(countryName: fullCountryName, count: 0)
-                selectedCountry.append(newCountry)
-                saveCountries(countries: selectedCountry)
-                let indexPath = IndexPath(row: selectedCountry.count - 1, section: 0)
-                tableView.insertRows(at: [indexPath], with: .automatic)
-                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            if selectedCountry.contains(where: { $0.countryName == fullCountryName }) {
+                showAlert(message: "이미 선택된 국가입니다!")
+                return
             }
+            addNewCountry(fullCountryName)
+            
         case .fromSecondVCCell:
             // 선택된 셀의 국가를 업데이트하는 로직
-            if let indexPath = tableView.indexPathForSelectedRow,
-               let countryTuple = countries.first(where: { $0.name == countryOnly }) {
-                let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
-                selectedCountry[indexPath.row].countryName = fullCountryName
-                tableView.reloadRows(at: [indexPath], with: .none)
+            if let indexPath = tableView.indexPathForSelectedRow {
+                if selectedCountry[indexPath.row].countryName != fullCountryName && selectedCountry.contains(where: { $0.countryName == fullCountryName }) {
+                    showAlert(message: "이미 선택된 국가입니다!")
+                    return
+                }
+                updateCountry(at: indexPath, with: fullCountryName)
             }
         default:
             break
         }
     }
 
+    private func addNewCountry(_ countryName: String) {
+        let newCountry = SelectedCountry(countryName: countryName, count: 0)
+        selectedCountry.append(newCountry)
+        saveCountries(countries: selectedCountry)
+        let indexPath = IndexPath(row: selectedCountry.count - 1, section: 0)
+        tableView.insertRows(at: [indexPath], with: .automatic)
+        tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+    }
+
+    private func updateCountry(at indexPath: IndexPath, with countryName: String) {
+        selectedCountry[indexPath.row].countryName = countryName
+        tableView.reloadRows(at: [indexPath], with: .none)
+    }
+
+    private func showAlert(message: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "중복된 나라입니다!!", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 }
 
 extension SecondViewController: CountryCellDelegate {
