@@ -128,7 +128,8 @@
             exchangeButton.tintColor = UIColor.secondaryTextColor
             exchangeButton.setTitleColor(.white, for: .normal)
             exchangeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
-            exchangeButton.addTarget(self, action: #selector(exchangeButtonTapped), for: .touchUpInside)
+            exchangeButton.isEnabled = false
+         //   exchangeButton.addTarget(self, action: #selector(exchangeButtonTapped), for: .touchUpInside)
             
             bigMacCountbox.titleLabel?.numberOfLines = 0
             bigMacCountbox.titleLabel?.textAlignment = .center
@@ -252,20 +253,20 @@
         
         
         @objc func exchangeButtonTapped() {
-            guard let fromAmountText = fromAmountTextField.text, let fromAmount = Double(fromAmountText.replacingOccurrences(of: ",", with: "")) else { return }
-            
-            let exchangeRate = 1300.0
-            let toAmount = fromAmount / exchangeRate
-            
-            let formattedToAmount = String(format: "%.2f", toAmount)
-            let characters = Array(formattedToAmount)
-            
-            for (index, label) in toAmountLabels.enumerated() {
-                if index < characters.count {
-                    label.text = String(characters[index])
-                }
-            }
-            toAmountSuffixLabel.textColor = .white
+//            guard let fromAmountText = fromAmountTextField.text, let fromAmount = Double(fromAmountText.replacingOccurrences(of: ",", with: "")) else { return }
+//            
+//            let exchangeRate = 1300.0
+//            let toAmount = fromAmount / exchangeRate
+//            
+//            let formattedToAmount = String(format: "%.2f", toAmount)
+//            let characters = Array(formattedToAmount)
+//            
+//            for (index, label) in toAmountLabels.enumerated() {
+//                if index < characters.count {
+//                    label.text = String(characters[index])
+//                }
+//            }
+//            toAmountSuffixLabel.textColor = .white
         }
         
         @objc func showTooltip() {
@@ -734,6 +735,7 @@
         
         @objc func toCountryButtonTapped() {
             let pickerVC = CircularViewController()
+            pickerVC.presentationContext = .fromFirstVC 
             pickerVC.delegate = self
             pickerVC.modalPresentationStyle = .overFullScreen
             pickerVC.modalTransitionStyle = .crossDissolve

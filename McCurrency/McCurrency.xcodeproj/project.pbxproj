@@ -11,7 +11,6 @@
 		465F65B82C168F75003B404D /* CountryFlagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465F65B72C168F75003B404D /* CountryFlagView.swift */; };
 		465F65BA2C169015003B404D /* CircularViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465F65B92C169015003B404D /* CircularViewController.swift */; };
 		465F65BE2C16904D003B404D /* NumericMotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465F65BD2C16904D003B404D /* NumericMotionView.swift */; };
-		465F65C02C169182003B404D /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465F65BF2C169182003B404D /* PickerViewController.swift */; };
 		465F65C22C16DFD7003B404D /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465F65C12C16DFD7003B404D /* String.swift */; };
 		469D900F2C0D9E1B000ABE8C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D900E2C0D9E1B000ABE8C /* AppDelegate.swift */; };
 		469D90112C0D9E1B000ABE8C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469D90102C0D9E1B000ABE8C /* SceneDelegate.swift */; };
@@ -44,7 +43,6 @@
 		465F65B72C168F75003B404D /* CountryFlagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryFlagView.swift; sourceTree = "<group>"; };
 		465F65B92C169015003B404D /* CircularViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularViewController.swift; sourceTree = "<group>"; };
 		465F65BD2C16904D003B404D /* NumericMotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericMotionView.swift; sourceTree = "<group>"; };
-		465F65BF2C169182003B404D /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
 		465F65C12C16DFD7003B404D /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		469D900B2C0D9E1B000ABE8C /* McCurrency.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = McCurrency.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		469D900E2C0D9E1B000ABE8C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -142,7 +140,6 @@
 				465F65B52C168F5B003B404D /* CountryCell.swift */,
 				465F65B72C168F75003B404D /* CountryFlagView.swift */,
 				465F65B92C169015003B404D /* CircularViewController.swift */,
-				465F65BF2C169182003B404D /* PickerViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -284,7 +281,6 @@
 				465F65BA2C169015003B404D /* CircularViewController.swift in Sources */,
 				465F65B82C168F75003B404D /* CountryFlagView.swift in Sources */,
 				469D900F2C0D9E1B000ABE8C /* AppDelegate.swift in Sources */,
-				465F65C02C169182003B404D /* PickerViewController.swift in Sources */,
 				465F65C22C16DFD7003B404D /* String.swift in Sources */,
 				EBC678952C12B84C0015C300 /* McRotator.swift in Sources */,
 				465F65BE2C16904D003B404D /* NumericMotionView.swift in Sources */,

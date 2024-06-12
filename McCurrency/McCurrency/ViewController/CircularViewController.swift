@@ -14,7 +14,7 @@ protocol CircularViewControllerDelegate: AnyObject {
 }
 
 class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBarDelegate {
-    
+    var presentationContext: PresentationContext = .fromFirstVC 
     weak var delegate: CircularViewControllerDelegate?
     var selectedCountryLabel: UILabel?
     
@@ -45,7 +45,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         setupCloseButton()
         setupAddButton()
         setupSearchBar()
-        
+        customizeForContext()
         filteredCountries = countries
         displayCountries(filteredCountries)
         
@@ -56,6 +56,19 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
+    }
+    
+    
+    
+    func customizeForContext() {
+        switch presentationContext {
+        case .fromFirstVC:
+            addButton.setTitle("변경하기", for: .normal)
+        case .fromSecondVCCell:
+            addButton.setTitle("변경하기", for: .normal)
+        case .fromSecondVCAddButton:
+            addButton.setTitle("추가하기", for: .normal)
+        }
     }
     
     private func setupBlurEffect() {

@@ -7,25 +7,30 @@
 
 import UIKit
 
+
 protocol CountryCellDelegate: AnyObject {
-    func countryViewDidTap(_ cell: CountryCell)
+    func buttonTapped(_ cell: CountryCell)
 }
+
  
 class CountryCell: UITableViewCell {
-   
+ 
     weak var delegate: CountryCellDelegate?
+    var indexPath: IndexPath?
 
-    
     static let cellId = "CountryCellId"
     let stackView = UIStackView()
-    let countryView = CountryFlagView()
     let hamburgerImage = UIImageView()
     let countLabel = UILabel()
+    
+    
+    let toCountryButton = UIButton()
+    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
-        setupTapGesture()
+
 
         backgroundColor = .backgroundColor
     }
@@ -36,8 +41,11 @@ class CountryCell: UITableViewCell {
     
     private func setupViews() {
         
-        countryView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(countryView)
+        
+        
+        toCountryButton.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(toCountryButton)
+        toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
         
         self.selectionStyle = .none
         stackView.axis = .horizontal
@@ -45,8 +53,9 @@ class CountryCell: UITableViewCell {
         stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(stackView)
+        stackView.backgroundColor = .red
         
-        countryView.backgroundColor = .lightGray
+        toCountryButton.backgroundColor = .boxColor
         countLabel.font = UIFont.systemFont(ofSize: 30)
         countLabel.textColor = .white
         
@@ -62,10 +71,10 @@ class CountryCell: UITableViewCell {
         
         
         NSLayoutConstraint.activate([
-            countryView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
-            countryView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            countryView.widthAnchor.constraint(equalToConstant: 95),
-            countryView.heightAnchor.constraint(equalToConstant: 32),
+            toCountryButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            toCountryButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            toCountryButton.widthAnchor.constraint(equalToConstant: 100),
+            toCountryButton.heightAnchor.constraint(equalToConstant: 32),
             
             stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
@@ -76,16 +85,15 @@ class CountryCell: UITableViewCell {
         ])
     }
     
-    
-    private func setupTapGesture() {
-           let tapGesture = UITapGestureRecognizer(target: self, action: #selector(countryViewTapped))
-           countryView.isUserInteractionEnabled = true
-           countryView.addGestureRecognizer(tapGesture)
-       }
-    
-    @objc func countryViewTapped() {
-            delegate?.countryViewDidTap(self)
+    @objc func toCountryButtonTapped() {
+            delegate?.buttonTapped(self)
         }
-    
-    
 }
+//
+//extension CountryCell:CountryCellDelegate {
+//    func buttonTapped(in cell: CountryCell) {
+//        self.delegate?.buttonTapped(in: self)
+//    }
+//    
+//    
+//}
