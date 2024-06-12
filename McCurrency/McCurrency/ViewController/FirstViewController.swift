@@ -6,9 +6,11 @@
 //
 
     import UIKit
-
+protocol FirstViewControllerDelegate: AnyObject {
+    func didSendData(_ data: String)
+}
     class FirstViewController: UIViewController {
-        
+        weak var delegate: FirstViewControllerDelegate?
         var totalWidth: CGFloat = 0
         var labelWidths: [CGFloat] = []
         var currencyDetails: [String: CurrencyDetail] = [:]
@@ -62,6 +64,8 @@
             animateDigits()
            
             fetchCurrencyData()
+            
+          
         }
         
         override func viewWillAppear(_ animated: Bool) {
@@ -316,7 +320,7 @@
                         print("Failed to fetch data")
                         return
                     }
-
+                    
                     self.currencyDetails = self.createCurrencyDetails(from: rates)
                     print("Updated Currency Details: \(self.currencyDetails)")
                     
@@ -327,6 +331,11 @@
                     if validDate != today {
                         self.showAlertForPastData(date: validDate)
                     }
+                    
+                    let usRateString = self.currencyDetails["미국"]?.tts.replacingOccurrences(of: ",", with: "")
+                    self.delegate?.didSendData(usRateString ?? "")
+                    
+                    
                 }
             }
         }
@@ -386,7 +395,7 @@
                 print("환율 데이터가 없거나 입력값 문제 발생")
                 return
             }
-
+           
             // JPY(100)과 같은 통화 처리
             let adjustedRate = currencyDetail.currencyName.contains("JPY(100)") ? rate / 100 : rate
 

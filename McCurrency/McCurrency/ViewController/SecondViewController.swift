@@ -301,3 +301,10 @@ extension SecondViewController: CountryCellDelegate {
        
     
 }
+extension SecondViewController:FirstViewControllerDelegate {
+    func didSendData(_ data: String) {
+        print("data\(data)")
+    }
+    
+    
+}
