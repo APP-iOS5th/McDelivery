@@ -209,6 +209,8 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
         
         let data = dummyData[indexPath.row]
         cell.delegate = self
+        cell.toCountryButton.tag = indexPath.row
+        cell.toCountryButton.addTarget(self, action: #selector(countryButtonTapped(_:)), for: .touchUpInside)
   //       cell.countryView.delegate = self
 //        cell.countryView.configure(with: data.countryName, imageName: data.imageName)
         cell.toCountryButton.setTitle(data.countryName, for: .normal)
@@ -233,7 +235,14 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
     }
-
+    @objc func countryButtonTapped(_ sender: UIButton) {
+            let indexPath = IndexPath(row: sender.tag, section: 0)
+            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+            let pickerVC = CircularViewController()
+            pickerVC.delegate = self
+            pickerVC.presentationContext = .fromSecondVCCell
+            present(pickerVC, animated: true, completion: nil)
+        }
 }
 
 extension SecondViewController: CircularViewControllerDelegate {
@@ -246,13 +255,34 @@ extension SecondViewController: CircularViewControllerDelegate {
         self.present(pickerVC, animated: true, completion: nil)
     }
     
-    func countrySelected(_ countryName: String) {
-        let newCountry = CountryDummy(countryName: countryName, imageName: "flag", count: 0)
-        dummyData.append(newCountry)
-        let indexPath = IndexPath(row: dummyData.count - 1, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic)
-        tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+    func countrySelected(_ countryName: String, context: PresentationContext) {
+        let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
+        let countryOnly = components[0]
+
+        switch context {
+        case .fromSecondVCAddButton:
+            // 새 국가를 목록에 추가하는 로직
+            if let countryTuple = countries.first(where: { $0.name == countryOnly }) {
+                let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
+                let newCountry = CountryDummy(countryName: fullCountryName, imageName: "flag", count: 0)
+                dummyData.append(newCountry)
+                let indexPath = IndexPath(row: dummyData.count - 1, section: 0)
+                tableView.insertRows(at: [indexPath], with: .automatic)
+                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            }
+        case .fromSecondVCCell:
+            // 선택된 셀의 국가를 업데이트하는 로직
+            if let indexPath = tableView.indexPathForSelectedRow,
+               let countryTuple = countries.first(where: { $0.name == countryOnly }) {
+                let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
+                dummyData[indexPath.row].countryName = fullCountryName
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
+        default:
+            break
+        }
     }
+
 }
 
 extension SecondViewController: CountryCellDelegate {

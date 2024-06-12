@@ -10,7 +10,7 @@ import UIKit
 import AVKit
 
 protocol CircularViewControllerDelegate: AnyObject {
-    func countrySelected(_ countryName: String)
+    func countrySelected(_ countryName: String, context: PresentationContext)
 }
 
 class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBarDelegate {
@@ -169,7 +169,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
     
     @objc func addCountryButtonTapped() {
         if let countryText = selectedCountryLabel?.text {
-            delegate?.countrySelected(countryText)
+            delegate?.countrySelected(countryText, context: presentationContext)
             dismiss(animated: true)
         }
     }
