@@ -53,7 +53,7 @@ class CountryCell: UITableViewCell {
         stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(stackView)
-        stackView.backgroundColor = .red
+        stackView.backgroundColor = .backgroundColor
         
         toCountryButton.backgroundColor = .boxColor
         countLabel.font = UIFont.systemFont(ofSize: 30)
