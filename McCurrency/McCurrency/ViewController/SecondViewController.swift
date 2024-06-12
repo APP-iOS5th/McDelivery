@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct CountryDummy {
+struct SelectedCountry {
     var countryName: String
     let imageName: String
     let count: Int
@@ -18,10 +18,10 @@ class SecondViewController: UIViewController {
     
     // MARK: - Properties
     
-    var dummyData: [CountryDummy] = [
-        CountryDummy(countryName: "🇺🇸미국", imageName: "flag", count: 187),
-        CountryDummy(countryName: "🇰🇷한국", imageName: "flag", count: 304),
-        CountryDummy(countryName: "🇯🇵일본", imageName: "flag", count: 176)
+    var selectedCountry: [SelectedCountry] = [
+//        SelectedCountry(countryName: "🇺🇸미국", imageName: "flag", count: 187),
+//        SelectedCountry(countryName: "🇰🇷한국", imageName: "flag", count: 304),
+//        SelectedCountry(countryName: "🇯🇵일본", imageName: "flag", count: 176)
     ]
     
     let countries: [(flag: String, name: String)] = [
@@ -50,7 +50,7 @@ class SecondViewController: UIViewController {
         view.backgroundColor = .backgroundColor
         autoLayout()
         setupPriceViews()
-        
+        setupEmptyView()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CountryCell.self, forCellReuseIdentifier: CountryCell.cellId)
@@ -66,7 +66,15 @@ class SecondViewController: UIViewController {
     }
     
     // MARK: - Functions
-    
+    private func setupEmptyView() {
+        let label = UILabel()
+        label.text = "나라를 선택하세요!"
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 18)
+        tableView.backgroundView = label
+        tableView.backgroundView?.isHidden = true
+    }
     private func autoLayout() {
         view.addSubview(koreaLabel)
         
@@ -200,7 +208,9 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dummyData.count
+        let count = selectedCountry.count
+            tableView.backgroundView?.isHidden = count > 0
+            return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -208,7 +218,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let data = dummyData[indexPath.row]
+        let data = selectedCountry[indexPath.row]
         cell.delegate = self
         cell.toCountryButton.tag = indexPath.row
         cell.toCountryButton.addTarget(self, action: #selector(countryButtonTapped(_:)), for: .touchUpInside)
@@ -228,7 +238,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     // 셀 삭제 기능 추가
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            dummyData.remove(at: indexPath.row)
+            selectedCountry.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
@@ -265,9 +275,9 @@ extension SecondViewController: CircularViewControllerDelegate {
             // 새 국가를 목록에 추가하는 로직
             if let countryTuple = countries.first(where: { $0.name == countryOnly }) {
                 let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
-                let newCountry = CountryDummy(countryName: fullCountryName, imageName: "flag", count: 0)
-                dummyData.append(newCountry)
-                let indexPath = IndexPath(row: dummyData.count - 1, section: 0)
+                let newCountry = SelectedCountry(countryName: fullCountryName, imageName: "flag", count: 0)
+                selectedCountry.append(newCountry)
+                let indexPath = IndexPath(row: selectedCountry.count - 1, section: 0)
                 tableView.insertRows(at: [indexPath], with: .automatic)
                 tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             }
@@ -276,7 +286,7 @@ extension SecondViewController: CircularViewControllerDelegate {
             if let indexPath = tableView.indexPathForSelectedRow,
                let countryTuple = countries.first(where: { $0.name == countryOnly }) {
                 let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
-                dummyData[indexPath.row].countryName = fullCountryName
+                selectedCountry[indexPath.row].countryName = fullCountryName
                 tableView.reloadRows(at: [indexPath], with: .none)
             }
         default:
