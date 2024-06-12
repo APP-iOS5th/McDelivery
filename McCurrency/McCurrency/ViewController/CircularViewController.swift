@@ -131,23 +131,8 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         searchBar.resignFirstResponder()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.tabBarController?.tabBar.isHidden = true
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-    }
-    
-    func attributedString(for text: String, fittingWidth width: CGFloat, in label: UILabel) -> NSAttributedString {
-        let font = label.font ?? UIFont.systemFont(ofSize: 16)
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: font,
-            .kern: 1.8
-        ]
-        let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
-        return attributedText
     }
     
     @objc func closeButtonTapped() {
@@ -184,6 +169,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         if abs(counter) > 12 { counter = 0 }
         if gesture.state == .ended {
             counter = 0
+            updateCheckmark()
         }
     }
     
@@ -237,6 +223,12 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         displayCountries(filteredCountries)
     }
     
+    func calculateLabelSize(for text: String, font: UIFont) -> CGSize {
+        let attributes: [NSAttributedString.Key: Any] = [.font: font]
+        let size = (text as NSString).size(withAttributes: attributes)
+        return size
+    }
+    
     func displayCountries(_ countries: [String]) {
         for label in labels {
             label.removeFromSuperview()
@@ -254,7 +246,10 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             let labelX = circleCenter.x + circleRadiusX * cos(angle)
             let labelY = circleCenter.y + circleRadiusY * sin(angle)
             
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 20))
+            let font = UIFont(name: AppFontName.interLight, size: 17) ?? UIFont.systemFont(ofSize: 17)
+            let labelSize = calculateLabelSize(for: country, font: font)
+            
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: labelSize.width + 20, height: 20))
             label.center = CGPoint(x: labelX, y: labelY)
             label.text = country
             label.font = UIFont(name: AppFontName.interLight, size: 17) ?? UIFont.systemFont(ofSize: 17)
@@ -272,48 +267,55 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             self.view.addSubview(label)
         }
     }
-    // 다중선택 가능. 탭2에서 활용해요.
-//    @objc func handleLabelTap(_ gesture: UITapGestureRecognizer) {
-//        guard let tappedLabel = gesture.view as? UILabel else { return }
-//        
-//        if tappedLabel.subviews.isEmpty {
-//            let checkmark = UIImageView(image: UIImage(systemName: "checkmark"))
-//            checkmark.tintColor = .mainColor
-//            checkmark.translatesAutoresizingMaskIntoConstraints = false
-//            tappedLabel.addSubview(checkmark)
-//            
-//            NSLayoutConstraint.activate([
-//                checkmark.leadingAnchor.constraint(equalTo: tappedLabel.trailingAnchor, constant: -10),
-//                checkmark.centerYAnchor.constraint(equalTo: tappedLabel.centerYAnchor)
-//            ])
-//        } else {
-//            tappedLabel.subviews.forEach { $0.removeFromSuperview() }
-//        }
-//    }
+    
+    func attributedString(for text: String, fittingWidth width: CGFloat, in label: UILabel) -> NSAttributedString {
+        let font = label.font ?? UIFont.systemFont(ofSize: 16)
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .kern: 1.8
+        ]
+        let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
+        return attributedText
+    }
+    
+    
+    private func updateCheckmark() {
+        for label in labels {
+            label.subviews.forEach { subview in
+                if let imageView = subview as? UIImageView, imageView.image == UIImage(systemName: "checkmark") {
+                    imageView.removeFromSuperview()
+                }
+            }
+        }
+        
+        if let selectedLabel = selectedCountryLabel {
+            let checkmark = UIImageView(image: UIImage(systemName: "checkmark"))
+            checkmark.tintColor = .mainColor
+            checkmark.translatesAutoresizingMaskIntoConstraints = false
+            selectedLabel.addSubview(checkmark)
+            
+            NSLayoutConstraint.activate([
+                checkmark.leadingAnchor.constraint(equalTo: selectedLabel.trailingAnchor, constant: 5),
+                checkmark.centerYAnchor.constraint(equalTo: selectedLabel.centerYAnchor)
+            ])
+            
+            checkmark.transform = CGAffineTransform(translationX: -30, y: 0).scaledBy(x: 0.3, y: 0.3)
+            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8, options: .curveEaseInOut, animations: {
+                checkmark.transform = .identity
+            }, completion: nil)
+        }
+    }
     
     @objc func handleLabelTap(_ gesture: UITapGestureRecognizer) {
-           guard let tappedLabel = gesture.view as? UILabel else { return }
-
-           selectedCountryLabel?.subviews.forEach { $0.removeFromSuperview() }
-
-           let checkmark = UIImageView(image: UIImage(systemName: "checkmark"))
-           checkmark.tintColor = .mainColor
-           checkmark.translatesAutoresizingMaskIntoConstraints = false
-           tappedLabel.addSubview(checkmark)
-           
-           NSLayoutConstraint.activate([
-               checkmark.leadingAnchor.constraint(equalTo: tappedLabel.trailingAnchor, constant: -20),
-               checkmark.centerYAnchor.constraint(equalTo: tappedLabel.centerYAnchor)
-           ])
-
-           selectedCountryLabel = tappedLabel
-       }
+        guard let tappedLabel = gesture.view as? UILabel else { return }
+        
+        selectedCountryLabel = tappedLabel
+        updateCheckmark()
+    }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-            if let searchText = searchBar.searchTextField.text {
-                        filterCountries(for: searchText)
-                       }
-        }
+        filterCountries(for: searchText)
+    }
     
     // UISearchBarDelegate methods
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -333,4 +335,3 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         }
     }
 }
-
