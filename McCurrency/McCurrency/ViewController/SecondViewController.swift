@@ -7,22 +7,17 @@
 
 import UIKit
 
-struct SelectedCountry {
+struct SelectedCountry: Codable {
     var countryName: String
-    let imageName: String
     let count: Int
 }
 
 class SecondViewController: UIViewController {
-   
+    
     
     // MARK: - Properties
     
-    var selectedCountry: [SelectedCountry] = [
-//        SelectedCountry(countryName: "🇺🇸미국", imageName: "flag", count: 187),
-//        SelectedCountry(countryName: "🇰🇷한국", imageName: "flag", count: 304),
-//        SelectedCountry(countryName: "🇯🇵일본", imageName: "flag", count: 176)
-    ]
+    var selectedCountry: [SelectedCountry] = []
     
     let countries: [(flag: String, name: String)] = [
         ("🇳🇴", "노르웨이"), ("🇲🇾", "말레이시아"),("🇺🇸", "미국"), ("🇸🇪", "스웨덴"),("🇨🇭", "스위스"),("🇬🇧", "영국"),("🇮🇩", "인도네시아"),("🇯🇵", "일본"),("🇨🇳", "중국"),("🇨🇦", "캐나다"),
@@ -57,6 +52,8 @@ class SecondViewController: UIViewController {
         tableView.separatorStyle = .none
         
         setupAddButton()
+        let loadedCountries = loadCountries()
+        self.selectedCountry = loadedCountries
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -163,6 +160,24 @@ class SecondViewController: UIViewController {
         ])
     }
     
+    func saveCountries(countries: [SelectedCountry]) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(countries) {
+            UserDefaults.standard.set(encoded, forKey: "SelectedCountries")
+        }
+    }
+    
+    
+    func loadCountries() -> [SelectedCountry] {
+        if let savedCountries = UserDefaults.standard.object(forKey: "SelectedCountries") as? Data {
+            let decoder = JSONDecoder()
+            if let loadedCountries = try? decoder.decode([SelectedCountry].self, from: savedCountries) {
+                return loadedCountries
+            }
+        }
+        return []
+    }
+    
     
 }
 
@@ -239,6 +254,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             selectedCountry.remove(at: indexPath.row)
+            saveCountries(countries: selectedCountry)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
@@ -275,8 +291,9 @@ extension SecondViewController: CircularViewControllerDelegate {
             // 새 국가를 목록에 추가하는 로직
             if let countryTuple = countries.first(where: { $0.name == countryOnly }) {
                 let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
-                let newCountry = SelectedCountry(countryName: fullCountryName, imageName: "flag", count: 0)
+                let newCountry = SelectedCountry(countryName: fullCountryName, count: 0)
                 selectedCountry.append(newCountry)
+                saveCountries(countries: selectedCountry)
                 let indexPath = IndexPath(row: selectedCountry.count - 1, section: 0)
                 tableView.insertRows(at: [indexPath], with: .automatic)
                 tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
