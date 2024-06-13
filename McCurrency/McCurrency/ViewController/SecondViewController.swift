@@ -14,7 +14,6 @@ struct SelectedCountry: Codable {
 
 class SecondViewController: UIViewController {
     
-    
     // MARK: - Properties
     var ttsValue: String = ""
     var selectedCountry: [SelectedCountry] = [] {
@@ -26,7 +25,6 @@ class SecondViewController: UIViewController {
     let countries: [(flag: String, name: String)] = [
         ("🇳🇴", "노르웨이"), ("🇲🇾", "말레이시아"),("🇺🇸", "미국"), ("🇸🇪", "스웨덴"),("🇨🇭", "스위스"),("🇬🇧", "영국"),("🇮🇩", "인도네시아"),("🇯🇵", "일본"),("🇨🇳", "중국"),("🇨🇦", "캐나다"),
         ("🇭🇰", "홍콩"),("🇹🇭","태국"),("🇦🇺", "호주"),("🇳🇿","뉴질랜드"),("🇸🇬","싱가포르")
-        
     ]
     
     let bigMacPricesInUSD: [String: Double] = [
@@ -189,7 +187,6 @@ class SecondViewController: UIViewController {
         }
     }
     
-    
     func loadCountries() -> [SelectedCountry] {
         if let savedCountries = UserDefaults.standard.object(forKey: "SelectedCountries") as? Data {
             let decoder = JSONDecoder()
@@ -239,7 +236,6 @@ extension SecondViewController: UITextFieldDelegate {
         let currentText = textField.text ?? "" // 현재 텍스트 필드의 텍스트
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
         
-       
         let unformattedText = updatedText.replacingOccurrences(of: ",", with: "")
         
         if updatedText.count > 13 {
@@ -281,8 +277,8 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let count = selectedCountry.count
-            tableView.backgroundView?.isHidden = count > 0
-            return count
+        tableView.backgroundView?.isHidden = count > 0
+        return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -295,9 +291,13 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
         cell.toCountryButton.tag = indexPath.row
         cell.toCountryButton.addTarget(self, action: #selector(countryButtonTapped(_:)), for: .touchUpInside)
         cell.toCountryButton.setTitle(data.countryName, for: .normal)
+        cell.toCountryButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        cell.toCountryButton.backgroundColor = UIColor.boxColor
+        cell.toCountryButton.layer.cornerRadius = 5
+        adjustButtonSize(button: cell.toCountryButton) // 버튼 크기 조정
         cell.hamburgerImage.image = UIImage(named: "Hamburger")
         cell.countLabel.text = "\(data.count) 개"
-      
+        
         return cell
     }
     
@@ -317,14 +317,22 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
     }
+    
     @objc func countryButtonTapped(_ sender: UIButton) {
-            let indexPath = IndexPath(row: sender.tag, section: 0)
-            tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-            let pickerVC = CircularViewController()
-            pickerVC.delegate = self
-            pickerVC.presentationContext = .fromSecondVCCell
-            present(pickerVC, animated: true, completion: nil)
-        }
+        let indexPath = IndexPath(row: sender.tag, section: 0)
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        let pickerVC = CircularViewController()
+        pickerVC.delegate = self
+        pickerVC.presentationContext = .fromSecondVCCell
+        present(pickerVC, animated: true, completion: nil)
+    }
+    
+    private func adjustButtonSize(button: UIButton) {
+        button.sizeToFit()
+        button.frame.size.width += 20 // 추가 여유 공간
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.titleLabel?.lineBreakMode = .byTruncatingTail
+    }
 }
 
 extension SecondViewController: CircularViewControllerDelegate {
@@ -396,26 +404,19 @@ extension SecondViewController: CircularViewControllerDelegate {
 }
 
 extension SecondViewController: CountryCellDelegate {
-    
-    
     func buttonTapped(_ cell: CountryCell) {
-           let pickerVC = CircularViewController()
+        let pickerVC = CircularViewController()
         pickerVC.presentationContext = .fromSecondVCCell
-           pickerVC.delegate = self
-           pickerVC.modalPresentationStyle = .overFullScreen
-           pickerVC.modalTransitionStyle = .crossDissolve
-           self.present(pickerVC, animated: true, completion: nil)
-       }
-
-       
-    
+        pickerVC.delegate = self
+        pickerVC.modalPresentationStyle = .overFullScreen
+        pickerVC.modalTransitionStyle = .crossDissolve
+        self.present(pickerVC, animated: true, completion: nil)
+    }
 }
-extension SecondViewController:FirstViewControllerDelegate {
+
+extension SecondViewController: FirstViewControllerDelegate {
     func didSendData(_ data: String) {
         print("data\(data)")
         self.ttsValue = data
-        
     }
-    
-    
 }
