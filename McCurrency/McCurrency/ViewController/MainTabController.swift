@@ -27,8 +27,9 @@ class MainTabController: UITabBarController, UITabBarControllerDelegate {
         tabBar.unselectedItemTintColor = UIColor.unselectedIcon
         
         movingView.backgroundColor = .mainColor
-        movingView.frame = CGRect(x: 0, y: 0, width: 89, height: 4)
-        movingView.layer.cornerRadius = 2
+        movingView.frame = CGRect(x: 0, y: 0, width: 6, height: 6)
+        movingView.layer.cornerRadius = movingView.frame.size.width / 2
+        movingView.clipsToBounds = true
         tabBar.addSubview(movingView)
         
         DispatchQueue.main.async {
@@ -74,7 +75,7 @@ class MainTabController: UITabBarController, UITabBarControllerDelegate {
             buttons.forEach { button in
                 button.translatesAutoresizingMaskIntoConstraints = false
                 NSLayoutConstraint.activate([
-                    button.centerYAnchor.constraint(equalTo: self.tabBar.topAnchor, constant: 30),
+                    button.centerYAnchor.constraint(equalTo: self.tabBar.topAnchor, constant: 33),
                     button.heightAnchor.constraint(equalToConstant: button.frame.height),
                     button.widthAnchor.constraint(equalToConstant: button.frame.width),
                     button.leadingAnchor.constraint(equalTo: self.tabBar.leadingAnchor, constant: button.frame.minX)
