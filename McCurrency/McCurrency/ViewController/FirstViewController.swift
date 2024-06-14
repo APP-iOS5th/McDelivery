@@ -36,7 +36,7 @@ class FirstViewController: UIViewController {
     var toAmountTopConstraints: [NSLayoutConstraint] = []
     let toAmountSuffixLabel = UILabel()
     let toAmountLabelsLine = UIView()
-    let exchangeButton = UIButton()
+    let exchangeIcon = UIButton()
     let bigMacCountbox = UIButton()
     let tooltipButton = UIButton()
     var tooltipView: UIView?
@@ -63,8 +63,6 @@ class FirstViewController: UIViewController {
         animateDigits()
         
         fetchCurrencyData()
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,7 +77,7 @@ class FirstViewController: UIViewController {
         view.addSubview(fromAmountTextField)
         view.addSubview(fromAmountSuffixLabel)
         view.addSubview(fromAmountTextFieldLine)
-        view.addSubview(exchangeButton)
+        view.addSubview(exchangeIcon)
         view.addSubview(bigMacCountbox)
         view.addSubview(tooltipButton)
         view.addSubview(toCountryButton)
@@ -93,7 +91,7 @@ class FirstViewController: UIViewController {
         fromAmountTextFieldLine.translatesAutoresizingMaskIntoConstraints = false
         toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
         toAmountLabelsLine.translatesAutoresizingMaskIntoConstraints = false
-        exchangeButton.translatesAutoresizingMaskIntoConstraints = false
+        exchangeIcon.translatesAutoresizingMaskIntoConstraints = false
         bigMacCountbox.translatesAutoresizingMaskIntoConstraints = false
         tooltipButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -105,9 +103,8 @@ class FirstViewController: UIViewController {
         toCountryButton.setTitleColor(.white, for: .normal)
         toCountryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         toCountryButton.backgroundColor = UIColor.toCountryButtonColor
-        toCountryButton.layer.cornerRadius = 5
+        toCountryButton.layer.cornerRadius = 9
         toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
-        
         
         let placeholderAttributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.lightGray,
@@ -134,11 +131,11 @@ class FirstViewController: UIViewController {
         
         toAmountLabelsLine.backgroundColor = .secondaryTextColor
         
-        exchangeButton.setImage(UIImage(systemName: "chevron.down"), for: .normal)
-        exchangeButton.tintColor = UIColor.secondaryTextColor
-        exchangeButton.setTitleColor(.white, for: .normal)
-        exchangeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
-        exchangeButton.isEnabled = false
+        exchangeIcon.setImage(UIImage(systemName: "chevron.down"), for: .normal)
+        exchangeIcon.tintColor = UIColor.secondaryTextColor
+        exchangeIcon.setTitleColor(.white, for: .normal)
+        exchangeIcon.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        exchangeIcon.isEnabled = false
         
         bigMacCountbox.titleLabel?.numberOfLines = 0
         bigMacCountbox.titleLabel?.textAlignment = .center
@@ -163,7 +160,7 @@ class FirstViewController: UIViewController {
             fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60),
             //대한민국
             
-            toCountryButton.topAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 58),
+            toCountryButton.topAnchor.constraint(equalTo: exchangeIcon.bottomAnchor, constant: 48),
             toCountryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 36),
             toCountryButton.widthAnchor.constraint(equalToConstant: 100),
             toCountryButton.heightAnchor.constraint(equalToConstant: 32),
@@ -184,8 +181,8 @@ class FirstViewController: UIViewController {
             fromAmountTextFieldLine.heightAnchor.constraint(equalToConstant: 1),
             //원화 텍스트필드 언더라인
             
-            exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 20),
-            exchangeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            exchangeIcon.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 30),
+            exchangeIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             //환전버튼
             
             toAmountSuffixLabel.topAnchor.constraint(equalTo: bigMacCountbox.topAnchor, constant: 75),
