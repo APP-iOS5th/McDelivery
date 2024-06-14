@@ -26,12 +26,13 @@ extension UIColor {
     static let mainColor = UIColor(hex: "FFC327") // 메인 컬러
     static let backgroundColor = UIColor(hex: "232123") // 배경 컬러
     static let boxColor = UIColor(hex: "363336") // 박스 컬러
-    static let slotBox = UIColor(hex: "1D1B1D")
+    static let toCountryButtonColor = UIColor(hex: "504B50") // 상대국가 선택 버튼 컬러
+    static let slotBox = UIColor(hex: "1D1B1D") // 햄버거 슬롯박스 컬러
     static let secondaryTextColor = UIColor(hex: "999999") // 보조 텍스트 컬러
     static let unselectedIcon = UIColor(hex: "3E3C3E") // 선택되지 않은 아이콘 컬러
     static let SearchBarColor = UIColor(hex: "646464") // 서큘러뷰 검색바 컬러
-    static let AddButton = UIColor(hex: "D6D6D6")
-    static let CenterHighlighted = UIColor(hex: "9C9C9C")
+    static let AddButton = UIColor(hex: "D6D6D6") // 서큘러뷰 변경하기 버튼
+    static let CenterHighlighted = UIColor(hex: "9C9C9C") // 서큘러뷰 센터 표시 박스 스트로크 컬러
 }
 
 // 탭바 투명도와 블러값 적용

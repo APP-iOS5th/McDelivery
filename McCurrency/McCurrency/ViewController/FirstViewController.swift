@@ -80,11 +80,11 @@ protocol FirstViewControllerDelegate: AnyObject {
             view.addSubview(fromCountryLabel)
             view.addSubview(fromAmountTextField)
             view.addSubview(fromAmountSuffixLabel)
-            view.addSubview(toAmountSuffixLabel)
             view.addSubview(exchangeButton)
             view.addSubview(bigMacCountbox)
             view.addSubview(tooltipButton)
             view.addSubview(toCountryButton)
+            view.addSubview(toAmountSuffixLabel)
             
             fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
             toCountryButton.translatesAutoresizingMaskIntoConstraints = false
@@ -97,12 +97,12 @@ protocol FirstViewControllerDelegate: AnyObject {
             
             fromCountryLabel.text = "🇰🇷 대한민국"
             fromCountryLabel.textColor = .white
-            fromCountryLabel.font = UIFont.systemFont(ofSize: 14)
+            fromCountryLabel.font = UIFont.systemFont(ofSize: 16)
             
             toCountryButton.setTitle("🇺🇸 미국", for: .normal)
             toCountryButton.setTitleColor(.white, for: .normal)
-            toCountryButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-            toCountryButton.backgroundColor = UIColor.boxColor
+            toCountryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+            toCountryButton.backgroundColor = UIColor.toCountryButtonColor
             toCountryButton.layer.cornerRadius = 5
             toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
             
@@ -128,28 +128,27 @@ protocol FirstViewControllerDelegate: AnyObject {
             toAmountSuffixLabel.textColor = .white
             toAmountSuffixLabel.font = UIFont.interMediumFont(ofSize: 36)
             
-            exchangeButton.setImage(UIImage(systemName: "arrow.left.arrow.right"), for: .normal)
+            exchangeButton.setImage(UIImage(systemName: "chevron.down"), for: .normal)
             exchangeButton.tintColor = UIColor.secondaryTextColor
             exchangeButton.setTitleColor(.white, for: .normal)
             exchangeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
             exchangeButton.isEnabled = false
-         //   exchangeButton.addTarget(self, action: #selector(exchangeButtonTapped), for: .touchUpInside)
             
             bigMacCountbox.titleLabel?.numberOfLines = 0
             bigMacCountbox.titleLabel?.textAlignment = .center
             
-            bigMacCountbox.setTitle("개의 빅맥을\n살 수 있어요.", for: .normal)
+            bigMacCountbox.setTitle("개의 빅맥을\n구매할 수 있어요.", for: .normal)
             bigMacCountbox.setTitleColor(.white, for: .normal)
-            bigMacCountbox.titleLabel?.font = UIFont.interLightFont(ofSize: 20)
+            bigMacCountbox.titleLabel?.font = UIFont.interThinFont(ofSize: 20)
             bigMacCountbox.backgroundColor = UIColor.boxColor
             bigMacCountbox.layer.cornerRadius = 20
-            bigMacCountbox.titleEdgeInsets = UIEdgeInsets(top: 75, left: 0, bottom: 0, right: 0)
+            bigMacCountbox.titleEdgeInsets = UIEdgeInsets(top: 240, left: 0, bottom: 0, right: 0)
             
             tooltipButton.setTitle(" 빅맥지수란?", for: .normal)
             tooltipButton.setImage(UIImage(systemName: "questionmark.circle.fill"), for: .normal)
             tooltipButton.tintColor = UIColor.secondaryTextColor
             tooltipButton.setTitleColor(UIColor.secondaryTextColor, for: .normal)
-            tooltipButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+            tooltipButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
             tooltipButton.addTarget(self, action: #selector(showTooltip), for: .touchUpInside)
             
             NSLayoutConstraint.activate([
@@ -158,11 +157,11 @@ protocol FirstViewControllerDelegate: AnyObject {
                 fromCountryLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60),
                 //대한민국
                 
-                toCountryButton.topAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 17),
-                toCountryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                toCountryButton.topAnchor.constraint(equalTo: exchangeButton.bottomAnchor, constant: 58),
+                toCountryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 36),
                 toCountryButton.widthAnchor.constraint(equalToConstant: 100),
                 toCountryButton.heightAnchor.constraint(equalToConstant: 32),
-                
+                //상대국 선택 버튼
                 
                 fromAmountTextField.topAnchor.constraint(equalTo: fromCountryLabel.bottomAnchor, constant: 20),
                 fromAmountTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -170,21 +169,22 @@ protocol FirstViewControllerDelegate: AnyObject {
                 
                 fromAmountSuffixLabel.centerYAnchor.constraint(equalTo: fromAmountTextField.centerYAnchor),
                 fromAmountSuffixLabel.leadingAnchor.constraint(equalTo: fromAmountTextField.trailingAnchor, constant: 5),
-                fromAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                fromAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
                 //원
                 
                 exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 20),
                 exchangeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 //환전버튼
                 
-                toAmountSuffixLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 260),
-                toAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                toAmountSuffixLabel.topAnchor.constraint(equalTo: bigMacCountbox.topAnchor, constant: 75),
+                toAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
                 //달러
                 
-                bigMacCountbox.topAnchor.constraint(equalTo: toAmountSuffixLabel.bottomAnchor, constant: 60),
+                bigMacCountbox.topAnchor.constraint(equalTo: fromAmountSuffixLabel.bottomAnchor, constant: 88),
                 bigMacCountbox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                bigMacCountbox.widthAnchor.constraint(equalToConstant: 333),
-                bigMacCountbox.heightAnchor.constraint(equalToConstant: 216),
+                bigMacCountbox.widthAnchor.constraint(equalToConstant: 357),
+                bigMacCountbox.heightAnchor.constraint(equalToConstant: 353),
+                //빅맥 갯수 바탕 박스
                 
                 tooltipButton.topAnchor.constraint(equalTo: bigMacCountbox.bottomAnchor, constant: 5),
                 tooltipButton.trailingAnchor.constraint(equalTo: bigMacCountbox.trailingAnchor, constant: -10)
@@ -274,14 +274,14 @@ protocol FirstViewControllerDelegate: AnyObject {
             let tooltipLabel = UILabel()
             tooltipLabel.text = "빅맥지수란, 전 세계 맥도날드 빅맥 가격을 기준으로 각국 통화의 구매력을 비교하는 지표입니다."
             tooltipLabel.textColor = .white
-            tooltipLabel.font = UIFont.systemFont(ofSize: 12)
+            tooltipLabel.font = UIFont.systemFont(ofSize: 14)
             tooltipLabel.numberOfLines = 0
             tooltipLabel.translatesAutoresizingMaskIntoConstraints = false
             
             newTooltipView.addSubview(tooltipLabel)
             
             NSLayoutConstraint.activate([
-                tooltipLabel.topAnchor.constraint(equalTo: newTooltipView.topAnchor, constant: 8),
+                tooltipLabel.topAnchor.constraint(equalTo: newTooltipView.topAnchor, constant: 10),
                 tooltipLabel.bottomAnchor.constraint(equalTo: newTooltipView.bottomAnchor, constant: -8),
                 tooltipLabel.leadingAnchor.constraint(equalTo: newTooltipView.leadingAnchor, constant: 8),
                 tooltipLabel.trailingAnchor.constraint(equalTo: newTooltipView.trailingAnchor, constant: -8)
@@ -454,17 +454,17 @@ protocol FirstViewControllerDelegate: AnyObject {
                 
                 NSLayoutConstraint.activate([
                     slotBoxes[0].leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 51),
-                    slotBoxes[0].topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 33),
+                    slotBoxes[0].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 119),
                     slotBoxes[0].widthAnchor.constraint(equalToConstant: 73),
                     slotBoxes[0].heightAnchor.constraint(equalToConstant: 78),
                     
                     slotBoxes[1].centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-                    slotBoxes[1].topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 33),
+                    slotBoxes[1].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 119),
                     slotBoxes[1].widthAnchor.constraint(equalToConstant: 73),
                     slotBoxes[1].heightAnchor.constraint(equalToConstant: 78),
                     
                     slotBoxes[2].trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -51),
-                    slotBoxes[2].topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 33),
+                    slotBoxes[2].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 119),
                     slotBoxes[2].widthAnchor.constraint(equalToConstant: 73),
                     slotBoxes[2].heightAnchor.constraint(equalToConstant: 78),
                 ])
@@ -494,7 +494,7 @@ protocol FirstViewControllerDelegate: AnyObject {
 
         private func calculateSlotTexts(from text: String) -> [String] {
             let numDigits = text.count
-            var slotTexts = ["000", "000", "000"]
+            var slotTexts = ["0", "0", "0"]
             switch numDigits {
             case 1:
                 slotTexts = ["0", "0", text]
@@ -579,8 +579,8 @@ protocol FirstViewControllerDelegate: AnyObject {
                 NSLayoutConstraint.activate([
                     coverBox.centerXAnchor.constraint(equalTo: hamburgerLabel.centerXAnchor),
                     coverBox.centerYAnchor.constraint(equalTo: hamburgerLabel.centerYAnchor),
-                    coverBox.widthAnchor.constraint(equalToConstant: 73),
-                    coverBox.heightAnchor.constraint(equalToConstant: 78)
+                    coverBox.widthAnchor.constraint(equalToConstant: 69),
+                    coverBox.heightAnchor.constraint(equalToConstant: 74)
                 ])
             }
         }
