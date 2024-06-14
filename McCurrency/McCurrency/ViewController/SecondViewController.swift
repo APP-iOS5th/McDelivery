@@ -74,6 +74,7 @@ class SecondViewController: UIViewController {
         setupAddButton()
         let loadedCountries = loadCountries()
         self.selectedCountry = loadedCountries
+        setupFooterView()  // 추가된 푸터 뷰 설정
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,6 +93,27 @@ class SecondViewController: UIViewController {
         tableView.backgroundView = label
         tableView.backgroundView?.isHidden = true
     }
+    
+    private func setupFooterView() {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50))
+        footerView.backgroundColor = .clear
+        
+        let footerLabel = UILabel()
+        footerLabel.text = "빅맥을 살 수 있어요"
+        footerLabel.font = UIFont.systemFont(ofSize: 16)
+        footerLabel.textColor = .white
+        footerLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        footerView.addSubview(footerLabel)
+        
+        NSLayoutConstraint.activate([
+            footerLabel.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -20),
+            footerLabel.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -10)
+        ])
+        
+        tableView.tableFooterView = footerView
+    }
+
     private func autoLayout() {
         view.addSubview(koreaLabel)
         
@@ -196,7 +218,6 @@ class SecondViewController: UIViewController {
         }
         return []
     }
-
     func mcCount(amountKRW: Double, ttsString: String) {
         guard let exchangeRateUSD = Double(ttsString) else {
             print("환율 정보가 유효하지 않습니다: \(ttsString)")
