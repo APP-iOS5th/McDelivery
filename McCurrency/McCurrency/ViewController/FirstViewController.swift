@@ -33,9 +33,11 @@ protocol FirstViewControllerDelegate: AnyObject {
         ]
         let fromAmountTextField = UITextField()
         let fromAmountSuffixLabel = UILabel()
+        let fromAmountTextFieldLine = UIView()
         var toAmountLabels: [UILabel] = []
         var toAmountTopConstraints: [NSLayoutConstraint] = []
         let toAmountSuffixLabel = UILabel()
+        let toAmountLabelsLine = UIView()
         let exchangeButton = UIButton()
         let bigMacCountbox = UIButton()
         let tooltipButton = UIButton()
@@ -60,7 +62,6 @@ protocol FirstViewControllerDelegate: AnyObject {
             setupSlotBoxesAndNumericViews(inside: bigMacCountbox, with: "$$$")
             setupHamburgerLabelsAndCoverBoxes()
             animateHamburgers()
-          //  bringHamburgersToFront()
             animateDigits()
            
             fetchCurrencyData()
@@ -80,17 +81,21 @@ protocol FirstViewControllerDelegate: AnyObject {
             view.addSubview(fromCountryLabel)
             view.addSubview(fromAmountTextField)
             view.addSubview(fromAmountSuffixLabel)
+            view.addSubview(fromAmountTextFieldLine)
             view.addSubview(exchangeButton)
             view.addSubview(bigMacCountbox)
             view.addSubview(tooltipButton)
             view.addSubview(toCountryButton)
             view.addSubview(toAmountSuffixLabel)
+            view.addSubview(toAmountLabelsLine)
             
             fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
             toCountryButton.translatesAutoresizingMaskIntoConstraints = false
             fromAmountTextField.translatesAutoresizingMaskIntoConstraints = false
             fromAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
+            fromAmountTextFieldLine.translatesAutoresizingMaskIntoConstraints = false
             toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
+            toAmountLabelsLine.translatesAutoresizingMaskIntoConstraints = false
             exchangeButton.translatesAutoresizingMaskIntoConstraints = false
             bigMacCountbox.translatesAutoresizingMaskIntoConstraints = false
             tooltipButton.translatesAutoresizingMaskIntoConstraints = false
@@ -106,13 +111,13 @@ protocol FirstViewControllerDelegate: AnyObject {
             toCountryButton.layer.cornerRadius = 5
             toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
             
-            fromAmountTextField.delegate = self
-            
             
             let placeholderAttributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: UIColor.lightGray,
                 .font: UIFont.interMediumFont(ofSize: 40)
             ]
+            
+            fromAmountTextField.delegate = self
             fromAmountTextField.attributedPlaceholder = NSAttributedString(string: "0", attributes: placeholderAttributes)
             fromAmountTextField.textColor = .white
             fromAmountTextField.font = UIFont.interLightFont(ofSize: 36)
@@ -124,9 +129,13 @@ protocol FirstViewControllerDelegate: AnyObject {
             fromAmountSuffixLabel.textColor = .white
             fromAmountSuffixLabel.font = UIFont.interMediumFont(ofSize: 36)
             
+            fromAmountTextFieldLine.backgroundColor = .secondaryTextColor
+            
             toAmountSuffixLabel.text = " 달러"
             toAmountSuffixLabel.textColor = .white
             toAmountSuffixLabel.font = UIFont.interMediumFont(ofSize: 36)
+            
+            toAmountLabelsLine.backgroundColor = .secondaryTextColor
             
             exchangeButton.setImage(UIImage(systemName: "chevron.down"), for: .normal)
             exchangeButton.tintColor = UIColor.secondaryTextColor
@@ -172,6 +181,12 @@ protocol FirstViewControllerDelegate: AnyObject {
                 fromAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
                 //원
                 
+                fromAmountTextFieldLine.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 4),
+                fromAmountTextFieldLine.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 43),
+                fromAmountTextFieldLine.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -42),
+                fromAmountTextFieldLine.heightAnchor.constraint(equalToConstant: 1),
+                //원화 텍스트필드 언더라인
+                
                 exchangeButton.topAnchor.constraint(equalTo: fromAmountTextField.bottomAnchor, constant: 20),
                 exchangeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 //환전버튼
@@ -179,6 +194,11 @@ protocol FirstViewControllerDelegate: AnyObject {
                 toAmountSuffixLabel.topAnchor.constraint(equalTo: bigMacCountbox.topAnchor, constant: 75),
                 toAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
                 //달러
+                
+                toAmountLabelsLine.topAnchor.constraint(equalTo: toAmountSuffixLabel.bottomAnchor, constant: 4),
+                toAmountLabelsLine.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 43),
+                toAmountLabelsLine.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -42),
+                toAmountLabelsLine.heightAnchor.constraint(equalToConstant: 1),
                 
                 bigMacCountbox.topAnchor.constraint(equalTo: fromAmountSuffixLabel.bottomAnchor, constant: 88),
                 bigMacCountbox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
