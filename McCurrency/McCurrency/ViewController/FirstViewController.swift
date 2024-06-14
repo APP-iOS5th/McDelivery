@@ -147,7 +147,7 @@ class FirstViewController: UIViewController {
         bigMacCountbox.layer.cornerRadius = 20
         bigMacCountbox.titleEdgeInsets = UIEdgeInsets(top: 240, left: 0, bottom: 0, right: 0)
         
-        tooltipButton.setTitle(" 빅맥지수란?", for: .normal)
+        tooltipButton.setTitle(" 빅맥 지수란?", for: .normal)
         tooltipButton.setImage(UIImage(systemName: "questionmark.circle.fill"), for: .normal)
         tooltipButton.tintColor = UIColor.secondaryTextColor
         tooltipButton.setTitleColor(UIColor.secondaryTextColor, for: .normal)
@@ -200,7 +200,7 @@ class FirstViewController: UIViewController {
             bigMacCountbox.heightAnchor.constraint(equalToConstant: 353),
             //빅맥 갯수 바탕 박스
             
-            tooltipButton.topAnchor.constraint(equalTo: bigMacCountbox.bottomAnchor, constant: 5),
+            tooltipButton.topAnchor.constraint(equalTo: bigMacCountbox.bottomAnchor, constant: 8),
             tooltipButton.trailingAnchor.constraint(equalTo: bigMacCountbox.trailingAnchor, constant: -10)
         ])
     }
@@ -296,7 +296,12 @@ class FirstViewController: UIViewController {
         newTooltipView.translatesAutoresizingMaskIntoConstraints = false
         
         let tooltipLabel = UILabel()
-        tooltipLabel.text = "빅맥지수란, 전 세계 맥도날드 빅맥 가격을 기준으로 각국 통화의 구매력을 비교하는 지표입니다."
+        let tooltipText = "빅맥 지수란,\n전 세계 맥도날드 빅맥 가격을 기준으로 각국 통화의 구매력을 비교하는 지표입니다."
+        let attributedString = NSMutableAttributedString(string: tooltipText)
+        let kernValue: CGFloat = 1.2
+        attributedString.addAttribute(.kern, value: kernValue, range: NSRange(location: 0, length: tooltipText.count))
+        
+        tooltipLabel.attributedText = attributedString
         tooltipLabel.textColor = .white
         tooltipLabel.font = UIFont.systemFont(ofSize: 14)
         tooltipLabel.numberOfLines = 0
