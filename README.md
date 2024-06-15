@@ -1,4 +1,4 @@
-# McCurrency  ![Xcode](https://img.shields.io/badge/Xcode-007ACC?style=for-the-badge&logo=Xcode&logoColor=white) ![Protopie](https://img.shields.io/badge/Protopie-%23FF6661.svg?style=for-the-badge) ![Blender](https://img.shields.io/badge/blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white) ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
+# McCurrency   ![Xcode](https://img.shields.io/badge/Xcode-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)<img src="https://img.shields.io/badge/15.4.0-515151?style=for-the-badge"> ![Protopie](https://img.shields.io/badge/Protopie-%23FF6661.svg?style=for-the-badge) ![Blender](https://img.shields.io/badge/blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white) ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
 사용자가 입력한 금액을 실시간 환율로 변환하고, 빅맥 가격을 기준으로 각국 통화의 구매력을 비교하는 환율 앱
 
 ## :sparkles: 프로젝트 소개
@@ -10,7 +10,7 @@ McCurrency는 세계 여러 나라에서 사용자의 구매력을 비교할 수
 - 다양한 나라 지원 <br>: 여러 나라의 환율과 빅맥 가격 데이터를 제공합니다.
 - 사용자 친화적 인터페이스 <br>: 부드러운 인터랙션과 간편한 인터페이스로 직관적인 사용이 가능합니다.
 
-## 🎞️: 실행 화면
+## 🎞️ 실행 화면
 | CurrencyView | CircularPickerView | IndexCompareView |
 |---|---|---|
 | gif | gif | gif |
