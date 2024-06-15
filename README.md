@@ -1,5 +1,4 @@
 # McCurrency   ![Xcode](https://img.shields.io/badge/Xcode-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)<img src="https://img.shields.io/badge/15.4.0-515151?style=for-the-badge"> ![Protopie](https://img.shields.io/badge/Protopie-%23FF6661.svg?style=for-the-badge) ![Blender](https://img.shields.io/badge/blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white) ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
-사용자가 입력한 금액을 실시간 환율로 변환하고, 빅맥 가격을 기준으로 각국 통화의 구매력을 비교하는 환율 앱
 
 <img src="https://github.com/APP-iOS5th/McDelivery/assets/164737302/7ff9ac47-415c-4ff6-a03f-5d82a908e706" width=480 />
 
