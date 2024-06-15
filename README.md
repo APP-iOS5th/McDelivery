@@ -1,7 +1,7 @@
 # McCurrency   ![Xcode](https://img.shields.io/badge/Xcode-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)<img src="https://img.shields.io/badge/15.4.0-515151?style=for-the-badge"> ![Protopie](https://img.shields.io/badge/Protopie-%23FF6661.svg?style=for-the-badge) ![Blender](https://img.shields.io/badge/blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white) ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
 사용자가 입력한 금액을 실시간 환율로 변환하고, 빅맥 가격을 기준으로 각국 통화의 구매력을 비교하는 환율 앱
 
-## :sparkles: 프로젝트 소개
+## :package: 프로젝트 소개
 McCurrency는 세계 여러 나라에서 사용자의 구매력을 비교할 수 있는 환율 앱입니다. 사용자가 입력한 금액을 실시간 환율을 적용해 다양한 나라의 통화로 변환하고, 해당 금액으로 그 나라에서 몇 개의 빅맥을 구매할 수 있는지 계산합니다.
 
 ## :world_map: 주요 기능
@@ -18,7 +18,7 @@ McCurrency는 세계 여러 나라에서 사용자의 구매력을 비교할 수
 ## :people_holding_hands: 팀 McDelivery
 | [임재현](https://github.com/LimJaeHyeon9298) | [이성운](https://github.com/5lsw) | [조아라](https://github.com/arachocho) | [권도율](https://github.com/YuleGlycerine) |
 |---|---|---|---|
-| 이미지  | 이미지 | 이미지 | ![9ZENSbDjkvzrsM1-MC5gApriHrklZTpNNwmdOkC-S1nyjpjPnrWYZEcT_WFLn-VBpamNj5WtRqHgeI9s9jTuWg](https://github.com/APP-iOS5th/Saver/assets/164737302/3bdf1c10-1c06-4696-8f9a-a61a4a73fe6b) |
+| <img src="https://avatars.githubusercontent.com/u/115773990?v=4" width=240 /> | <img src="https://avatars.githubusercontent.com/u/164517761?v=4" width=240 />| 이미지 | ![9ZENSbDjkvzrsM1-MC5gApriHrklZTpNNwmdOkC-S1nyjpjPnrWYZEcT_WFLn-VBpamNj5WtRqHgeI9s9jTuWg](https://github.com/APP-iOS5th/Saver/assets/164737302/3bdf1c10-1c06-4696-8f9a-a61a4a73fe6b) |
 
 ## :microscope: 담당
 임재현 [@LimJaeHyeon9298](https://github.com/LimJaeHyeon9298)
