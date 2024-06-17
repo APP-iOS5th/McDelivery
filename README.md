@@ -31,8 +31,16 @@ McCurrency는 세계 여러 나라에서 사용자의 구매력을 비교할 수
 * 구현 기능:
 
 조아라 [@arachocho](https://github.com/arachocho)
-* 담당:
-* 구현 기능:
+* 담당: First, Seoncd UI View 구성
+* 구현 기능: 프로젝트의 두 개의 주요 뷰(View)와 기본적인 UI를 구현
+  - First View
+    - Default 로 대한민국을 설정하여 원하는 금액을 입력, 수정 할 수 있음
+    - UIButton을 이용해 원하는 국가를 선택할 수 있는 버튼을 만듦
+  - Second View
+   - 나라 슬롯을 추가할 수 있는 버튼을 생성함
+   - 추가한 셀을 슬라이드하여 삭제할 수 있는 기능을 추가함
+  
+
 
 권도율 [@YuleGlycerine](https://github.com/YuleGlycerine)
 * 담당: 기획, 디자인
