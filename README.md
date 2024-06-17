@@ -31,7 +31,7 @@ McCurrency는 세계 여러 나라에서 사용자의 구매력을 비교할 수
 * 구현 기능:
 
 조아라 [@arachocho](https://github.com/arachocho)
-* 담당: First, Seoncd UI View 구성
+* 담당: 프로젝트의 전반적인 UI 개발
 * 구현 기능: 프로젝트의 두 개의 주요 뷰(View)와 기본적인 UI를 구현
   - First View
     - Default 로 대한민국을 설정하여 원하는 금액을 입력, 수정 할 수 있음
