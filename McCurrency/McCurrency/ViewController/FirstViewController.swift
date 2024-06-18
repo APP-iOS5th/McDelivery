@@ -462,32 +462,37 @@ extension FirstViewController {
         
         // 슬롯 박스가 없을 경우 새로 생성
         if slotBoxes.isEmpty {
-            for _ in 0..<3 {
+            for _ in 0..<4 {
                 let slotbox = createSlotBox()
                 backgroundView.addSubview(slotbox)
                 slotBoxes.append(slotbox)
             }
             
             NSLayoutConstraint.activate([
-                slotBoxes[0].leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 51),
-                slotBoxes[0].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 119),
+                slotBoxes[0].leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 24),
+                slotBoxes[0].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 115),
                 slotBoxes[0].widthAnchor.constraint(equalToConstant: 73),
                 slotBoxes[0].heightAnchor.constraint(equalToConstant: 78),
                 
-                slotBoxes[1].centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-                slotBoxes[1].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 119),
+                slotBoxes[1].leadingAnchor.constraint(equalTo: slotBoxes[0].trailingAnchor, constant: 5),
+                slotBoxes[1].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 115),
                 slotBoxes[1].widthAnchor.constraint(equalToConstant: 73),
                 slotBoxes[1].heightAnchor.constraint(equalToConstant: 78),
                 
-                slotBoxes[2].trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -51),
-                slotBoxes[2].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 119),
+                slotBoxes[2].leadingAnchor.constraint(equalTo: slotBoxes[1].trailingAnchor, constant: 5),
+                slotBoxes[2].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 115),
                 slotBoxes[2].widthAnchor.constraint(equalToConstant: 73),
                 slotBoxes[2].heightAnchor.constraint(equalToConstant: 78),
+                
+                slotBoxes[3].leadingAnchor.constraint(equalTo: slotBoxes[2].trailingAnchor, constant: 5),
+                slotBoxes[3].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 115),
+                slotBoxes[3].widthAnchor.constraint(equalToConstant: 73),
+                slotBoxes[3].heightAnchor.constraint(equalToConstant: 78),
             ])
         }
         
         // 새로운 텍스트에 따른 슬롯 텍스트 계산
-        let slotTexts = calculateSlotTexts(from: text)
+        let slotTexts = calculateSlotTexts(from: text, numberOfSlots: 4)
         for (index, slotText) in slotTexts.enumerated() {
             let numericMotionView = NumericMotionView(
                 frame: .zero,
@@ -508,47 +513,40 @@ extension FirstViewController {
         }
     }
     
-    private func calculateSlotTexts(from text: String) -> [String] {
+    private func calculateSlotTexts(from text: String, numberOfSlots: Int) -> [String] {
         let numDigits = text.count
-        var slotTexts = ["0", "0", "0"]
+        var slotTexts = Array(repeating: "0", count: numberOfSlots)
         switch numDigits {
         case 1:
-            slotTexts = ["0", "0", text]
+            slotTexts = Array(repeating: "0", count: numberOfSlots - 1) + [text]
         case 2:
-            slotTexts = ["0", String(text.first!), String(text.last!)]
+            slotTexts = Array(repeating: "0", count: numberOfSlots - 2) + [String(text.first!), String(text.last!)]
         case 3:
-            slotTexts = [String(text[text.startIndex]), String(text[text.index(text.startIndex, offsetBy: 1)]), String(text[text.index(text.startIndex, offsetBy: 2)])]
+            slotTexts = Array(repeating: "0", count: numberOfSlots - 3) + [
+                String(text[text.startIndex]),
+                String(text[text.index(text.startIndex, offsetBy: 1)]),
+                String(text[text.index(text.startIndex, offsetBy: 2)])
+            ]
         case 4:
-            slotTexts[0] = String(text.prefix(1))
-            slotTexts[1] = String(text[text.index(text.startIndex, offsetBy: 1)])
-            slotTexts[2] = String(text.dropFirst(2))
-        case 5:
-            slotTexts[0] = String(text.prefix(1))
-            slotTexts[1] = String(text[text.index(text.startIndex, offsetBy: 1)...text.index(text.startIndex, offsetBy: 2)])
-            slotTexts[2] = String(text.dropFirst(3))
-        case 6:
-            slotTexts[0] = String(text.prefix(2))
-            slotTexts[1] = String(text[text.index(text.startIndex, offsetBy: 2)...text.index(text.startIndex, offsetBy: 3)])
-            slotTexts[2] = String(text.dropFirst(4))
-        case 7:
-            slotTexts[0] = String(text.prefix(2))
-            slotTexts[1] = String(text[text.index(text.startIndex, offsetBy: 2)...text.index(text.startIndex, offsetBy: 3)])
-            slotTexts[2] = String(text.dropFirst(4))
-        case 8:
-            slotTexts[0] = String(text.prefix(2))
-            slotTexts[1] = String(text[text.index(text.startIndex, offsetBy: 2)...text.index(text.startIndex, offsetBy: 4)])
-            slotTexts[2] = String(text.dropFirst(5))
+            slotTexts = [
+                String(text[text.startIndex]),
+                String(text[text.index(text.startIndex, offsetBy: 1)]),
+                String(text[text.index(text.startIndex, offsetBy: 2)]),
+                String(text[text.index(text.startIndex, offsetBy: 3)])
+            ]
         default:
-            let partSize = numDigits / 3
-            let remainder = numDigits % 3
+            let partSize = numDigits / numberOfSlots
+            let remainder = numDigits % numberOfSlots
             if remainder == 0 {
-                slotTexts[0] = String(text.prefix(partSize))
-                slotTexts[1] = String(text.dropFirst(partSize).prefix(partSize))
-                slotTexts[2] = String(text.dropFirst(2 * partSize))
+                for i in 0..<numberOfSlots {
+                    slotTexts[i] = String(text[text.index(text.startIndex, offsetBy: i*partSize)..<text.index(text.startIndex, offsetBy: (i+1)*partSize)])
+                }
             } else {
-                slotTexts[0] = String(text.prefix(partSize))
-                slotTexts[1] = String(text.dropFirst(partSize).prefix(partSize + remainder))
-                slotTexts[2] = String(text.dropFirst(2 * partSize + remainder))
+                for i in 0..<numberOfSlots {
+                    let startIndex = text.index(text.startIndex, offsetBy: i * partSize + min(i, remainder))
+                    let endIndex = text.index(startIndex, offsetBy: partSize + (i < remainder ? 1 : 0))
+                    slotTexts[i] = String(text[startIndex..<endIndex])
+                }
             }
         }
         return slotTexts
@@ -564,7 +562,7 @@ extension FirstViewController {
     }
     
     private func setupHamburgerLabelsAndCoverBoxes() {
-        let hamburgerText = "🍔🍔🍔"
+        let hamburgerText = "🍔🍔🍔🍔"
         let hamburgers = Array(hamburgerText)
         
         for (index, hamburgerEmoji) in hamburgers.enumerated() {
@@ -580,6 +578,8 @@ extension FirstViewController {
             hamburgerLabels.append(hamburgerLabel)
             
             let hamburgerTopConstraint = hamburgerLabel.centerYAnchor.constraint(equalTo: slotBoxes[index].centerYAnchor)
+            hamburgerTopConstraints.append(hamburgerTopConstraint)
+            
             
             let hamburgerHeightConstraint = hamburgerLabel.heightAnchor.constraint(equalToConstant: 50)
             hamburgerHeightConstraints.append(hamburgerHeightConstraint)
