@@ -193,6 +193,7 @@ class FirstViewController: UIViewController {
             toAmountLabelsLine.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 43),
             toAmountLabelsLine.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -42),
             toAmountLabelsLine.heightAnchor.constraint(equalToConstant: 1),
+            //상대국 통화 텍스트필드 언더라인
             
             bigMacCountbox.topAnchor.constraint(equalTo: fromAmountSuffixLabel.bottomAnchor, constant: 88),
             bigMacCountbox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -202,6 +203,7 @@ class FirstViewController: UIViewController {
             
             tooltipButton.topAnchor.constraint(equalTo: bigMacCountbox.bottomAnchor, constant: 8),
             tooltipButton.trailingAnchor.constraint(equalTo: bigMacCountbox.trailingAnchor, constant: -10)
+            //툴팁 버튼
         ])
     }
     //MARK: - toAmountLabels Motion
@@ -234,7 +236,7 @@ class FirstViewController: UIViewController {
             let toAmountLabel = createtoAmountLabel(with: String(digit))
             view.addSubview(toAmountLabel)
             
-            let toAmountTopConstraint = toAmountLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 290)
+            let toAmountTopConstraint = toAmountLabel.topAnchor.constraint(equalTo: toAmountSuffixLabel.topAnchor, constant: -30)
             toAmountTopConstraints.append(toAmountTopConstraint)
             toAmountLabels.append(toAmountLabel)
             
@@ -255,6 +257,11 @@ class FirstViewController: UIViewController {
                 lastLabel.trailingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -1)
             ])
         }
+
+        for label in toAmountLabels {
+                view.bringSubviewToFront(label)
+            }
+            view.bringSubviewToFront(toAmountSuffixLabel)
         
         animateDigits()
     }
