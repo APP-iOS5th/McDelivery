@@ -137,15 +137,17 @@ class FirstViewController: UIViewController {
         exchangeIcon.titleLabel?.font = UIFont.systemFont(ofSize: 24)
         exchangeIcon.isEnabled = false
         
+        var bigMacBoxConfig = UIButton.Configuration.plain()
+        bigMacBoxConfig.attributedTitle = AttributedString("개의 빅맥을\n구매할 수 있어요.", attributes: AttributeContainer([.font: UIFont.interThinFont(ofSize: 20)]))
+        bigMacBoxConfig.baseForegroundColor = .white
+        bigMacBoxConfig.background.backgroundColor = UIColor.boxColor
+        bigMacBoxConfig.contentInsets = NSDirectionalEdgeInsets(top: 240, leading: 0, bottom: 0, trailing: 0)
+        bigMacCountbox.configuration = bigMacBoxConfig
         bigMacCountbox.titleLabel?.numberOfLines = 0
-        bigMacCountbox.titleLabel?.textAlignment = .center
-        
-        bigMacCountbox.setTitle("개의 빅맥을\n구매할 수 있어요.", for: .normal)
-        bigMacCountbox.setTitleColor(.white, for: .normal)
         bigMacCountbox.titleLabel?.font = UIFont.interThinFont(ofSize: 20)
-        bigMacCountbox.backgroundColor = UIColor.boxColor
+        bigMacCountbox.titleLabel?.textAlignment = .center
         bigMacCountbox.layer.cornerRadius = 20
-        bigMacCountbox.titleEdgeInsets = UIEdgeInsets(top: 240, left: 0, bottom: 0, right: 0)
+        bigMacCountbox.layer.masksToBounds = true
         
         tooltipButton.setTitle(" 빅맥 지수란?", for: .normal)
         tooltipButton.setImage(UIImage(systemName: "questionmark.circle.fill"), for: .normal)
@@ -257,11 +259,11 @@ class FirstViewController: UIViewController {
                 lastLabel.trailingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -1)
             ])
         }
-
+        
         for label in toAmountLabels {
-                view.bringSubviewToFront(label)
-            }
-            view.bringSubviewToFront(toAmountSuffixLabel)
+            view.bringSubviewToFront(label)
+        }
+        view.bringSubviewToFront(toAmountSuffixLabel)
         
         animateDigits()
     }
@@ -333,7 +335,7 @@ class FirstViewController: UIViewController {
         
         self.tooltipView = newTooltipView
     }
-
+    
     //MARK: - 환율 API 불러오기
     private func fetchCurrencyData() {
         CurrencyService.shared.fetchExchangeRates { [weak self] exchangeRates in
@@ -437,7 +439,7 @@ class FirstViewController: UIViewController {
         animateHamburgers() // Constraint 밀리는 지점. 추후 수정
         setupSlotBoxesAndNumericViews(inside: bigMacCountbox, with: "\(bigMacsCanBuy)")
     }
-
+    
     private func displayConvertedAmount(amount: String) {
         setuptoAmountLabels(with: amount)
     }
@@ -485,7 +487,7 @@ extension FirstViewController {
         }
         
         // 새로운 텍스트에 따른 슬롯 텍스트 계산
-        var slotTexts = calculateSlotTexts(from: text)
+        let slotTexts = calculateSlotTexts(from: text)
         for (index, slotText) in slotTexts.enumerated() {
             let numericMotionView = NumericMotionView(
                 frame: .zero,
@@ -551,7 +553,7 @@ extension FirstViewController {
         }
         return slotTexts
     }
-
+    
     private func createSlotBox() -> UIView {
         let slotbox = UIView()
         slotbox.translatesAutoresizingMaskIntoConstraints = false
@@ -578,7 +580,6 @@ extension FirstViewController {
             hamburgerLabels.append(hamburgerLabel)
             
             let hamburgerTopConstraint = hamburgerLabel.centerYAnchor.constraint(equalTo: slotBoxes[index].centerYAnchor)
-            hamburgerTopConstraints.append(hamburgerTopConstraint)
             
             let hamburgerHeightConstraint = hamburgerLabel.heightAnchor.constraint(equalToConstant: 50)
             hamburgerHeightConstraints.append(hamburgerHeightConstraint)
@@ -597,7 +598,30 @@ extension FirstViewController {
             ])
         }
     }
-
+    
+    private func animateHamburgers() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            for (index, _) in self.hamburgerTopConstraints.enumerated() {
+                let label = self.hamburgerLabels[index]
+                let coverBox = self.coverBoxes[index]
+                
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                    self.hamburgerHeightConstraints[index].constant = 0
+                    self.view.layoutIfNeeded()
+                }, completion: { _ in
+                    UIView.animate(withDuration: 1, animations: {
+                        label.alpha = 0.0
+                        coverBox.alpha = 0.0
+                    })
+                })
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                self.numericMotionViews.forEach { $0.animateText() }
+            }
+        }
+    }
+    
     private func createCoverBox() -> UIView {
         let coverBox = UIView()
         coverBox.translatesAutoresizingMaskIntoConstraints = false
@@ -629,42 +653,19 @@ extension FirstViewController {
             }
         }
     }
-    
-    private func animateHamburgers() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-            for (index, _) in self.hamburgerTopConstraints.enumerated() {
-                let label = self.hamburgerLabels[index]
-                let coverBox = self.coverBoxes[index]
-                
-                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
-                    self.hamburgerHeightConstraints[index].constant = 0
-                    self.view.layoutIfNeeded()
-                }, completion: { _ in
-                    UIView.animate(withDuration: 1, animations: {
-                        label.alpha = 0.0
-                        coverBox.alpha = 0.0
-                    })
-                })
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now()) {
-                self.numericMotionViews.forEach { $0.animateText() }
-            }
-        }
-    }
-    
 }
 
 //MARK: - UITextFieldDelegate
 extension FirstViewController: UITextFieldDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         self.view.endEditing(true)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.animateHamburgers()
+        }
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
