@@ -1,4 +1,4 @@
-# McCurrency   ![Xcode](https://img.shields.io/badge/Xcode-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)<img src="https://img.shields.io/badge/15.4.0-515151?style=for-the-badge"> ![Protopie](https://img.shields.io/badge/Protopie-%23FF6661.svg?style=for-the-badge) ![Blender](https://img.shields.io/badge/blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white) ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
+# McCurrency   ![Xcode](https://img.shields.io/badge/Xcode-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)<img src="https://img.shields.io/badge/15.4.0-515151?style=for-the-badge"> ![Protopie](https://img.shields.io/badge/Protopie-%23FF6661.svg?style=for-the-badge) ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
 
 <img src="https://github.com/APP-iOS5th/McDelivery/assets/164737302/7ff9ac47-415c-4ff6-a03f-5d82a908e706" width=480 />
 
@@ -43,8 +43,16 @@ McCurrency는 세계 여러 나라에서 사용자의 구매력을 비교할 수
 
 
 권도율 [@YuleGlycerine](https://github.com/YuleGlycerine)
-* 담당: 기획, 디자인
-* 구현 기능: 인터랙션/모션 전반, UI 디벨롭
+* 담당: 기획, 디자인 및 인터랙션과 모션 구현, UI 디벨롭
+  - 기획과 UI 디자인, 인터랙션 디자인을 하였습니다.
+  - 애니메이션과 모션 전반을 구현했습니다.
+  - 팀이 구현한 화면을 디자인에 가깝게 조정하였습니다.
+* 구현 기능:
+  - 입력 금액 애니메이션
+  - 슬롯 머신 애니메이션
+  - 탭바 슬라이드 마이크로 인터랙션
+  - 원형 피커 뷰 마이크로 인터랙션
+
 
 ## 🧾 기술 스택
 - Swift
