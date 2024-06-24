@@ -6,15 +6,17 @@
 //
 
 import UIKit
+import Foundation
+
 protocol FirstViewControllerDelegate: AnyObject {
     func didSendData(_ data: String)
 }
+
 class FirstViewController: UIViewController {
     weak var delegate: FirstViewControllerDelegate?
     var totalWidth: CGFloat = 0
     var labelWidths: [CGFloat] = []
     var currencyDetails: [String: CurrencyDetail] = [:]
-    
     var ttsDictionary: [String: String] = [:] {
         didSet {
             print("환율정보 업데이트 완료\(self)")
@@ -62,7 +64,7 @@ class FirstViewController: UIViewController {
         animateHamburgers()
         animateDigits()
         
-        fetchCurrencyData()
+        fetchCurrencyData(for: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -209,7 +211,7 @@ class FirstViewController: UIViewController {
         ])
     }
     //MARK: - toAmountLabels Motion
-    private func setuptoAmountLabels(with text: String) {
+    internal func setuptoAmountLabels(with text: String) {
         let formattedText = text.formattedWithCommas()
         let digits = Array(formattedText)
         var previousLabel: UILabel? = nil
@@ -336,124 +338,25 @@ class FirstViewController: UIViewController {
         self.tooltipView = newTooltipView
     }
     
-    //MARK: - 환율 API 불러오기
-    private func fetchCurrencyData() {
-        CurrencyService.shared.fetchExchangeRates { [weak self] exchangeRates in
-            DispatchQueue.main.async {
-                guard let self = self, let rates = exchangeRates else {
-                    print("Failed to fetch data")
-                    return
-                }
-                
-                self.currencyDetails = self.createCurrencyDetails(from: rates)
-                print("Updated Currency Details: \(self.currencyDetails)")
-                
-                // 날짜 확인 후 알림 표시
-                let currentDate = Date()
-                let validDate = CurrencyService.shared.getValidSearchDate(date: currentDate)
-                let today = self.formattedDate(from: currentDate)
-                if validDate != today {
-                    self.showAlertForPastData(date: validDate)
-                }
-                
-                let usRateString = self.currencyDetails["미국"]?.tts.replacingOccurrences(of: ",", with: "")
-                self.delegate?.didSendData(usRateString ?? "")
-            }
-        }
-    }
+   
+
     
-    private func showAlertForPastData(date: String) {
+    internal func showAlertForPastData(date: String) {
         let alert = UIAlertController(title: "이전 날짜 데이터 사용", message: "현재 \(date)의 환율 정보를 표시하고 있습니다.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
-    private func formattedDate(from date: Date) -> String {
+    internal func formattedDate(from date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.string(from: date)
-    }
-    
-    //MARK: - 받아온 데이터 Dictionary로 저장
-    func createTtsDictionary(from rates: [ExchangeRate]) -> [String: String] {
-        let dictionary = rates.reduce(into: [String: String]()) { (dict, rate) in
-            dict[rate.cur_nm] = rate.tts
-        }
-        return dictionary
-    }
-    
-    func createCurrencyDetails(from rates: [ExchangeRate]) -> [String: CurrencyDetail] {
-        var details = [String: CurrencyDetail]()
-        
-        for rate in rates {
-            let parts = rate.cur_nm.components(separatedBy: " ")
-            guard parts.count >= 2 else { continue }
-            
-            let currencyUnit = parts.last!
-            let countryName = parts.dropLast().joined(separator: " ")
-            
-            details[countryName] = CurrencyDetail(
-                countryName: countryName,
-                currencyName: rate.cur_unit,
-                currencyUnit: currencyUnit,
-                tts: rate.tts
-            )
-        }
-        
-        return details
-    }
-    
-    private func updateConversionAmount(text: String) {
-        guard let countryButtonTitle = toCountryButton.title(for: .normal),
-              let selectedCountry = extractCountryName(from: countryButtonTitle),
-              let currencyDetail = currencyDetails[selectedCountry],
-              let rate = Double(currencyDetail.tts.replacingOccurrences(of: ",", with: "")),
-              let amount = Double(text.replacingOccurrences(of: ",", with: "")),
-              let bigMacPrice = McCounter().bigMacPricesInUSD[selectedCountry], // 각 나라의 빅맥 가격 (USD)
-              let usRateString = currencyDetails["미국"]?.tts.replacingOccurrences(of: ",", with: ""),
-              let usRate = Double(usRateString) else {
-            print("환율 데이터가 없거나 입력값 문제 발생")
-            return
-        }
-        
-        // JPY(100)과 같은 통화 처리
-        let adjustedRate = currencyDetail.currencyName.contains("JPY(100)") ? rate / 100 : rate
-        
-        // 입력 금액을 해당 국가의 환율로 환산
-        let convertedAmount = amount / adjustedRate
-        let formattedAmount = String(format: "%.2f", convertedAmount)
-        print("환산된 금액: \(formattedAmount)")
-        
-        // 입력 금액을 미국 환율로 환산하여 USD 계산
-        let usdAmount = amount / usRate
-        let formattedUSDAmount = String(format: "%.2f", usdAmount)
-        print("USD로 환산된 금액: \(formattedUSDAmount)")
-        
-        // 빅맥 구매 가능 개수 계산 (각 나라별 빅맥 가격과 비교)
-        let bigMacsCanBuy = Int(usdAmount / bigMacPrice)
-        print("구매 가능한 빅맥 개수: \(bigMacsCanBuy)")
-        
-        displayConvertedAmount(amount: formattedUSDAmount)
-        setupHamburgerLabelsAndCoverBoxes()
-        
-        animateHamburgers() // Constraint 밀리는 지점. 추후 수정
-        setupSlotBoxesAndNumericViews(inside: bigMacCountbox, with: "\(bigMacsCanBuy)")
-    }
-    
-    private func displayConvertedAmount(amount: String) {
-        setuptoAmountLabels(with: amount)
-    }
-    
-    func extractCountryName(from title: String) -> String? {
-        let components = title.split(separator: " ")
-        guard components.count > 1 else { return nil }
-        return String(components[1])
     }
 }
 
 //MARK: - Animation
 extension FirstViewController {
-    private func setupSlotBoxesAndNumericViews(inside backgroundView: UIView, with text: String) {
+    internal func setupSlotBoxesAndNumericViews(inside backgroundView: UIView, with text: String) {
         // 기존의 숫자 뷰들을 제거
         for view in numericMotionViews {
             view.removeFromSuperview()
@@ -561,7 +464,7 @@ extension FirstViewController {
         return slotbox
     }
     
-    private func setupHamburgerLabelsAndCoverBoxes() {
+    internal func setupHamburgerLabelsAndCoverBoxes() {
         let hamburgerText = "🍔🍔🍔🍔"
         let hamburgers = Array(hamburgerText)
         
@@ -599,7 +502,7 @@ extension FirstViewController {
         }
     }
     
-    private func animateHamburgers() {
+    internal func animateHamburgers() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             for (index, _) in self.hamburgerTopConstraints.enumerated() {
                 let label = self.hamburgerLabels[index]
@@ -695,62 +598,15 @@ extension FirstViewController: UITextFieldDelegate {
                 print("계산 시작\(text)")
                 updateConversionAmount(text: text)
             }
-            // updateConversionAmount(text: formattedNumber)
         } else {
             textField.text = ""
         }
-        
         return false
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
         print("키보드 닫힘")
-        
         textField.resignFirstResponder()
-        
         return true
-        
-    }
-}
-
-extension FirstViewController: CircularViewControllerDelegate {
-    func countrySelected(_ countryName: String, context: PresentationContext) {
-        print("전달받은 국가 정보: \(countryName)")
-        
-        let components = countryName.split(separator: "/").map { $0.trimmingCharacters(in: .whitespaces) }
-        if components.count == 2 {
-            let country = components[0]
-            let currencyCode = components[1]
-            
-            if let countryTuple = countries.first(where: { $0.name == country }) {
-                let fullCountryName = "\(countryTuple.flag) \(countryTuple.name)"
-                toCountryButton.setTitle(fullCountryName, for: .normal)
-                toAmountSuffixLabel.text = currencyCode
-                print("국가: \(fullCountryName), 통화: \(currencyCode)")
-                
-                // 자동으로 환율 계산을 트리거합니다.
-                if let fromAmountText = fromAmountTextField.text, !fromAmountText.isEmpty {
-                    updateConversionAmount(text: fromAmountText)
-                }
-            } else {
-                toCountryButton.setTitle("국가 정보 없음", for: .normal)
-                toAmountSuffixLabel.text = "통화 정보 없음"
-                print("국가 정보 미발견: \(country)")
-            }
-        } else {
-            toCountryButton.setTitle("형식 오류", for: .normal)
-            toAmountSuffixLabel.text = "통화 정보 없음"
-            print("잘못된 형식: \(countryName)")
-        }
-    }
-    
-    @objc func toCountryButtonTapped() {
-        let pickerVC = CircularViewController()
-        pickerVC.presentationContext = .fromFirstVC
-        pickerVC.delegate = self
-        pickerVC.modalPresentationStyle = .overFullScreen
-        pickerVC.modalTransitionStyle = .crossDissolve
-        self.present(pickerVC, animated: true, completion: nil)
     }
 }
