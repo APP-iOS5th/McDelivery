@@ -56,8 +56,6 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         view.addGestureRecognizer(tapGesture)
     }
     
-    
-    
     func customizeForContext() {
         switch presentationContext {
         case .fromFirstVC:
@@ -193,7 +191,10 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
                 label.center = CGPoint(x: labelX, y: labelY)
                 label.transform = CGAffineTransform(rotationAngle: baseAngle)
             }
-        }, completion: { _ in self.labelTextSending() })
+        }, completion: { _ in
+            self.labelTextSending()
+            self.updateCheckmark()
+        })
     }
     
     func labelTextSending() {
@@ -281,7 +282,6 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         return attributedText
     }
     
-    
     private func updateCheckmark() {
         for label in labels {
             label.subviews.forEach { subview in
@@ -315,12 +315,10 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         selectedCountryLabel = tappedLabel
         updateCheckmark()
     }
-    
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterCountries(for: searchText)
     }
-
     
     // UISearchBarDelegate methods
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
