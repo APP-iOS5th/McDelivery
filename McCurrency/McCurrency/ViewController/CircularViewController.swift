@@ -14,7 +14,7 @@ protocol CircularViewControllerDelegate: AnyObject {
 }
 
 class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBarDelegate {
-    var presentationContext: PresentationContext = .fromFirstVC 
+    var presentationContext: PresentationContext = .fromFirstVC
     weak var delegate: CircularViewControllerDelegate?
     var selectedCountryLabel: UILabel?
     
@@ -127,7 +127,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             searchBarWidthConstraint
         ])
     }
-
+    
     @objc func dismissKeyboard() {
         searchBar.resignFirstResponder()
     }
@@ -262,10 +262,14 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             label.attributedText = attributedString(for: country, fittingWidth: 150, in: label)
             label.transform = CGAffineTransform(rotationAngle: angle)
             
-            // 탭 제스처 추가
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleLabelTap(_:)))
-            label.isUserInteractionEnabled = true
-            label.addGestureRecognizer(tapGesture)
+            if label.frame.origin.x < 10 && label.frame.origin.y < 150 {
+                label.isUserInteractionEnabled = false
+            } else {
+                // 탭 제스처 추가
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleLabelTap(_:)))
+                label.isUserInteractionEnabled = true
+                label.addGestureRecognizer(tapGesture)
+            }
             
             self.labels.append(label)
             self.view.addSubview(label)
@@ -298,7 +302,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             selectedLabel.addSubview(checkmark)
             
             NSLayoutConstraint.activate([
-                checkmark.leadingAnchor.constraint(equalTo: selectedLabel.trailingAnchor, constant: 5),
+                checkmark.leadingAnchor.constraint(equalTo: selectedLabel.trailingAnchor, constant: 7),
                 checkmark.centerYAnchor.constraint(equalTo: selectedLabel.centerYAnchor)
             ])
             
@@ -315,7 +319,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         selectedCountryLabel = tappedLabel
         updateCheckmark()
     }
-
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterCountries(for: searchText)
     }
