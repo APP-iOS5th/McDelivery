@@ -6,7 +6,6 @@ import AVKit
 
 class McRotator: UIViewController {
     
-    
     let countries = [
         "Switzerland", "Norway", "Uruguay", "Sweden", "Euro Area", "United States", "Canada", "Australia", "Brazil",
         "United Kingdom", "South Korea", "Saudi Arabia", "Argentina", "China", "India", "Indonesia", "Philippines",
@@ -17,12 +16,8 @@ class McRotator: UIViewController {
     var lastAngle: CGFloat = 0
     var counter: CGFloat = 0
     var currentRotationAngle: CGFloat = 0
-    
     var lastText : String?
-    
     var resultLabel: UILabel!
-    var centerLabel: UILabel!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,24 +40,11 @@ class McRotator: UIViewController {
             label.attributedText = attributedString(for: country, fittingWidth: 125, in: label)
             label.transform = CGAffineTransform(rotationAngle: angle)
             
-            
-            //위치, 결과 확인용 레이블
-            self.labels.append(label)
-            self.view.addSubview(label)
-            resultLabel = UILabel(frame: CGRect(x: 250, y: 100, width: 200, height: 40))
-            resultLabel.numberOfLines = 0
-            resultLabel.layer.borderWidth = 1.0
-            resultLabel.layer.borderColor = UIColor.black.cgColor
-            centerLabel = UILabel(frame: CGRect(x: 0, y: self.view.frame.height / 2  - 20, width: self.view.frame.width, height: 40))
-            centerLabel.layer.borderColor = UIColor.black.cgColor
-            centerLabel.layer.borderWidth = 1.0
-            self.view.addSubview(resultLabel)
-            self.view.addSubview(centerLabel)
         }
     }
     
     func attributedString(for text: String, fittingWidth width: CGFloat, in label: UILabel) -> NSAttributedString {
-           let font = label.font ?? UIFont.systemFont(ofSize: 17)  //label 폰트 여기에
+           let font = label.font ?? UIFont.systemFont(ofSize: 17)
            let attributes: [NSAttributedString.Key: Any] = [
                .font: font
            ]

@@ -49,8 +49,6 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         filteredCountries = countries
         displayCountries(filteredCountries)
         
-        setupCenterLabel()
-        
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGesture)
         
@@ -131,15 +129,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             searchBarWidthConstraint
         ])
     }
-    
-    private func setupCenterLabel() {
-        centerLabel = UILabel(frame: CGRect(x: 0, y: self.view.frame.height / 2, width: self.view.frame.width, height: 40))
-        centerLabel.layer.borderColor = UIColor.CenterHighlighted.cgColor
-        centerLabel.layer.borderWidth = 1.0
-        centerLabel.textColor = .white
-        self.view.addSubview(centerLabel)
-    }
-    
+
     @objc func dismissKeyboard() {
         searchBar.resignFirstResponder()
     }
