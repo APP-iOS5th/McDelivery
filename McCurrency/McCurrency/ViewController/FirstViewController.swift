@@ -11,7 +11,7 @@ protocol FirstViewControllerDelegate: AnyObject {
     func didSendData(_ data: String)
 }
 
-class FirstViewController: UIViewController, UITextFieldDelegate {
+class FirstViewController: UIViewController {
     weak var delegate: FirstViewControllerDelegate?
     var totalWidth: CGFloat = 0
     var labelWidths: [CGFloat] = []
@@ -264,3 +264,62 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         return dateFormatter.string(from: date)
     }
 }
+
+extension FirstViewController: UITextFieldDelegate {
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.animateHamburgers()
+        }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? "0"
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        
+        if updatedText.count > 13 {
+            return false
+        }
+        
+        let allowedCharacters = CharacterSet(charactersIn: "0123456789,").inverted
+        let filtered = string.components(separatedBy: allowedCharacters).joined(separator: "")
+        if string != filtered {
+            return false
+        }
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.groupingSeparator = ","
+        
+        if let number = Double(updatedText.replacingOccurrences(of: ",", with: "")) {
+            let formattedNumber = numberFormatter.string(from: NSNumber(value: number)) ?? ""
+            textField.text = formattedNumber
+            print("formattedNumber\(formattedNumber)")
+            
+            if let text = textField.text, !text.isEmpty {
+                print("계산 시작\(text)")
+                updateConversionAmount(text: text)
+            }
+            // updateConversionAmount(text: formattedNumber)
+        } else {
+            textField.text = ""
+        }
+        
+        return false
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        print("키보드 닫힘")
+        
+        textField.resignFirstResponder()
+        
+        return true
+        
+    }
+}
+
