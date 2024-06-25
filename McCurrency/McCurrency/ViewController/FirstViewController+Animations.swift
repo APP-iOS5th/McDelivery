@@ -107,22 +107,22 @@ extension FirstViewController {
             }
             
             NSLayoutConstraint.activate([
-                slotBoxes[0].leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 24),
+                slotBoxes[0].leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 27),
                 slotBoxes[0].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 115),
                 slotBoxes[0].widthAnchor.constraint(equalToConstant: 73),
                 slotBoxes[0].heightAnchor.constraint(equalToConstant: 78),
                 
-                slotBoxes[1].leadingAnchor.constraint(equalTo: slotBoxes[0].trailingAnchor, constant: 5),
+                slotBoxes[1].leadingAnchor.constraint(equalTo: slotBoxes[0].trailingAnchor, constant: 3),
                 slotBoxes[1].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 115),
                 slotBoxes[1].widthAnchor.constraint(equalToConstant: 73),
                 slotBoxes[1].heightAnchor.constraint(equalToConstant: 78),
                 
-                slotBoxes[2].leadingAnchor.constraint(equalTo: slotBoxes[1].trailingAnchor, constant: 5),
+                slotBoxes[2].leadingAnchor.constraint(equalTo: slotBoxes[1].trailingAnchor, constant: 3),
                 slotBoxes[2].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 115),
                 slotBoxes[2].widthAnchor.constraint(equalToConstant: 73),
                 slotBoxes[2].heightAnchor.constraint(equalToConstant: 78),
                 
-                slotBoxes[3].leadingAnchor.constraint(equalTo: slotBoxes[2].trailingAnchor, constant: 5),
+                slotBoxes[3].leadingAnchor.constraint(equalTo: slotBoxes[2].trailingAnchor, constant: 3),
                 slotBoxes[3].topAnchor.constraint(equalTo: toCountryButton.bottomAnchor, constant: 115),
                 slotBoxes[3].widthAnchor.constraint(equalToConstant: 73),
                 slotBoxes[3].heightAnchor.constraint(equalToConstant: 78),
