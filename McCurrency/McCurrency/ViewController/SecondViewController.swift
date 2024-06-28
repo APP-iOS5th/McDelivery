@@ -1,10 +1,3 @@
-//
-//  SecondViewController.swift
-//  McCurrency
-//
-//  Created by 임재현 on 6/3/24.
-//
-
 import UIKit
 
 struct SelectedCountry: Codable {
@@ -19,6 +12,7 @@ class SecondViewController: UIViewController {
     var selectedCountry: [SelectedCountry] = [] {
         didSet {
             print("country \(selectedCountry)")
+            updateBigMacLabelVisibility()
         }
     }
     
@@ -57,7 +51,15 @@ class SecondViewController: UIViewController {
     private var priceHStackView: UIStackView = UIStackView()
     private var priceVStackView: UIStackView = UIStackView()
     private var tableView: UITableView = UITableView()
-    private let purchaseLabel: UILabel = UILabel()
+    private let purchaseLabel: UILabel = {
+        let label = UILabel()
+        label.text = "빅맥을 구매할 수 있어요"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .white
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     // MARK: - LifeCycles
     override func viewDidLoad() {
@@ -92,6 +94,7 @@ class SecondViewController: UIViewController {
         tableView.backgroundView = label
         tableView.backgroundView?.isHidden = true
     }
+    
     private func autoLayout() {
         view.addSubview(koreaLabel)
         
@@ -162,6 +165,18 @@ class SecondViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        // tableFooterView로 purchaseLabel 추가
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50))
+        footerView.addSubview(purchaseLabel)
+        tableView.tableFooterView = footerView
+        
+        NSLayoutConstraint.activate([
+            purchaseLabel.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -16),
+            purchaseLabel.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -16)
+        ])
+        
+        updateBigMacLabelVisibility()
     }
     
     func setupAddButton() {
@@ -225,6 +240,9 @@ class SecondViewController: UIViewController {
         }
     }
     
+    private func updateBigMacLabelVisibility() {
+        purchaseLabel.isHidden = selectedCountry.isEmpty
+    }
 }
 
 extension SecondViewController: UITextFieldDelegate {
