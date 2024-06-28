@@ -1,10 +1,3 @@
-//
-//  NumericMotionView.swift
-//  McCurrency
-//
-//  Created by Mac on 6/9/24.
-//
-
 import UIKit
 
 class NumericMotionView: UIView {
@@ -13,18 +6,20 @@ class NumericMotionView: UIView {
     var duration: CGFloat = 1.0
     var speed: CGFloat = 0.1
     var textColor: UIColor = .white
+    var initialTextColor: UIColor = .lightGray
     
     private var animatedText: String = ""
     private var randomCharacters: [Character] = Array("1234567890")
     private var animationID: String = UUID().uuidString
     private var label: UILabel!
     
-    init(frame: CGRect, text: String, trigger: Bool, duration: CGFloat, speed: CGFloat, textColor: UIColor = .white) {
+    init(frame: CGRect, text: String, trigger: Bool, duration: CGFloat, speed: CGFloat, textColor: UIColor = .white, initialTextColor: UIColor = .lightGray) {
         self.text = text
         self.trigger = trigger
         self.duration = duration
         self.speed = speed
         self.textColor = textColor
+        self.initialTextColor = initialTextColor
         super.init(frame: frame)
         setupLabel()
         setRandomCharacters()
@@ -38,7 +33,7 @@ class NumericMotionView: UIView {
     private func setupLabel() {
         label = UILabel()
         label.font = UIFont.systemFont(ofSize: 40)
-        label.textColor = textColor
+        label.textColor = initialTextColor // 초기 색상 설정
         label.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(label)
         
@@ -64,6 +59,7 @@ class NumericMotionView: UIView {
                             if self.text.indices.contains(charIndex) {
                                 let actualCharacter = self.text[charIndex]
                                 self.replaceCharacter(at: charIndex, character: actualCharacter)
+                                self.label.textColor = self.textColor // 최종 색상 설정
                             }
                             timer.invalidate()
                         } else {
@@ -107,4 +103,3 @@ class NumericMotionView: UIView {
         animateText()
     }
 }
-

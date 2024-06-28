@@ -1,3 +1,4 @@
+
 //  FirstViewController.swift
 //  McCurrency
 //
@@ -16,6 +17,7 @@ class FirstViewController: UIViewController {
     var totalWidth: CGFloat = 0
     var labelWidths: [CGFloat] = []
     var currencyDetails: [String: CurrencyDetail] = [:]
+
     var ttsDictionary: [String: String] = [:] {
         didSet {
             print("환율정보 업데이트 완료\(self)")
@@ -275,6 +277,7 @@ extension FirstViewController: UITextFieldDelegate {
             self.animateHamburgers()
         }
     }
+
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? "0"
@@ -303,6 +306,7 @@ extension FirstViewController: UITextFieldDelegate {
                 print("계산 시작\(text)")
                 updateConversionAmount(text: text)
             }
+
             // updateConversionAmount(text: formattedNumber)
         } else {
             textField.text = ""
