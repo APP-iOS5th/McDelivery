@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04A64FDC2C29A83800370530 /* CurrencyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A64FDB2C29A83800370530 /* CurrencyAPI.swift */; };
+		04A64FDE2C29A90A00370530 /* FirstViewController+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A64FDD2C29A90A00370530 /* FirstViewController+Conversion.swift */; };
+		04A64FE02C29B01C00370530 /* FirstViewController+CircularViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A64FDF2C29B01C00370530 /* FirstViewController+CircularViewControllerDelegate.swift */; };
+		04A64FE22C29B47400370530 /* FirstViewController+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A64FE12C29B47400370530 /* FirstViewController+Animations.swift */; };
 		465F65B62C168F5B003B404D /* CountryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465F65B52C168F5B003B404D /* CountryCell.swift */; };
 		465F65BA2C169015003B404D /* CircularViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465F65B92C169015003B404D /* CircularViewController.swift */; };
 		465F65BE2C16904D003B404D /* NumericMotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465F65BD2C16904D003B404D /* NumericMotionView.swift */; };
@@ -37,6 +41,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04A64FDB2C29A83800370530 /* CurrencyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyAPI.swift; sourceTree = "<group>"; };
+		04A64FDD2C29A90A00370530 /* FirstViewController+Conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirstViewController+Conversion.swift"; sourceTree = "<group>"; };
+		04A64FDF2C29B01C00370530 /* FirstViewController+CircularViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirstViewController+CircularViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		04A64FE12C29B47400370530 /* FirstViewController+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirstViewController+Animations.swift"; sourceTree = "<group>"; };
 		04E0DCC62C15D8210012C77D /* CircularViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularViewController.swift; sourceTree = "<group>"; };
 		465F65B52C168F5B003B404D /* CountryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCell.swift; sourceTree = "<group>"; };
 		465F65B92C169015003B404D /* CircularViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularViewController.swift; sourceTree = "<group>"; };
@@ -132,6 +140,9 @@
 			children = (
 				469D902F2C0DA049000ABE8C /* MainTabController.swift */,
 				469D90272C0D9FE4000ABE8C /* FirstViewController.swift */,
+				04A64FE12C29B47400370530 /* FirstViewController+Animations.swift */,
+				04A64FDD2C29A90A00370530 /* FirstViewController+Conversion.swift */,
+				04A64FDF2C29B01C00370530 /* FirstViewController+CircularViewControllerDelegate.swift */,
 				469D90292C0D9FED000ABE8C /* SecondViewController.swift */,
 				EBC678942C12B84C0015C300 /* McRotator.swift */,
 				EBC678962C12BAE20015C300 /* McCounter_addedSearch.swift */,
@@ -152,9 +163,10 @@
 		469D90252C0D9F9A000ABE8C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				04A64FDB2C29A83800370530 /* CurrencyAPI.swift */,
+				465F65BD2C16904D003B404D /* NumericMotionView.swift */,
 				469D902B2C0DA035000ABE8C /* Colors.swift */,
 				469D902D2C0DA03D000ABE8C /* Fonts.swift */,
-				465F65BD2C16904D003B404D /* NumericMotionView.swift */,
 				465F65C12C16DFD7003B404D /* String.swift */,
 			);
 			path = Extensions;
@@ -270,14 +282,18 @@
 				469D90452C0DAC02000ABE8C /* CurrencyService.swift in Sources */,
 				465F65B62C168F5B003B404D /* CountryCell.swift in Sources */,
 				469D902A2C0D9FED000ABE8C /* SecondViewController.swift in Sources */,
+				04A64FDE2C29A90A00370530 /* FirstViewController+Conversion.swift in Sources */,
 				469D902C2C0DA035000ABE8C /* Colors.swift in Sources */,
 				469D90302C0DA049000ABE8C /* MainTabController.swift in Sources */,
 				469D90282C0D9FE4000ABE8C /* FirstViewController.swift in Sources */,
 				EBC678972C12BAE20015C300 /* McCounter_addedSearch.swift in Sources */,
+				04A64FE22C29B47400370530 /* FirstViewController+Animations.swift in Sources */,
 				469D90472C0DAC10000ABE8C /* CurrencyModel.swift in Sources */,
 				465F65BA2C169015003B404D /* CircularViewController.swift in Sources */,
 				469D900F2C0D9E1B000ABE8C /* AppDelegate.swift in Sources */,
+				04A64FDC2C29A83800370530 /* CurrencyAPI.swift in Sources */,
 				465F65C22C16DFD7003B404D /* String.swift in Sources */,
+				04A64FE02C29B01C00370530 /* FirstViewController+CircularViewControllerDelegate.swift in Sources */,
 				EBC678952C12B84C0015C300 /* McRotator.swift in Sources */,
 				465F65BE2C16904D003B404D /* NumericMotionView.swift in Sources */,
 				EB320F762C0ED0BC009FF27D /* McCount.swift in Sources */,

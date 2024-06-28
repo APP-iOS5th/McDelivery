@@ -14,7 +14,7 @@ protocol CircularViewControllerDelegate: AnyObject {
 }
 
 class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBarDelegate {
-    var presentationContext: PresentationContext = .fromFirstVC 
+    var presentationContext: PresentationContext = .fromFirstVC
     weak var delegate: CircularViewControllerDelegate?
     var selectedCountryLabel: UILabel?
     
@@ -49,16 +49,12 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         filteredCountries = countries
         displayCountries(filteredCountries)
         
-        setupCenterLabel()
-        
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGesture)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
     }
-    
-    
     
     func customizeForContext() {
         switch presentationContext {
@@ -132,14 +128,6 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         ])
     }
     
-    private func setupCenterLabel() {
-        centerLabel = UILabel(frame: CGRect(x: 0, y: self.view.frame.height / 2, width: self.view.frame.width, height: 40))
-        centerLabel.layer.borderColor = UIColor.CenterHighlighted.cgColor
-        centerLabel.layer.borderWidth = 1.0
-        centerLabel.textColor = .white
-        self.view.addSubview(centerLabel)
-    }
-    
     @objc func dismissKeyboard() {
         searchBar.resignFirstResponder()
     }
@@ -203,7 +191,10 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
                 label.center = CGPoint(x: labelX, y: labelY)
                 label.transform = CGAffineTransform(rotationAngle: baseAngle)
             }
-        }, completion: { _ in self.labelTextSending() })
+        }, completion: { _ in
+            self.labelTextSending()
+            self.updateCheckmark()
+        })
     }
     
     func labelTextSending() {
@@ -271,10 +262,14 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             label.attributedText = attributedString(for: country, fittingWidth: 150, in: label)
             label.transform = CGAffineTransform(rotationAngle: angle)
             
-            // 탭 제스처 추가
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleLabelTap(_:)))
-            label.isUserInteractionEnabled = true
-            label.addGestureRecognizer(tapGesture)
+            if label.frame.origin.x < 10 && label.frame.origin.y < 150 {
+                label.isUserInteractionEnabled = false
+            } else {
+                // 탭 제스처 추가
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleLabelTap(_:)))
+                label.isUserInteractionEnabled = true
+                label.addGestureRecognizer(tapGesture)
+            }
             
             self.labels.append(label)
             self.view.addSubview(label)
@@ -290,7 +285,6 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
         return attributedText
     }
-    
     
     private func updateCheckmark() {
         for label in labels {
@@ -308,7 +302,7 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
             selectedLabel.addSubview(checkmark)
             
             NSLayoutConstraint.activate([
-                checkmark.leadingAnchor.constraint(equalTo: selectedLabel.trailingAnchor, constant: 5),
+                checkmark.leadingAnchor.constraint(equalTo: selectedLabel.trailingAnchor, constant: 7),
                 checkmark.centerYAnchor.constraint(equalTo: selectedLabel.centerYAnchor)
             ])
             
@@ -326,11 +320,9 @@ class CircularViewController: UIViewController, UITextFieldDelegate, UISearchBar
         updateCheckmark()
     }
     
-
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterCountries(for: searchText)
     }
-
     
     // UISearchBarDelegate methods
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
