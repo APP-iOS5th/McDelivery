@@ -6,22 +6,22 @@ class McCounter_addedSearch: UIViewController, UIPickerViewDelegate, UIPickerVie
     
     // 빅맥 지수 데이터
     let bigMacPricesInUSD: [String: Double] = [
-    "노르웨이": 6.23,
-    "말레이시아": 2.34,
-     "미국": 5.69,
-    "스웨덴": 6.15,
-    "스위스": 6.71,
-    "영국": 4.50,
-    "인도네시아": 2.36,
-    "일본": 3.50,
-    "중국": 3.37,
-    "캐나다": 6.77,
-    "홍콩": 2.81,
-    "태국": 4.40,
-    "호주": 5.90,
-    "뉴질랜드": 5.33,
-    "싱가포르": 5.18
-    
+        "노르웨이": 6.23,
+        "말레이시아": 2.34,
+        "미국": 5.69,
+        "스웨덴": 6.15,
+        "스위스": 6.71,
+        "영국": 4.50,
+        "인도네시아": 2.36,
+        "일본": 3.50,
+        "중국": 3.37,
+        "캐나다": 6.77,
+        "홍콩": 2.81,
+        "태국": 4.40,
+        "호주": 5.90,
+        "뉴질랜드": 5.33,
+        "싱가포르": 5.18
+        
     ]
     
     let countries = [
@@ -91,7 +91,7 @@ class McCounter_addedSearch: UIViewController, UIPickerViewDelegate, UIPickerVie
         countryTableView.dataSource = self
         countryTableView.delegate = self
         countryTableView.allowsSelection = true
-    
+        
         countryTableView.frame = CGRect(x: (self.view.frame.size.width - 200) / 2, y: searchBar.frame.origin.y + 50 , width: 200, height:  100)
         countryTableView.layer.cornerRadius = 10
         countryTableView.layer.borderWidth = 1.0
@@ -111,7 +111,7 @@ class McCounter_addedSearch: UIViewController, UIPickerViewDelegate, UIPickerVie
             countryTableView.isHidden = false
         }
         countryTableView.reloadData()
-
+        
     }
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         // 포커스가 가면 직사각형 모양으로 펼쳐지는 애니메이션
@@ -127,7 +127,7 @@ class McCounter_addedSearch: UIViewController, UIPickerViewDelegate, UIPickerVie
             searchBar.frame.origin.x = (self.view.frame.size.width - 50) / 2
             searchBar.text = nil
             self.countryTableView.isHidden = true
-
+            
             searchBar.frame.size.width = 50
         }
     }
@@ -183,6 +183,6 @@ class McCounter_addedSearch: UIViewController, UIPickerViewDelegate, UIPickerVie
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedCountry = countries[row]
     }
-
+    
     
 }

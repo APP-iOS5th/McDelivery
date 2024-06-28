@@ -9,7 +9,7 @@ import UIKit
 extension FirstViewController {
     
     //MARK: - toAmountLabels Motion
-    internal func setuptoAmountLabels(with text: String) {
+    func setuptoAmountLabels(with text: String) {
         let formattedText = text.formattedWithCommas()
         let digits = Array(formattedText)
         var previousLabel: UILabel? = nil
@@ -68,7 +68,7 @@ extension FirstViewController {
         animateDigits()
     }
     
-    internal func createtoAmountLabel(with text: String) -> UILabel {
+    func createtoAmountLabel(with text: String) -> UILabel {
         let toAmountLabel = UILabel()
         toAmountLabel.translatesAutoresizingMaskIntoConstraints = false
         toAmountLabel.text = text
@@ -78,20 +78,20 @@ extension FirstViewController {
         return toAmountLabel
     }
     
-    internal func animatetoAmounts() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            for (index, label) in self.toAmountLabels.reversed().enumerated() {
-                let topConstraint = self.toAmountTopConstraints.reversed()[index]
-                UIView.animate(withDuration: 0.3, delay: Double(index) * 0.15, options: .curveEaseInOut, animations: {
-                    topConstraint.constant += 30
-                    label.alpha = 1.0
-                    self.view.layoutIfNeeded()
-                }, completion: nil)
-            }
-        }
-    }
+//    func animatetoAmounts() {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            for (index, label) in self.toAmountLabels.reversed().enumerated() {
+//                let topConstraint = self.toAmountTopConstraints.reversed()[index]
+//                UIView.animate(withDuration: 0.3, delay: Double(index) * 0.15, options: .curveEaseInOut, animations: {
+//                    topConstraint.constant += 30
+//                    label.alpha = 1.0
+//                    self.view.layoutIfNeeded()
+//                }, completion: nil)
+//            }
+//        }
+//    }
     
-    internal func setupSlotBoxesAndNumericViews(inside backgroundView: UIView, with text: String) {
+    func setupSlotBoxesAndNumericViews(inside backgroundView: UIView, with text: String) {
         // 기존의 숫자 뷰들을 제거
         for view in numericMotionViews {
             view.removeFromSuperview()
@@ -151,7 +151,7 @@ extension FirstViewController {
         }
     }
     
-    internal func calculateSlotTexts(from text: String, numberOfSlots: Int) -> [String] {
+    func calculateSlotTexts(from text: String, numberOfSlots: Int) -> [String] {
         let numDigits = text.count
         var slotTexts = Array(repeating: "0", count: numberOfSlots)
         switch numDigits {
@@ -190,7 +190,7 @@ extension FirstViewController {
         return slotTexts
     }
     
-    internal func createSlotBox() -> UIView {
+    func createSlotBox() -> UIView {
         let slotbox = UIView()
         slotbox.translatesAutoresizingMaskIntoConstraints = false
         slotbox.backgroundColor = UIColor.slotBox
@@ -199,7 +199,7 @@ extension FirstViewController {
         return slotbox
     }
     
-    internal func setupHamburgerLabelsAndCoverBoxes() {
+    func setupHamburgerLabelsAndCoverBoxes() {
         let hamburgerText = "🍔🍔🍔🍔"
         let hamburgers = Array(hamburgerText)
         
@@ -219,7 +219,7 @@ extension FirstViewController {
             hamburgerTopConstraints.append(hamburgerTopConstraint)
             
             
-            let hamburgerHeightConstraint = hamburgerLabel.heightAnchor.constraint(equalToConstant: 50)
+            let hamburgerHeightConstraint = hamburgerLabel.heightAnchor.constraint(equalToConstant: 100)
             hamburgerHeightConstraints.append(hamburgerHeightConstraint)
             
             NSLayoutConstraint.activate([
@@ -237,7 +237,7 @@ extension FirstViewController {
         }
     }
     
-    internal func animateHamburgers() {
+    func animateHamburgers() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             for (index, _) in self.hamburgerTopConstraints.enumerated() {
                 let label = self.hamburgerLabels[index]
@@ -259,7 +259,7 @@ extension FirstViewController {
         }
     }
     
-    internal func createCoverBox() -> UIView {
+    func createCoverBox() -> UIView {
         let coverBox = UIView()
         coverBox.translatesAutoresizingMaskIntoConstraints = false
         coverBox.backgroundColor = UIColor.slotBox
@@ -268,13 +268,13 @@ extension FirstViewController {
         return coverBox
     }
     
-    internal func bringHamburgersToFront() {
+    func bringHamburgersToFront() {
         for hamburgerLabel in self.hamburgerLabels {
             bigMacCountbox.bringSubviewToFront(hamburgerLabel)
         }
     }
     
-    internal func animateDigits() {
+    func animateDigits() {
         DispatchQueue.main.async {
             let reversedLabels = Array(self.toAmountLabels.reversed())
             let reversedTopConstraints = Array(self.toAmountTopConstraints.reversed())

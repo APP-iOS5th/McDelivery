@@ -36,7 +36,6 @@ extension FirstViewController {
         
         displayConvertedAmount(amount: formattedUSDAmount)
         setupHamburgerLabelsAndCoverBoxes()
-        
         animateHamburgers()
         setupSlotBoxesAndNumericViews(inside: bigMacCountbox, with: "\(bigMacsCanBuy)")
     }

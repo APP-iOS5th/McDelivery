@@ -12,12 +12,12 @@ protocol CountryCellDelegate: AnyObject {
     func buttonTapped(_ cell: CountryCell)
 }
 
- 
+
 class CountryCell: UITableViewCell {
- 
+    
     weak var delegate: CountryCellDelegate?
     var indexPath: IndexPath?
-
+    
     static let cellId = "CountryCellId"
     let stackView = UIStackView()
     let hamburgerImage = UIImageView()
@@ -30,8 +30,8 @@ class CountryCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
-
-
+        
+        
         backgroundColor = .backgroundColor
     }
     
@@ -40,9 +40,6 @@ class CountryCell: UITableViewCell {
     }
     
     private func setupViews() {
-        
-        
-        
         toCountryButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(toCountryButton)
         toCountryButton.addTarget(self, action: #selector(toCountryButtonTapped), for: .touchUpInside)
@@ -86,14 +83,14 @@ class CountryCell: UITableViewCell {
     }
     
     @objc func toCountryButtonTapped() {
-            delegate?.buttonTapped(self)
-        }
+        delegate?.buttonTapped(self)
+    }
 }
 //
 //extension CountryCell:CountryCellDelegate {
 //    func buttonTapped(in cell: CountryCell) {
 //        self.delegate?.buttonTapped(in: self)
 //    }
-//    
-//    
+//
+//
 //}
