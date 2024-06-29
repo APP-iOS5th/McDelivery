@@ -17,7 +17,7 @@ class FirstViewController: UIViewController {
     var totalWidth: CGFloat = 0
     var labelWidths: [CGFloat] = []
     var currencyDetails: [String: CurrencyDetail] = [:]
-
+    
     var ttsDictionary: [String: String] = [:] {
         didSet {
             print("환율정보 업데이트 완료\(self)")
@@ -37,6 +37,7 @@ class FirstViewController: UIViewController {
     var toAmountTopConstraints: [NSLayoutConstraint] = []
     let toAmountSuffixLabel = UILabel()
     let toAmountLabelsLine = UIView()
+    let toAmountPlaceholderLabel = UILabel()
     let exchangeIcon = UIButton()
     let bigMacCountbox = UIButton()
     let tooltipButton = UIButton()
@@ -56,7 +57,7 @@ class FirstViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-//        animatetoAmounts()
+        //       animatetoAmounts()
         setupSlotBoxesAndNumericViews(inside: bigMacCountbox, with: "$$$$")
         setupHamburgerLabelsAndCoverBoxes()
         animateHamburgers()
@@ -82,6 +83,7 @@ class FirstViewController: UIViewController {
         view.addSubview(toCountryButton)
         view.addSubview(toAmountSuffixLabel)
         view.addSubview(toAmountLabelsLine)
+        view.addSubview(toAmountPlaceholderLabel)
         
         fromCountryLabel.translatesAutoresizingMaskIntoConstraints = false
         toCountryButton.translatesAutoresizingMaskIntoConstraints = false
@@ -90,9 +92,11 @@ class FirstViewController: UIViewController {
         fromAmountTextFieldLine.translatesAutoresizingMaskIntoConstraints = false
         toAmountSuffixLabel.translatesAutoresizingMaskIntoConstraints = false
         toAmountLabelsLine.translatesAutoresizingMaskIntoConstraints = false
+        toAmountPlaceholderLabel.translatesAutoresizingMaskIntoConstraints = false
         exchangeIcon.translatesAutoresizingMaskIntoConstraints = false
         bigMacCountbox.translatesAutoresizingMaskIntoConstraints = false
         tooltipButton.translatesAutoresizingMaskIntoConstraints = false
+        
         
         fromCountryLabel.text = "🇰🇷 대한민국"
         fromCountryLabel.textColor = .white
@@ -127,6 +131,13 @@ class FirstViewController: UIViewController {
         toAmountSuffixLabel.text = " 달러"
         toAmountSuffixLabel.textColor = .white
         toAmountSuffixLabel.font = UIFont.interMediumFont(ofSize: 36)
+        
+        toAmountPlaceholderLabel.text = "0" // 추가된 부분: 초기값 설정
+        toAmountPlaceholderLabel.textColor = UIColor.lightGray // 초기 색상 설정
+        toAmountPlaceholderLabel.font = UIFont.interLightFont(ofSize: 36)
+        toAmountPlaceholderLabel.textAlignment = .right
+        
+        
         
         toAmountLabelsLine.backgroundColor = .secondaryTextColor
         
@@ -189,6 +200,9 @@ class FirstViewController: UIViewController {
             toAmountSuffixLabel.topAnchor.constraint(equalTo: bigMacCountbox.topAnchor, constant: 75),
             toAmountSuffixLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
             //달러
+            
+            toAmountPlaceholderLabel.centerYAnchor.constraint(equalTo: toAmountSuffixLabel.centerYAnchor),
+            toAmountPlaceholderLabel.trailingAnchor.constraint(equalTo: toAmountSuffixLabel.leadingAnchor, constant: -5),
             
             toAmountLabelsLine.topAnchor.constraint(equalTo: toAmountSuffixLabel.bottomAnchor, constant: 4),
             toAmountLabelsLine.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 43),
@@ -277,7 +291,7 @@ extension FirstViewController: UITextFieldDelegate {
             self.animateHamburgers()
         }
     }
-
+    
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? "0"
@@ -306,7 +320,7 @@ extension FirstViewController: UITextFieldDelegate {
                 print("계산 시작\(text)")
                 updateConversionAmount(text: text)
             }
-
+            
             // updateConversionAmount(text: formattedNumber)
         } else {
             textField.text = ""
